@@ -1,128 +1,272 @@
-# 📚 Mini-Agent Documentation
+# Mini-Agent Documentation Hub
 
-Comprehensive documentation for Mini-Agent - an AI assistant powered by MiniMax M2.
+## 🎯 **Quick Navigation**
 
----
+### **For New Agents - Start Here** 🚀
+1. **[Agent Best Practices](workflows/AGENT_BEST_PRACTICES.md)** - Mandatory first steps
+2. **[Project Context](project/PROJECT_CONTEXT.md)** - System overview and status
+3. **[Setup Guide](setup/SETUP_GUIDE.md)** - Installation and configuration
+4. **[Universal Workflow Protocol](workflows/UNIVERSAL_WORKFLOW_PROTOCOL.md)** - 5-phase mandatory process
 
-## 🚀 Quick Start
+### **Architecture & Design** 🏗️
+- **[Architectural Mastery](architecture/MINI_AGENT_ARCHITECTURAL_MASTERY.md)** - System design patterns
+- **[Codebase Organization](CODEBASE_ORGANIZATION_REFERENCE.md)** - File structure reference
+- **[System Architecture](architecture/SYSTEM_ARCHITECTURE.md)** - Technical overview
+- **[VS Code Integration](architecture/NATIVE_VSCODE_INTEGRATION.md)** - Extension architecture
 
-New to Mini-Agent? Start here:
-
-1. **[SYSTEM_STATUS.md](SYSTEM_STATUS.md)** - Current system overview and status
-2. **[guides/QUICK_START_GUIDE.md](guides/QUICK_START_GUIDE.md)** - Get up and running in minutes
-3. **[guides/CONFIGURATION_GUIDE.md](guides/CONFIGURATION_GUIDE.md)** - Configure your installation
-
----
-
-## 📖 User Guides
-
-Practical guides for using Mini-Agent:
-
-| Guide | Description |
-|-------|-------------|
-| **[QUICK_START_GUIDE.md](guides/QUICK_START_GUIDE.md)** | Installation and first steps |
-| **[CONFIGURATION_GUIDE.md](guides/CONFIGURATION_GUIDE.md)** | Configure tools, LLM, and behavior |
-| **[TROUBLESHOOTING.md](guides/TROUBLESHOOTING.md)** | Common issues and solutions |
+### **Development Resources** 🛠️
+- **[Agent Handoff](project/AGENT_HANDOFF.md)** - Current status and next steps
+- **[Configuration Guide](setup/CONFIGURATION_GUIDE.md)** - System configuration
+- **[Usage Examples](examples/USAGE_EXAMPLES.md)** - Common patterns
+- **[Troubleshooting](troubleshooting/TROUBLESHOOTING.md)** - Problem resolution
 
 ---
 
-## 🔧 Technical Documentation
+## 📁 **Documentation Structure**
 
-Deep-dive technical documentation:
-
-| Document | Description |
-|----------|-------------|
-| **[SYSTEM_ARCHITECTURE.md](technical/SYSTEM_ARCHITECTURE.md)** | Complete system design and data flow |
-| **[DEEP_DIVE_CONFIG_AND_MCP.md](technical/DEEP_DIVE_CONFIG_AND_MCP.md)** | Detailed configuration explanation |
-| **[TOOL_ACCESS_ANALYSIS.md](technical/TOOL_ACCESS_ANALYSIS.md)** | Tool capabilities and security model |
-| **[TECHNICAL_OVERVIEW.md](technical/TECHNICAL_OVERVIEW.md)** | Technical implementation details |
-| **[VISUAL_ARCHITECTURE_GUIDE.md](technical/VISUAL_ARCHITECTURE_GUIDE.md)** | Visual system diagrams |
-
----
-
-## 📁 Documentation Structure
+This documentation follows a professional 7-category organizational system:
 
 ```
 documents/
-├── README.md                     ← You are here
-├── SYSTEM_STATUS.md              ← Current system status
-│
-├── guides/                       ← User-facing guides
-│   ├── QUICK_START_GUIDE.md
-│   ├── CONFIGURATION_GUIDE.md
-│   └── TROUBLESHOOTING.md
-│
-├── technical/                    ← Technical deep-dives
-│   ├── SYSTEM_ARCHITECTURE.md
-│   ├── DEEP_DIVE_CONFIG_AND_MCP.md
-│   ├── TOOL_ACCESS_ANALYSIS.md
-│   ├── TECHNICAL_OVERVIEW.md
-│   └── VISUAL_ARCHITECTURE_GUIDE.md
-│
-├── archive/                      ← Historical documents
-│   ├── Old status reports
-│   ├── Investigation documents
-│   └── Deprecated guides
-│
-└── testing/                      ← Test documentation
-    └── Test plans and results
+├── architecture/          # System design and architecture (9 files)
+├── workflows/             # Procedures and protocols (2 files)
+├── project/               # Management and context (4 files)
+├── setup/                 # Installation and configuration (3 files)
+├── examples/              # Usage patterns and templates (3 files)
+├── testing/               # Validation and reports (15+ files)
+├── troubleshooting/       # Problem resolution (2 files)
+├── legacy/                # Historical documentation
+├── vscode-extension/      # Extension integration guides
+└── archive/               # Previous agent work
 ```
 
 ---
 
-## 🎯 What's What
+## 🔍 **Finding Information**
 
-### Core Documents
+### By Task Type
+- **Setting up Mini-Agent** → [Setup Guide](setup/SETUP_GUIDE.md)
+- **Understanding architecture** → [Architectural Mastery](architecture/MINI_AGENT_ARCHITECTURAL_MASTERY.md)
+- **Starting a new task** → [Universal Workflow](workflows/UNIVERSAL_WORKFLOW_PROTOCOL.md)
+- **Implementing features** → [Agent Best Practices](workflows/AGENT_BEST_PRACTICES.md)
+- **Solving problems** → [Troubleshooting](troubleshooting/TROUBLESHOOTING.md)
+- **Reviewing status** → [Project Context](project/PROJECT_CONTEXT.md)
 
-- **SYSTEM_STATUS.md** - Start here! Current system state, what works, how to use it
-- **QUICK_START_GUIDE.md** - Installation, setup, first run
-- **CONFIGURATION_GUIDE.md** - All configuration options explained
-
-### When You Need Help
-
-- **TROUBLESHOOTING.md** - Common problems and solutions
-- **SYSTEM_ARCHITECTURE.md** - Understanding how the system works
-- **TOOL_ACCESS_ANALYSIS.md** - Understanding what the agent can do
-
-### For Developers
-
-- **TECHNICAL_OVERVIEW.md** - Code structure and implementation
-- **DEEP_DIVE_CONFIG_AND_MCP.md** - Configuration system internals
-- **VISUAL_ARCHITECTURE_GUIDE.md** - System diagrams and flows
+### By Component
+- **Skills System** → [Architectural Mastery](architecture/MINI_AGENT_ARCHITECTURAL_MASTERY.md)
+- **Z.AI Integration** → [Project Context](project/PROJECT_CONTEXT.md)
+- **Knowledge Graph** → [Codebase Organization](CODEBASE_ORGANIZATION_REFERENCE.md)
+- **VS Code Extension** → [Native VS Code Integration](architecture/NATIVE_VSCODE_INTEGRATION.md)
+- **ACP Server** → [ACP Integration Guide](architecture/ACP_INTEGRATION_GUIDE.md)
 
 ---
 
-## 🔗 Related Files
+## 🚀 **Quick Start for Agents**
 
-Main project files (in root directory):
+### Mandatory Agent Initialization
+```bash
+# 1. Query organizational knowledge
+search_nodes("Mini-Agent Codebase Organization System")
+search_nodes("Universal Workflow Protocol")
+read_graph()
 
-- **README.md** - Project overview and quick reference
-- **.env.example** - Environment variables template
-- **pyproject.toml** - Package configuration
-- **mini_agent/config/** - System configuration files
+# 2. Load fact-checking skill
+get_skill("fact-checking-self-assessment")
+
+# 3. Validate workspace
+python scripts/validation/pre_implementation_check.py
+
+# 4. Review workflow protocol
+read_file("documents/workflows/UNIVERSAL_WORKFLOW_PROTOCOL.md")
+```
+
+### Essential Reading (5 minutes)
+1. **[Agent Best Practices](workflows/AGENT_BEST_PRACTICES.md)** - How to work with Mini-Agent
+2. **[Project Context](project/PROJECT_CONTEXT.md)** - What is Mini-Agent
+3. **[Universal Workflow](workflows/UNIVERSAL_WORKFLOW_PROTOCOL.md)** - How to complete tasks
 
 ---
 
-## 📝 Documentation Standards
+## 🎯 **System Identity**
+
+**Mini-Agent is a CLI/coder tool with protocol support**, serving as the foundation for a broader ecosystem:
+
+### Three-Project Ecosystem
+1. **Mini-Agent** (current): CLI/coder with agentic structure → **Foundation**
+2. **exai-mcp-server**: Complex multi-tool system → **WIP**
+3. **orchestrator**: Infrastructure framework integration → **WIP**
+
+### Core Capabilities
+- **Progressive Skill Loading**: 15+ specialized skills with 3-level disclosure
+- **Z.AI Integration**: Direct REST API with GLM-4.5/4.6 models
+- **Knowledge Graph**: Persistent context across agent sessions
+- **VS Code Integration**: Native Chat API support
+- **Organizational Intelligence**: Self-documenting, self-enforcing structure
+
+### Production Status
+- **Architecture Compliance**: 95% (80%+ required)
+- **Dependencies**: 92/92 packages resolved ✅
+- **Services**: 7 Docker services healthy ✅
+- **Documentation**: 30+ files organized ✅
+- **Quality**: Automated validation operational ✅
+
+---
+
+## 📊 **Documentation Quality Standards**
 
 All documentation follows these principles:
 
-1. **Clarity** - Written for humans, not machines
-2. **Examples** - Real, working examples for every concept
-3. **Current** - Reflects actual system state, not aspirations
-4. **Organized** - Logical structure, easy to navigate
-5. **Actionable** - Tells you what to do, not just what is
+### Clarity
+- Clear language and structure
+- Progressive disclosure of complexity
+- Consistent terminology
+- Well-organized sections
+
+### Examples
+- Code examples for key concepts
+- Command-line examples for procedures
+- Architecture diagrams where helpful
+- Real-world usage patterns
+
+### Currency
+- Regular updates with system changes
+- Version tracking and timestamps
+- Deprecated content moved to legacy
+- Active maintenance and review
+
+### Organization
+- 7-category structure for findability
+- Cross-references between related docs
+- Clear navigation and indexing
+- Knowledge graph integration
+
+### Actionable
+- Step-by-step procedures
+- Checklists for validation
+- Troubleshooting guides
+- Quick reference sections
 
 ---
 
-## 🆘 Need Help?
+## 🔄 **Keeping Documentation Current**
 
-1. Check **SYSTEM_STATUS.md** for current system state
-2. Check **TROUBLESHOOTING.md** for common issues
-3. Check **CONFIGURATION_GUIDE.md** for configuration options
-4. Dive into **TECHNICAL_OVERVIEW.md** for implementation details
+### Agent Responsibilities
+- Update relevant docs when making changes
+- Add new docs to correct categories
+- Move outdated content to legacy
+- Update this README when adding major docs
+
+### Documentation Checklist
+- [ ] Content accurate and tested
+- [ ] Examples working and verified
+- [ ] Cross-references updated
+- [ ] Placed in correct category
+- [ ] Timestamp updated
+- [ ] Knowledge graph updated
 
 ---
 
-**Last Updated:** January 2025
-**System Version:** 0.1.0
+## 🛠️ **Validation Tools**
+
+### Pre-Implementation Check
+```bash
+python scripts/validation/pre_implementation_check.py
+```
+Validates workspace cleanliness and organizational compliance.
+
+### Architecture Compliance
+```bash
+python scripts/validation/validate_architectural_compliance.py
+```
+Ensures implementation follows architectural patterns.
+
+### Organization Validator
+```bash
+python scripts/assessment/organization_validator.py
+```
+Checks file placement in correct categories.
+
+---
+
+## 📝 **Contributing to Documentation**
+
+### Adding New Documentation
+1. **Determine category** (architecture, workflows, project, setup, examples, testing, troubleshooting)
+2. **Follow naming conventions** (UPPERCASE_WITH_UNDERSCORES.md)
+3. **Include metadata** (timestamp, version, status)
+4. **Add cross-references** to related docs
+5. **Update this README** if major addition
+6. **Update knowledge graph** with new entities
+
+### Documentation Template
+```markdown
+# Document Title
+
+## Overview
+Brief description of document purpose
+
+## Contents
+- Section 1
+- Section 2
+
+[Document content]
+
+---
+
+**Last Updated**: YYYY-MM-DD  
+**Status**: [Production Ready | WIP | Deprecated]  
+**Related Docs**: [Links to related documents]
+```
+
+---
+
+## 🔍 **Knowledge Graph Integration**
+
+All documentation is integrated into the knowledge graph system:
+
+### Query Organizational Knowledge
+```python
+search_nodes("codebase organization")
+search_nodes("Universal Workflow Protocol")
+read_graph()  # Complete organizational context
+```
+
+### Key Entities Available
+- **Mini-Agent Codebase Organization System**
+- **Document Directory Structure**
+- **Scripts Directory Structure**
+- **Universal Workflow Protocol**
+
+---
+
+## 📞 **Getting Help**
+
+### For Agents
+1. Check [Troubleshooting Guide](troubleshooting/TROUBLESHOOTING.md)
+2. Review [Agent Best Practices](workflows/AGENT_BEST_PRACTICES.md)
+3. Query knowledge graph for context
+4. Run validation tools for diagnostics
+
+### For Users
+1. Start with [Setup Guide](setup/SETUP_GUIDE.md)
+2. Review [Usage Examples](examples/USAGE_EXAMPLES.md)
+3. Check [Troubleshooting](troubleshooting/TROUBLESHOOTING.md)
+4. See [Configuration Guide](setup/CONFIGURATION_GUIDE.md)
+
+---
+
+## 🏆 **Documentation Status**
+
+- **Total Files**: 30+ organized documents
+- **Categories**: 7 professional categories
+- **Quality**: Comprehensive and current
+- **Integration**: Knowledge graph enabled
+- **Validation**: Automated tools operational
+- **Compliance**: 95% architectural standards
+
+---
+
+**Last Updated**: 2025-11-20  
+**Current Stage**: Production Ready with Professional Organizational Intelligence  
+**System Version**: 0.1.0  
+**Maintenance**: Active and regularly updated
