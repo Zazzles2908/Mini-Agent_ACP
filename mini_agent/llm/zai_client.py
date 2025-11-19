@@ -147,7 +147,7 @@ class ZAIClient:
                 
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    f"{self.base_url}/web_page_reader",  # Use correct /web_page_reader endpoint
+                    f"{self.base_url}/reader",  # Use correct /reader endpoint for Lite Plan
                     headers=self.headers,
                     json=payload,
                     timeout=aiohttp.ClientTimeout(total=60),

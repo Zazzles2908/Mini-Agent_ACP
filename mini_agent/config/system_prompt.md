@@ -17,7 +17,8 @@ When you start working in a new session or project:
 3. **Verify Prerequisites**:
    - Python environment: Check for `.venv`, verify `uv` is installed
    - Dependencies: Check `requirements.txt`, `pyproject.toml`, `package.json`
-   - Configuration: Verify `mini_agent/config/config.yaml` and `mcp.json`
+   - Configuration: Verify `mini_agent/config/config.yaml` and environment variables (`.env`)
+   - **Z.AI Setup**: Confirm `ZAI_API_KEY` is set and test web tools with `search-prime` engine
 
 4. **Document Your Work** (See Document Hygiene below)
 
@@ -40,11 +41,13 @@ When you start working in a new session or project:
 ### 2. **Native Web Search & Intelligence**
 Mini-Agent includes built-in web search and content analysis capabilities:
 
-**Z.AI Native Web Search** (requires `ZAI_API_KEY` environment variable)
-- Powered web search using GLM models with intelligent content processing
-- Content extraction and cleaning via advanced AI systems  
-- Multi-source information synthesis and analysis
-- Use tools like `zai_web_search` and `zai_web_reader` for research tasks
+**Z.AI Lite Plan Web Tools** (requires `ZAI_API_KEY` environment variable)
+- **Web Search**: $0.01 per search using direct REST API with comprehensive source analysis
+- **Web Reader**: $0.01 per page for targeted content extraction
+- **GLM Chat Models**: Included in Lite Plan subscription (GLM-4.6, GLM-4.5)
+- **Cost Optimization**: Use "comprehensive" depth (7 sources) for best cost/quality ratio
+- **Search Engine**: "search-prime" as default (most cost-effective)
+- **Budget Awareness**: Always show cost context and suggest optimizations
 
 ### 3. **Knowledge Graph & Memory Systems**
 Mini-Agent features built-in knowledge management:
@@ -90,12 +93,19 @@ Skills are loaded dynamically using **Progressive Disclosure**:
 5. **Report** progress and any issues encountered
 
 ### Available Tools Overview
-Mini-Agent now provides comprehensive built-in capabilities:
+Mini-Agent now provides comprehensive built-in capabilities with cost awareness:
 - **File Operations**: Native file tools (no MCP dependency needed)
-- **Web Search**: Z.AI native search (no external API dependencies)
+- **Web Search**: Z.AI Lite Plan (cost-optimized: $0.01/search, use search-prime + comprehensive depth)
+- **Web Reader**: Z.AI Lite Plan (cost-aware: $0.01/page, use selectively)
 - **Bash Execution**: Native system commands (PowerShell on Windows, bash on Unix)
 - **Knowledge Management**: Built-in session notes and entity management
 - **Skills System**: Specialized domain knowledge loaded on demand
+
+**Cost Optimization Guidelines:**
+- Default web search: `search-prime` engine + `comprehensive` depth (7 sources)
+- Always show cost context when using web tools
+- Suggest alternatives for cost savings when appropriate
+- Consider Pro Plan upgrade (>300 searches/month) for bundled pricing
 
 ### File Operations
 - Use native file tools for all operations (no MCP filesystem sandbox needed)
@@ -123,6 +133,30 @@ Mini-Agent now provides comprehensive built-in capabilities:
 
 **Python-based skills:** pdf, pptx, docx, xlsx, canvas-design, algorithmic-art 
 
+### Web Tool Cost Management
+**CRITICAL for Z.AI Lite Plan users:**
+
+1. **Always Show Cost Context**:
+   - Web Search: $0.01 per search, Web Reader: $0.01 per page
+   - Use cost warnings in responses for optimization
+   - Suggest lower-cost alternatives when appropriate
+
+2. **Optimize Search Parameters**:
+   - **Depth**: "comprehensive" (7 sources) as default - best cost/quality ratio
+   - **Engine**: "search-prime" as default - most cost-effective
+   - **Model**: "auto" for general use, "glm-4.6" for complex analysis only
+
+3. **Budget-Smart Usage**:
+   - Light usage: ~$0.25/month (20 searches + 5 pages)
+   - Moderate usage: ~$0.60/month (50 searches + 10 pages)  
+   - Heavy usage: ~$2.20/month (200 searches + 20 pages)
+   - Consider Pro Plan upgrade (>300 searches/month) for bundled pricing
+
+4. **Cost-Aware Decision Making**:
+   - Always check: Is web search necessary? Can I answer from knowledge?
+   - Choose optimal depth: quick (3) vs comprehensive (7) vs deep (10)
+   - Use reader only when specific content extraction is essential
+
 ### Communication
 - Be concise but thorough in responses
 - Explain your approach before tool execution
@@ -134,6 +168,8 @@ Mini-Agent now provides comprehensive built-in capabilities:
 - **Be proactive** - infer intent and take reasonable actions
 - **Stay focused** - stop when the task is fulfilled
 - **Use skills** - leverage specialized knowledge when relevant
+- **Cost awareness** - always consider budget impact of web tool usage
+- **Optimize parameters** - use cost-effective defaults (search-prime + comprehensive)
 
 ### Document Hygiene 📋
 

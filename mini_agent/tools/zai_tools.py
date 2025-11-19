@@ -1,7 +1,7 @@
-"""Z.AI native web search and reading tools.
+"""Z.AI Lite Plan web search and reading tools.
 
-Provides access to GLM models' built-in web search capabilities
-through Z.AI's Search Prime engine.
+Provides access to Z.AI's direct REST API for Lite Plan users.
+Includes cost optimization and budget-aware functionality.
 """
 
 import logging
@@ -49,12 +49,12 @@ class ZAIWebSearchTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Native GLM web search using Z.AI's Search Prime engine. "
+            "Z.AI Lite Plan web search using Search Prime engine ($0.01/search). "
             "Searches the web and provides AI-powered analysis of results. "
-            "Use this for: current information, research, fact-checking, "
-            "recent developments, news, and any web-based queries. "
+            "Use for: current information, research, fact-checking, recent developments, news. "
+            "Cost-optimized defaults: search-prime engine + comprehensive depth (7 sources). "
             "Supports time-based filtering and domain restrictions. "
-            "Uses GLM-4.5 models optimized for tool invocation and web browsing."
+            "Shows cost warnings and optimization suggestions for Lite Plan users."
         )
 
     @property
@@ -116,6 +116,13 @@ class ZAIWebSearchTool(Tool):
             # Extract search_engine from kwargs (if provided)
             search_engine = kwargs.get("search_engine", "search-prime")
             
+            # Add cost awareness based on parameters
+            cost_warning = ""
+            if depth == "deep":
+                cost_warning = "⚠️ **COST WARNING (Lite Plan):** Deep searches use more API calls and costs. Consider 'comprehensive' for better cost efficiency.\n\n"
+            elif depth == "comprehensive" and kwargs.get("search_engine") in ["search_pro", "search_pro_sogou", "search_pro_quark"]:
+                cost_warning = "💡 **COST TIP (Lite Plan):** Professional search engines cost more. Use 'search-prime' for standard queries.\n\n"
+            
             # Perform research with analysis using GLM models
             result = await self.client.research_and_analyze(
                 query=query,
@@ -126,7 +133,7 @@ class ZAIWebSearchTool(Tool):
             if result.get("success"):
                 content = f"""**Z.AI Web Search Results**
 
-**Query:** {result['query']}
+{cost_warning}**Query:** {result['query']}
 **Model:** {result['model_used']} ({result['model_description']})
 **Analysis Depth:** {result['depth']}
 **Timestamp:** {result['timestamp']}
@@ -141,6 +148,7 @@ class ZAIWebSearchTool(Tool):
 
 **Note:** Direct search API does not report token usage metrics.
 **Sources:** {len(result.get('search_evidence', []))} web sources analyzed
+**Cost:** ~$0.01 per search (Lite Plan)
 """
                 return ToolResult(success=True, content=content)
             else:
@@ -196,10 +204,11 @@ class ZAIWebReaderTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Read and extract content from web pages. "
-            "Provides clean, formatted content with metadata extraction. "
-            "Use this to read articles, documentation, blog posts, or any web page content. "
-            "Supports markdown, HTML, and text output formats."
+            "Z.AI Lite Plan web page reader ($0.01/page) with intelligent content extraction. "
+            "Reads and extracts content from web pages with smart cleaning and formatting. "
+            "Use this to read articles, documentation, blog posts, or specific web content. "
+            "Supports markdown, HTML, and text output formats with metadata extraction. "
+            "Shows cost warnings to help optimize Lite Plan budget usage."
         )
 
     @property
@@ -250,6 +259,9 @@ class ZAIWebReaderTool(Tool):
             )
 
         try:
+            # Add cost awareness for Lite Plan
+            cost_warning = "💰 **LITE PLAN:** Web Reader costs $0.01 per page read. Consider if this page is essential.\n\n"
+            
             result = await self.client.web_reading(
                 url=url,
                 format_type=format,
@@ -259,7 +271,7 @@ class ZAIWebReaderTool(Tool):
             if result.get("success"):
                 content = f"""**Z.AI Web Reader Results**
 
-**URL:** {result['url']}
+{cost_warning}**URL:** {result['url']}
 **Title:** {result.get('title', 'N/A')}
 **Description:** {result.get('description', 'N/A')}
 **Format:** {result['format']}
@@ -271,6 +283,10 @@ class ZAIWebReaderTool(Tool):
 **Content:**
 
 {result['content']}
+
+---
+
+**Cost:** $0.01 per page read (Lite Plan)
 """
                 return ToolResult(success=True, content=content)
             else:
