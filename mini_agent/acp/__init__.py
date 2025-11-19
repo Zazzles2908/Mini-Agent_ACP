@@ -13,6 +13,7 @@ import aiohttp
 from acp import (
     PROTOCOL_VERSION,
     AgentSideConnection,
+    Agent,
     start_tool_call,
     stdio_streams,
     text_block,
@@ -31,38 +32,41 @@ class SessionState:
     cancelled: bool = False
 
 
-class MiniMaxACPAgent:
-    """Minimal ACP adapter wrapping the existing Agent runtime."""
+class MiniMaxACPAgent(Agent):
+    """ACP agent that wraps the existing Mini-Agent runtime."""
 
     def __init__(
         self,
-        conn: Optional[AgentSideConnection],
         config: Any,
         llm: Any,
         base_tools: list,
         system_prompt: str,
     ):
-        self._conn = conn
+        super().__init__()
         self._config = config
         self._llm = llm
         self._base_tools = base_tools
         self._system_prompt = system_prompt
         self._sessions: dict[str, SessionState] = {}
 
-    async def initialize(self, params: Any) -> Any:
+    async def initialize(self, params: Any) -> dict[str, Any]:
         """Initialize the agent with ACP protocol."""
-        from acp.schema import AgentCapabilities, Implementation
-        
-        return type('InitializeResponse', (), {
+        return {
             'protocolVersion': PROTOCOL_VERSION,
-            'agentCapabilities': AgentCapabilities(loadSession=False),
-            'agentInfo': Implementation(name="mini-agent", title="Mini-Agent", version="0.1.0")
-        })()
+            'agentCapabilities': {
+                'loadSession': False
+            },
+            'agentInfo': {
+                'name': "mini-agent",
+                'title': "Mini-Agent",
+                'version': "0.1.0"
+            }
+        }
 
-    async def newSession(self, params: Any) -> Any:
+    async def newSession(self, params: Any) -> dict[str, Any]:
         """Create a new agent session."""
         session_id = f"sess-{len(self._sessions)}-{uuid4().hex[:8]}"
-        workspace = Path(params.cwd or "./workspace").expanduser()
+        workspace = Path(params.get('cwd', "./workspace")).expanduser()
         if not workspace.is_absolute():
             workspace = workspace.resolve()
         
@@ -72,34 +76,35 @@ class MiniMaxACPAgent:
             llm_client=self._llm, 
             system_prompt=self._system_prompt, 
             tools=self._base_tools, 
-            max_steps=self._config.agent.max_steps, 
+            max_steps=self._config.agent.max_steps if self._config else 10, 
             workspace_dir=str(workspace)
         )
         
         self._sessions[session_id] = SessionState(agent=agent)
         
-        # Return response object
-        return type('NewSessionResponse', (), {'sessionId': session_id})()
+        return {'sessionId': session_id}
 
-    async def prompt(self, params: Any) -> Any:
+    async def prompt(self, params: Any) -> dict[str, Any]:
         """Process a prompt request in an existing session."""
-        state = self._sessions.get(params.sessionId)
+        session_id = params.get('sessionId')
+        state = self._sessions.get(session_id)
+        
         if not state:
-            return type('PromptResponse', (), {
+            return {
                 'content': [text_block("Session not found")],
                 'hasError': True
-            })()
+            }
         
         if state.cancelled:
-            return type('PromptResponse', (), {
+            return {
                 'content': [text_block("Session cancelled")],
                 'hasError': True
-            })()
+            }
         
         try:
             # Convert prompt to agent message format
             from mini_agent.schema import Message
-            messages = [Message(role="user", content=params.prompt)]
+            messages = [Message(role="user", content=params.get('prompt', ''))]
             
             # Run agent
             response = await state.agent.run(messages)
@@ -107,25 +112,34 @@ class MiniMaxACPAgent:
             # Convert response back to ACP format
             content = [text_block(response.content)]
             
-            return type('PromptResponse', (), {'content': content})()
+            return {'content': content}
             
         except Exception as e:
             logger.error("Error processing prompt: %s", e)
-            return type('PromptResponse', (), {
+            return {
                 'content': [text_block(f"Error: {str(e)}")],
                 'hasError': True
-            })()
+            }
 
-    async def cancelSession(self, sessionId: str) -> None:
+    async def cancel(self, params: Any) -> dict[str, Any]:
         """Cancel a running session."""
-        state = self._sessions.get(sessionId)
+        session_id = params.get('sessionId')
+        state = self._sessions.get(session_id)
         if state:
             state.cancelled = True
-
-    async def cleanup(self) -> None:
-        """Cleanup all sessions."""
-        for state in self._sessions.values():
-            state.cancelled = True
+        return {'cancelled': True}
+    
+    async def loadSession(self, params: Any) -> dict[str, Any]:
+        """Load a session (not implemented yet)."""
+        return {'sessionLoaded': False}
+    
+    async def setSessionMode(self, params: Any) -> dict[str, Any]:
+        """Set session mode (not implemented yet)."""
+        return {'modeSet': True}
+    
+    async def setSessionModel(self, params: Any) -> dict[str, Any]:
+        """Set session model (not implemented yet)."""
+        return {'modelSet': True}
 
 
 async def main():
@@ -178,7 +192,7 @@ async def main():
     
     # Initialize LLM client
     try:
-        from mini_agent.llm.llm_client import LLMClient
+        from mini_agent.llm import LLMClient
         if config:
             llm = LLMClient(
                 api_key=config.llm.api_key,
@@ -203,7 +217,6 @@ async def main():
     
     # Create ACP agent
     agent = MiniMaxACPAgent(
-        conn=None,  # Will be set by ACP runtime
         config=config,
         llm=llm,
         base_tools=tools,
@@ -212,11 +225,11 @@ async def main():
     
     # Run with stdio streams
     try:
-        async with stdio_streams() as streams:
-            from acp.server import AgentServer
-            
-            server = AgentServer(agent)
-            await server.run(streams[0], streams[1])
+        streams = await stdio_streams()
+        read_stream, write_stream = streams
+        
+        # Run the agent with stdio streams
+        await agent.run(read_stream, write_stream)
             
     except Exception as e:
         logger.error("Error starting ACP server: %s", e)

@@ -291,7 +291,7 @@ class MyTool(Tool):
 
 ### **Attribution**
 - **Mini-Agent core is created by MiniMax AI Team**
-- Original repository: https://github.com/MiniMax-AI/agent-demo
+- Original repository: https://github.com/MiniMax-AI/Mini-Agent
 - Official docs in `docs/` directory are authoritative
 - Community extensions are additional, not replacements
 

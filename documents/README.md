@@ -12,7 +12,8 @@
 - **[Architectural Mastery](architecture/MINI_AGENT_ARCHITECTURAL_MASTERY.md)** - System design patterns
 - **[Codebase Organization](CODEBASE_ORGANIZATION_REFERENCE.md)** - File structure reference
 - **[System Architecture](architecture/SYSTEM_ARCHITECTURE.md)** - Technical overview
-- **[VS Code Integration](architecture/NATIVE_VSCODE_INTEGRATION.md)** - Extension architecture
+- **[ACP Protocol Guide](architecture/ACP_PROTOCOL_INTEGRATION.md)** - Editor integration protocol
+- **[VS Code Integration](architecture/VSCODE_INTEGRATION_GUIDE.md)** - Extension development guide
 
 ### **Development Resources** 🛠️
 - **[Agent Handoff](project/AGENT_HANDOFF.md)** - Current status and next steps
@@ -56,8 +57,8 @@ documents/
 - **Skills System** → [Architectural Mastery](architecture/MINI_AGENT_ARCHITECTURAL_MASTERY.md)
 - **Z.AI Integration** → [Project Context](project/PROJECT_CONTEXT.md)
 - **Knowledge Graph** → [Codebase Organization](CODEBASE_ORGANIZATION_REFERENCE.md)
-- **VS Code Extension** → [Native VS Code Integration](architecture/NATIVE_VSCODE_INTEGRATION.md)
-- **ACP Server** → [ACP Integration Guide](architecture/ACP_INTEGRATION_GUIDE.md)
+- **VS Code Extension** → [VS Code Integration Guide](architecture/VSCODE_INTEGRATION_GUIDE.md)
+- **ACP Server** → [ACP Protocol Guide](architecture/ACP_PROTOCOL_INTEGRATION.md)
 
 ---
 
