@@ -242,8 +242,9 @@ async def initialize_base_tools(config: Config):
 
     # 2. Z.AI Native Web Search and Reading Tools
     if config.tools.enable_zai_search:
-        print(f"{Colors.BRIGHT_CYAN}Loading Z.AI native web search...{Colors.RESET}")
+        print(f"{Colors.BRIGHT_CYAN}Loading Z.AI web search tools...{Colors.RESET}")
         try:
+            # Load original Z.AI tools
             from mini_agent.tools.zai_tools import ZAIWebSearchTool, ZAIWebReaderTool
             
             # Initialize with API key from environment
@@ -259,6 +260,23 @@ async def initialize_base_tools(config: Config):
             if zai_reader_tool.available:
                 tools.append(zai_reader_tool)
                 print(f"{Colors.GREEN}✅ Loaded Z.AI Web Reader tool{Colors.RESET}")
+                
+            # Load Claude-compatible Z.AI tools
+            from mini_agent.tools.claude_zai_tools import ClaudeZAIWebSearchTool, ClaudeZAIRecommendationTool
+            
+            claude_search_tool = ClaudeZAIWebSearchTool()
+            claude_guide_tool = ClaudeZAIRecommendationTool()
+            
+            if claude_search_tool.available:
+                tools.append(claude_search_tool)
+                print(f"{Colors.GREEN}✅ Loaded Claude Z.AI Web Search tool (with citations){Colors.RESET}")
+            else:
+                print(f"{Colors.YELLOW}⚠️  Claude Z.AI Web Search unavailable (set ZAI_API_KEY environment variable){Colors.RESET}")
+                
+            # Always add the guide tool
+            tools.append(claude_guide_tool)
+            print(f"{Colors.GREEN}✅ Loaded Claude Z.AI Setup Guide tool{Colors.RESET}")
+                
         except Exception as e:
             print(f"{Colors.YELLOW}⚠️  Failed to load Z.AI tools: {e}{Colors.RESET}")
 
