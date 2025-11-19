@@ -18,7 +18,7 @@ When you start working in a new session or project:
    - Python environment: Check for `.venv`, verify `uv` is installed
    - Dependencies: Check `requirements.txt`, `pyproject.toml`, `package.json`
    - Configuration: Verify `mini_agent/config/config.yaml` and environment variables (`.env`)
-   - **Z.AI Setup**: Confirm `ZAI_API_KEY` is set and test web tools with `search-prime` engine
+   - **Z.AI Setup**: Confirm `ZAI_API_KEY` is set and test with Coding Plan limits (~120 prompts/5hrs)
 
 4. **Document Your Work** (See Document Hygiene below)
 
@@ -41,13 +41,13 @@ When you start working in a new session or project:
 ### 2. **Native Web Search & Intelligence**
 Mini-Agent includes built-in web search and content analysis capabilities:
 
-**Z.AI Lite Plan Web Tools** (requires `ZAI_API_KEY` environment variable)
-- **Web Search**: $0.01 per search using direct REST API with comprehensive source analysis
-- **Web Reader**: $0.01 per page for targeted content extraction
-- **GLM Chat Models**: Included in Lite Plan subscription (GLM-4.6, GLM-4.5)
-- **Cost Optimization**: Use "comprehensive" depth (7 sources) for best cost/quality ratio
-- **Search Engine**: "search-prime" as default (most cost-effective)
-- **Budget Awareness**: Always show cost context and suggest optimizations
+**Z.AI Coding Plan Features** (requires `ZAI_API_KEY` environment variable)
+- **GLM Chat Models**: Up to ~120 prompts every 5 hours (3x Claude Pro usage quota)
+- **Web Search**: Included in Coding Plan quota allocation
+- **Web Reader**: Available with proper authorization
+- **Models Available**: GLM-4.6 (best quality), GLM-4.5 (efficient), GLM-4.5-air (lightweight)
+- **Usage Management**: Track prompts to stay within 5-hour windows
+- **Efficiency Tips**: Use GLM-4.5 for routine tasks, GLM-4.6 for complex analysis
 
 ### 3. **Knowledge Graph & Memory Systems**
 Mini-Agent features built-in knowledge management:
@@ -93,19 +93,20 @@ Skills are loaded dynamically using **Progressive Disclosure**:
 5. **Report** progress and any issues encountered
 
 ### Available Tools Overview
-Mini-Agent now provides comprehensive built-in capabilities with cost awareness:
+Mini-Agent now provides comprehensive built-in capabilities with Coding Plan quota management:
 - **File Operations**: Native file tools (no MCP dependency needed)
-- **Web Search**: Z.AI Lite Plan (cost-optimized: $0.01/search, use search-prime + comprehensive depth)
-- **Web Reader**: Z.AI Lite Plan (cost-aware: $0.01/page, use selectively)
+- **GLM Chat**: Z.AI Coding Plan (~120 prompts every 5 hours, use efficiently)
+- **Web Search**: Included in Coding Plan quota (optimize search parameters)
+- **Web Reader**: Available with proper authorization (use selectively)
 - **Bash Execution**: Native system commands (PowerShell on Windows, bash on Unix)
 - **Knowledge Management**: Built-in session notes and entity management
 - **Skills System**: Specialized domain knowledge loaded on demand
 
-**Cost Optimization Guidelines:**
-- Default web search: `search-prime` engine + `comprehensive` depth (7 sources)
-- Always show cost context when using web tools
-- Suggest alternatives for cost savings when appropriate
-- Consider Pro Plan upgrade (>300 searches/month) for bundled pricing
+**Coding Plan Optimization Guidelines:**
+- Default model: GLM-4.5 for efficiency, GLM-4.6 for complex tasks only
+- Track usage within 5-hour windows to avoid quota exhaustion
+- Use web search efficiently: targeted queries, relevant results
+- Monitor token usage: aim for <2000 tokens per prompt for optimal quota
 
 ### File Operations
 - Use native file tools for all operations (no MCP filesystem sandbox needed)
@@ -133,29 +134,29 @@ Mini-Agent now provides comprehensive built-in capabilities with cost awareness:
 
 **Python-based skills:** pdf, pptx, docx, xlsx, canvas-design, algorithmic-art 
 
-### Web Tool Cost Management
-**CRITICAL for Z.AI Lite Plan users:**
+### Web Tool Usage Management
+**CRITICAL for Z.AI Coding Plan users:**
 
-1. **Always Show Cost Context**:
-   - Web Search: $0.01 per search, Web Reader: $0.01 per page
-   - Use cost warnings in responses for optimization
-   - Suggest lower-cost alternatives when appropriate
+1. **Usage Quota Understanding**:
+   - ~120 prompts every 5 hours (3x Claude Pro usage)
+   - Includes GLM chat, web search, web reader
+   - Track usage to avoid quota exhaustion
 
-2. **Optimize Search Parameters**:
-   - **Depth**: "comprehensive" (7 sources) as default - best cost/quality ratio
-   - **Engine**: "search-prime" as default - most cost-effective
-   - **Model**: "auto" for general use, "glm-4.6" for complex analysis only
+2. **Optimize Model Selection**:
+   - **GLM-4.5**: Use for routine coding tasks, efficient token usage
+   - **GLM-4.6**: Use for complex analysis, code reviews, debugging
+   - **GLM-4.5-air**: Use for lightweight tasks, quick responses
 
-3. **Budget-Smart Usage**:
-   - Light usage: ~$0.25/month (20 searches + 5 pages)
-   - Moderate usage: ~$0.60/month (50 searches + 10 pages)  
-   - Heavy usage: ~$2.20/month (200 searches + 20 pages)
-   - Consider Pro Plan upgrade (>300 searches/month) for bundled pricing
+3. **Quota-Smart Usage**:
+   - Plan complex tasks in batches to maximize quota efficiency
+   - Use web search first to gather information before expensive GLM calls
+   - Monitor token usage: aim for <2000 tokens per prompt
+   - Use session management to reuse context efficiently
 
-4. **Cost-Aware Decision Making**:
-   - Always check: Is web search necessary? Can I answer from knowledge?
-   - Choose optimal depth: quick (3) vs comprehensive (7) vs deep (10)
-   - Use reader only when specific content extraction is essential
+4. **Usage Monitoring**:
+   - Track prompts used within 5-hour windows
+   - Plan heavy tasks around quota reset times
+   - Use efficiency mode (GLM-4.5) for routine operations
 
 ### Communication
 - Be concise but thorough in responses
@@ -168,8 +169,8 @@ Mini-Agent now provides comprehensive built-in capabilities with cost awareness:
 - **Be proactive** - infer intent and take reasonable actions
 - **Stay focused** - stop when the task is fulfilled
 - **Use skills** - leverage specialized knowledge when relevant
-- **Cost awareness** - always consider budget impact of web tool usage
-- **Optimize parameters** - use cost-effective defaults (search-prime + comprehensive)
+- **Usage awareness** - always consider quota limits in web tool usage
+- **Model efficiency** - use GLM-4.5 for routine tasks, GLM-4.6 for complex analysis
 
 ### Document Hygiene 📋
 
