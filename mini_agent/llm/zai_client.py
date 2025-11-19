@@ -27,14 +27,16 @@ class ZAIClient:
     through the official REST API v4 endpoints.
     """
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, use_coding_plan: bool = True):
         """Initialize Z.AI client.
         
         Args:
             api_key: Z.AI API key
+            use_coding_plan: Use GLM Coding Plan API (True) or Common API (False)
         """
         self.api_key = api_key
-        self.base_url = "https://api.z.ai/api/paas/v4"
+        # CORRECTED: Use Coding Plan API for GLM Coding Plan subscribers
+        self.base_url = "https://api.z.ai/api/coding/paas/v4" if use_coding_plan else "https://api.z.ai/api/paas/v4"
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
@@ -214,6 +216,82 @@ class ZAIClient:
             logger.exception("Z.AI web reading failed")
             return {"success": False, "url": url, "error": str(e)}
 
+    async def chat_completion(
+        self,
+        messages: list[dict[str, str]],
+        model: str = "GLM-4.6",
+        temperature: float = 0.7,
+        max_tokens: Optional[int] = None,
+    ) -> dict[str, Any]:
+        """Chat completion using GLM models via Coding Plan API.
+        
+        PRIMARY FEATURE of GLM Coding Plan - provides access to GLM-4.6 and GLM-4.5 models.
+        
+        Args:
+            messages: List of message dictionaries with 'role' and 'content'
+            model: Model name - "GLM-4.6", "GLM-4.5", or "GLM-4.5-air"
+            temperature: Temperature for generation (0.0-2.0)
+            max_tokens: Maximum tokens to generate
+            
+        Returns:
+            Dict with chat completion result
+        """
+        payload = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        
+        if max_tokens:
+            payload["max_tokens"] = max_tokens
+
+        try:
+            if not AIOHTTP_AVAILABLE:
+                raise ImportError("aiohttp is not installed. Please install it with: pip install aiohttp")
+                
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{self.base_url}/chat/completions",  # OpenAI-compatible endpoint
+                    headers=self.headers,
+                    json=payload,
+                    timeout=aiohttp.ClientTimeout(total=60),
+                ) as response:
+                    response_text = await response.text()
+                    logger.info(f"GLM Chat Response Status: {response.status}")
+                    logger.info(f"GLM Chat Response: {response_text}")
+                    
+                    if response.status == 200:
+                        result = await response.json()
+                        choice = result.get("choices", [{}])[0]
+                        return {
+                            "success": True,
+                            "id": result.get("id"),
+                            "object": result.get("object"),
+                            "created": result.get("created"),
+                            "model": result.get("model"),
+                            "content": choice.get("message", {}).get("content", ""),
+                            "usage": result.get("usage", {}),
+                            "timestamp": datetime.now().isoformat(),
+                            "api_endpoint": self.base_url,
+                        }
+                    elif response.status == 429:
+                        return {
+                            "success": False,
+                            "error": f"Billing Error: {response_text}",
+                            "api_endpoint": self.base_url,
+                            "recommendation": "Check Coding Plan subscription and billing"
+                        }
+                    else:
+                        logger.error(f"GLM chat completion error {response.status}: {response_text}")
+                        return {
+                            "success": False,
+                            "error": f"API error {response.status}: {response_text}",
+                            "api_endpoint": self.base_url,
+                        }
+        except Exception as e:
+            logger.exception("GLM chat completion failed")
+            return {"success": False, "error": str(e), "api_endpoint": self.base_url}
+
     async def research_and_analyze(
         self,
         query: str,
@@ -289,6 +367,52 @@ Date: {item.get('publish_date', 'N/A')}
                 "token_usage": {"note": "Direct search API does not report token usage"},
                 "timestamp": datetime.now().isoformat(),
             }
+    async def gl_research_and_analyze(
+        self,
+        query: str,
+        model: str = "GLM-4.6",
+        temperature: float = 0.3,
+    ) -> dict[str, Any]:
+        """Research and analysis using GLM models.
+        
+        Uses GLM-4.6/GLM-4.5 to analyze queries and provide comprehensive responses.
+        This is the PRIMARY VALUE of GLM Coding Plan subscription.
+        
+        Args:
+            query: Research query
+            model: GLM model to use - "GLM-4.6" or "GLM-4.5"
+            temperature: Response creativity (0.1-0.5 for research)
+            
+        Returns:
+            Dict with GLM analysis
+        """
+        messages = [
+            {
+                "role": "system", 
+                "content": f"You are a research assistant using {model}. Provide comprehensive, factual analysis with supporting details."
+            },
+            {
+                "role": "user", 
+                "content": f"Please research and analyze: {query}. Provide a detailed response with multiple perspectives and supporting evidence."
+            }
+        ]
+        
+        result = await self.chat_completion(
+            messages=messages,
+            model=model,
+            temperature=temperature
+        )
+        
+        if result["success"]:
+            return {
+                "success": True,
+                "query": query,
+                "model_used": model,
+                "analysis": result.get("content", ""),
+                "usage": result.get("usage", {}),
+                "timestamp": datetime.now().isoformat(),
+                "api_endpoint": self.base_url,
+            }
         else:
             return result
         """Complete research workflow using web search with proper GLM models.
@@ -359,6 +483,52 @@ Date: {item.get('publish_date', 'N/A')}
                 "search_evidence": search_results,
                 "token_usage": {"note": "Direct search API does not report token usage"},
                 "timestamp": datetime.now().isoformat(),
+            }
+    async def gl_research_and_analyze(
+        self,
+        query: str,
+        model: str = "GLM-4.6",
+        temperature: float = 0.3,
+    ) -> dict[str, Any]:
+        """Research and analysis using GLM models.
+        
+        Uses GLM-4.6/GLM-4.5 to analyze queries and provide comprehensive responses.
+        This is the PRIMARY VALUE of GLM Coding Plan subscription.
+        
+        Args:
+            query: Research query
+            model: GLM model to use - "GLM-4.6" or "GLM-4.5"
+            temperature: Response creativity (0.1-0.5 for research)
+            
+        Returns:
+            Dict with GLM analysis
+        """
+        messages = [
+            {
+                "role": "system", 
+                "content": f"You are a research assistant using {model}. Provide comprehensive, factual analysis with supporting details."
+            },
+            {
+                "role": "user", 
+                "content": f"Please research and analyze: {query}. Provide a detailed response with multiple perspectives and supporting evidence."
+            }
+        ]
+        
+        result = await self.chat_completion(
+            messages=messages,
+            model=model,
+            temperature=temperature
+        )
+        
+        if result["success"]:
+            return {
+                "success": True,
+                "query": query,
+                "model_used": model,
+                "analysis": result.get("content", ""),
+                "usage": result.get("usage", {}),
+                "timestamp": datetime.now().isoformat(),
+                "api_endpoint": self.base_url,
             }
         else:
             return result
