@@ -56,7 +56,7 @@ class ZAIClient:
         Args:
             query: Search query
             count: Number of results (1-50, default: 5)
-            search_engine: Search engine to use (default: "search-prime")
+            search_engine: Search engine to use - "search_std" (default), "search_pro", "search_pro_sogou", "search_pro_quark"
             recency_filter: Time filter - oneDay, oneWeek, oneMonth, oneYear, noLimit
             domain_filter: Optional domain restriction (e.g., "arxiv.org")
             request_id: Optional request tracking ID
@@ -145,14 +145,14 @@ class ZAIClient:
                 
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    f"{self.base_url}/reader",  # Fixed: Use correct /reader endpoint
+                    f"{self.base_url}/web_page_reader",  # Use correct /web_page_reader endpoint
                     headers=self.headers,
                     json=payload,
                     timeout=aiohttp.ClientTimeout(total=60),
                 ) as response:
                     if response.status == 200:
                         result = await response.json()
-                        reader_result = result.get("reader_result", {})
+                        reader_result = result.get("web_page_reader_result", {})
                         
                         return {
                             "success": True,
@@ -220,6 +220,77 @@ class ZAIClient:
         depth: str = "comprehensive",
         model_preference: str = "auto",
     ) -> dict[str, Any]:
+        """Complete research workflow using web search with proper GLM models.
+        
+        Args:
+            query: Research query
+            depth: Analysis depth - "quick" (3 sources), "comprehensive" (7 sources), "deep" (10 sources)
+            model_preference: Model preference - "glm-4.5", "glm-4.6", or "auto"
+            
+        Returns:
+            Dict with research results
+        """
+        # Configure search depth and model
+        depth_config = {
+            "quick": {"count": 3, "recency": "noLimit"},
+            "comprehensive": {"count": 7, "recency": "oneDay"},
+            "deep": {"count": 10, "recency": "oneWeek"},
+        }
+
+        # Use better GLM models based on user preference
+        if model_preference == "auto":
+            model_used = "GLM-4.5 (optimized for tool invocation and web browsing)"
+            model_description = "Optimized for tool invocation, web browsing, software engineering"
+        elif model_preference == "glm-4.5":
+            model_used = "GLM-4.5"
+            model_description = "Optimized for tool invocation, web browsing, software engineering"
+        elif model_preference == "glm-4.6":
+            model_used = "GLM-4.6"
+            model_description = "Latest iteration with comprehensive enhancements across multiple domains"
+        else:
+            model_used = "Z.AI Direct Search"
+            model_description = f"Direct REST API with {depth_config[depth]['count']} sources"
+
+        config = depth_config.get(depth, depth_config["comprehensive"])
+
+        # Perform web search
+        result = await self.web_search(
+            query=query,
+            count=config["count"],
+            recency_filter=config["recency"],
+        )
+
+        if result["success"]:
+            # Format results for analysis
+            search_results = result.get("search_result", [])
+            
+            # Combine all search results into analysis
+            analysis_parts = []
+            for i, item in enumerate(search_results, 1):
+                analysis_parts.append(f"""
+**Result {i}: {item.get('title', 'N/A')}**
+Source: {item.get('link', 'N/A')}
+Media: {item.get('media', 'N/A')}
+Date: {item.get('publish_date', 'N/A')}
+
+{item.get('content', 'N/A')}
+""")
+            
+            analysis = "\n---\n".join(analysis_parts)
+            
+            return {
+                "success": True,
+                "query": query,
+                "depth": depth,
+                "model_used": model_used,
+                "model_description": model_description,
+                "analysis": analysis,
+                "search_evidence": search_results,
+                "token_usage": {"note": "Direct search API does not report token usage"},
+                "timestamp": datetime.now().isoformat(),
+            }
+        else:
+            return result
         """Complete research workflow using web search with proper GLM models.
         
         Args:

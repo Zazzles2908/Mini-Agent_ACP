@@ -53,7 +53,8 @@ class ZAIWebSearchTool(Tool):
             "Searches the web and provides AI-powered analysis of results. "
             "Use this for: current information, research, fact-checking, "
             "recent developments, news, and any web-based queries. "
-            "Supports time-based filtering and domain restrictions."
+            "Supports time-based filtering and domain restrictions. "
+            "Uses GLM-4.5 models optimized for tool invocation and web browsing."
         )
 
     @property
@@ -77,6 +78,12 @@ class ZAIWebSearchTool(Tool):
                     "enum": ["auto", "glm-4.6", "glm-4.5"],
                     "default": "glm-4.5",
                 },
+                "search_engine": {
+                    "type": "string",
+                    "description": "Search engine type: 'search-prime' (default), 'search_std' (standard), 'search_pro' (professional), 'search_pro_sogou', 'search_pro_quark'",
+                    "enum": ["search-prime", "search_std", "search_pro", "search_pro_sogou", "search_pro_quark"],
+                    "default": "search-prime",
+                },
             },
             "required": ["query"],
         }
@@ -86,13 +93,14 @@ class ZAIWebSearchTool(Tool):
         query: str,
         depth: str = "comprehensive",
         model: str = "auto",
+        **kwargs,
     ) -> ToolResult:
         """Execute Z.AI web search with analysis.
         
         Args:
             query: Search query
             depth: Analysis depth (quick/comprehensive/deep)
-            model: GLM model to use (auto/glm-4.6/glm-4.5)
+            **kwargs: Additional parameters including search_engine
             
         Returns:
             ToolResult with search results and analysis
@@ -105,7 +113,10 @@ class ZAIWebSearchTool(Tool):
             )
 
         try:
-            # Perform research with analysis
+            # Extract search_engine from kwargs (if provided)
+            search_engine = kwargs.get("search_engine", "search-prime")
+            
+            # Perform research with analysis using GLM models
             result = await self.client.research_and_analyze(
                 query=query,
                 depth=depth,
@@ -113,7 +124,6 @@ class ZAIWebSearchTool(Tool):
             )
 
             if result.get("success"):
-                # Format the results (note: direct search API doesn't report token usage)
                 content = f"""**Z.AI Web Search Results**
 
 **Query:** {result['query']}
