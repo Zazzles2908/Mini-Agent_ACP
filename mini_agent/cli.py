@@ -263,15 +263,25 @@ async def initialize_base_tools(config: Config):
                 
             # Load Claude-compatible Z.AI tools
             from mini_agent.tools.claude_zai_tools import ClaudeZAIWebSearchTool, ClaudeZAIRecommendationTool
+            from mini_agent.tools.zai_anthropic_tools import ZAIAnthropicWebSearchTool
             
             claude_search_tool = ClaudeZAIWebSearchTool()
             claude_guide_tool = ClaudeZAIRecommendationTool()
+            
+            # Load Z.AI Anthropic web search tool (uses coding plan credits)
+            zai_anthropic_tool = ZAIAnthropicWebSearchTool()
             
             if claude_search_tool.available:
                 tools.append(claude_search_tool)
                 print(f"{Colors.GREEN}✅ Loaded Claude Z.AI Web Search tool (with citations){Colors.RESET}")
             else:
                 print(f"{Colors.YELLOW}⚠️  Claude Z.AI Web Search unavailable (set ZAI_API_KEY environment variable){Colors.RESET}")
+                
+            if zai_anthropic_tool.available:
+                tools.append(zai_anthropic_tool)
+                print(f"{Colors.GREEN}✅ Loaded Z.AI Anthropic Web Search tool (coding plan, natural citations){Colors.RESET}")
+            else:
+                print(f"{Colors.YELLOW}⚠️  Z.AI Anthropic Web Search unavailable (set ANTHROPIC_AUTH_TOKEN or ZAI_API_KEY){Colors.RESET}")
                 
             # Always add the guide tool
             tools.append(claude_guide_tool)

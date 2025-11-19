@@ -9,6 +9,7 @@ from .note_tool import RecallNoteTool, SessionNoteTool
 try:
     from .zai_tools import ZAIWebSearchTool, ZAIWebReaderTool
     from .claude_zai_tools import ClaudeZAIWebSearchTool, ClaudeZAIRecommendationTool
+    from .zai_anthropic_tools import ZAIAnthropicWebSearchTool
     _zai_tools_available = True
 except ImportError:
     _zai_tools_available = False
@@ -31,4 +32,5 @@ if _zai_tools_available:
         "ZAIWebReaderTool", 
         "ClaudeZAIWebSearchTool",
         "ClaudeZAIRecommendationTool",
+        "ZAIAnthropicWebSearchTool",
     ])
