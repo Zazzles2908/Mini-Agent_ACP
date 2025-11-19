@@ -1,0 +1,23 @@
+[
+  {
+    "name": "John Doe",
+    "age": 30,
+    "score": 85.5,
+    "processed_at": "2025-11-19T21:07:42.966748",
+    "score_category": "B"
+  },
+  {
+    "name": "Jane Smith",
+    "age": 25,
+    "score": 92.0,
+    "processed_at": "2025-11-19T21:07:42.966766",
+    "score_category": "A"
+  },
+  {
+    "name": "Bob Johnson",
+    "age": 35,
+    "score": 78.3,
+    "processed_at": "2025-11-19T21:07:42.966768",
+    "score_category": "C"
+  }
+]

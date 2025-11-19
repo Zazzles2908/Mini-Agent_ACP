@@ -1,0 +1,8 @@
+0000000000000000000000000000000000000000 45c9d6ad978199e1fcb8e0e730e4f409a3c7c3bc Jazeel <jajireen1@gmail.com> 1763411160 +1100	clone: from https://github.com/0xSero/Mini-Agent.git
+45c9d6ad978199e1fcb8e0e730e4f409a3c7c3bc 89280842f3bc9dc36693ef93b0fb4539a29056fa Jazeel <jajireen1@gmail.com> 1763545844 +1100	feat: Complete Mini-Agent ACP integration with Z.AI web search
+89280842f3bc9dc36693ef93b0fb4539a29056fa d8183543246c2ddacae20ad6c7cefd9083818d5d Jazeel <jajireen1@gmail.com> 1763546615 +1100	✅ Complete system verification and dependency resolution
+d8183543246c2ddacae20ad6c7cefd9083818d5d 7ea1df6488e25f19774deac122f7a9a8d33fe5b1 Jazeel <jajireen1@gmail.com> 1763547296 +1100	✅ Update Z.AI integration to use direct REST API
+7ea1df6488e25f19774deac122f7a9a8d33fe5b1 8fc4987697fc7f45a0d1f0032cd4072a814c5629 Jazeel <jajireen1@gmail.com> 1763547360 +1100	📝 Update handoff notes with Z.AI direct API implementation status
+8fc4987697fc7f45a0d1f0032cd4072a814c5629 36c5c4276ef776fe4036dc171d5815d3e6dce853 Jazeel <jajireen1@gmail.com> 1763559476 +1100	Pre-cleanup snapshot: Mini-Agent CLI/coder foundation with Z.AI integration
+36c5c4276ef776fe4036dc171d5815d3e6dce853 fc214f6e682e374d8e7ebcaea2899218c1e934d3 Jazeel <jajireen1@gmail.com> 1763559864 +1100	Architectural cleanup: Organized Mini-Agent based on intrinsic design flow
+fc214f6e682e374d8e7ebcaea2899218c1e934d3 c6052b5eafb02b52f9ba676245071ea9c0b2161a Jazeel <jajireen1@gmail.com> 1763559946 +1100	ARCHITECTURAL MASTERY ACHIEVED: Mini-Agent foundation ready for ecosystem integration

@@ -1,0 +1,99 @@
+{
+  "name": "mini-agent-vscode",
+  "displayName": "Mini-Agent VS Code Integration",
+  "description": "Native VS Code integration for Mini-Agent AI assistant",
+  "version": "0.1.0",
+  "publisher": "MiniMax",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Machine Learning", "Other"],
+  "activationEvents": [
+    "onCommand:miniAgent.activate",
+    "onLanguage:typescript",
+    "onLanguage:javascript",
+    "onLanguage:python",
+    "onLanguage:markdown",
+    "onFileSystem:file"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "miniAgent.activate",
+        "title": "Mini-Agent: Activate",
+        "category": "Mini-Agent",
+        "icon": "$(robot)"
+      },
+      {
+        "command": "miniAgent.ask",
+        "title": "Mini-Agent: Ask Question",
+        "category": "Mini-Agent"
+      },
+      {
+        "command": "miniAgent.explain",
+        "title": "Mini-Agent: Explain Code",
+        "category": "Mini-Agent"
+      },
+      {
+        "command": "miniAgent.generate",
+        "title": "Mini-Agent: Generate Code",
+        "category": "Mini-Agent"
+      },
+      {
+        "command": "miniAgent.refactor",
+        "title": "Mini-Agent: Refactor Selection",
+        "category": "Mini-Agent"
+      },
+      {
+        "command": "miniAgent.test",
+        "title": "Mini-Agent: Generate Tests",
+        "category": "Mini-Agent"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "miniAgent.ask",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a"
+      },
+      {
+        "command": "miniAgent.explain", 
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e"
+      },
+      {
+        "command": "miniAgent.generate",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "miniAgentView",
+          "name": "Mini-Agent"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "miniAgent",
+          "title": "Mini-Agent",
+          "icon": "$(robot)"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "webpack",
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^5.0.0"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Mini-Agent ACP Integration",
+  "displayName": "Mini-Agent ACP Integration",
+  "description": "VS Code integration for Mini-Agent via ACP",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:miniAgent.start",
+    "onLanguage:markdown"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "miniAgent.start",
+        "title": "Start Mini-Agent ACP Session"
+      },
+      {
+        "command": "miniAgent.prompt",
+        "title": "Send Prompt to Mini-Agent"
+      }
+    ],
+    "configuration": {
+      "title": "Mini-Agent",
+      "properties": {
+        "miniAgent.acpServerPath": {
+          "type": "string",
+          "default": "python -m mini_agent.acp.server",
+          "description": "Command to start ACP server"
+        },
+        "miniAgent.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Mini-Agent integration"
+        }
+      }
+    }
+  }
+}

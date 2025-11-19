@@ -1,0 +1,124 @@
+{
+  "timestamp": "2025-11-19T21:08:21.038510",
+  "task_description": "Create a Python data processing script with class-based implementation",
+  "implementation_files": [
+    "example_implementation.py"
+  ],
+  "requirements": [
+    "Implement data processing functionality",
+    "Include error handling for missing files",
+    "Provide summary statistics generation",
+    "Support JSON data input and output",
+    "Include proper documentation and comments",
+    "Handle edge cases like empty data"
+  ],
+  "fact_checks": [
+    {
+      "claim": "Python is the most popular programming language for data processing according to recent surveys",
+      "status": "ValidationStatus.VERIFIED",
+      "confidence": 0.8999999999999999,
+      "sources": [
+        "Source(url='https://example.com/source1', title='Official Documentation', source_type=<SourceType.OFFICIAL: 'official'>, reliability_score=0.95, date_accessed='2025-11-19T21:08:20.980060', content_snippet='')",
+        "Source(url='https://example.com/source2', title='Research Paper', source_type=<SourceType.REPUTABLE: 'reputable'>, reliability_score=0.85, date_accessed='2025-11-19T21:08:20.980078', content_snippet='')"
+      ],
+      "conflicting_sources": null,
+      "notes": "Verified against 2 sources"
+    },
+    {
+      "claim": "JSON format is widely used for data interchange in modern applications",
+      "status": "ValidationStatus.VERIFIED",
+      "confidence": 0.8999999999999999,
+      "sources": [
+        "Source(url='https://example.com/source1', title='Official Documentation', source_type=<SourceType.OFFICIAL: 'official'>, reliability_score=0.95, date_accessed='2025-11-19T21:08:20.980098', content_snippet='')",
+        "Source(url='https://example.com/source2', title='Research Paper', source_type=<SourceType.REPUTABLE: 'reputable'>, reliability_score=0.85, date_accessed='2025-11-19T21:08:20.980101', content_snippet='')"
+      ],
+      "conflicting_sources": null,
+      "notes": "Verified against 2 sources"
+    },
+    {
+      "claim": "Object-oriented programming improves code maintainability and reusability",
+      "status": "ValidationStatus.VERIFIED",
+      "confidence": 0.8999999999999999,
+      "sources": [
+        "Source(url='https://example.com/source1', title='Official Documentation', source_type=<SourceType.OFFICIAL: 'official'>, reliability_score=0.95, date_accessed='2025-11-19T21:08:20.980112', content_snippet='')",
+        "Source(url='https://example.com/source2', title='Research Paper', source_type=<SourceType.REPUTABLE: 'reputable'>, reliability_score=0.85, date_accessed='2025-11-19T21:08:20.980115', content_snippet='')"
+      ],
+      "conflicting_sources": null,
+      "notes": "Verified against 2 sources"
+    },
+    {
+      "claim": "Error handling is essential for production data processing systems",
+      "status": "ValidationStatus.VERIFIED",
+      "confidence": 0.8999999999999999,
+      "sources": [
+        "Source(url='https://example.com/source1', title='Official Documentation', source_type=<SourceType.OFFICIAL: 'official'>, reliability_score=0.95, date_accessed='2025-11-19T21:08:20.980121', content_snippet='')",
+        "Source(url='https://example.com/source2', title='Research Paper', source_type=<SourceType.REPUTABLE: 'reputable'>, reliability_score=0.85, date_accessed='2025-11-19T21:08:20.980122', content_snippet='')"
+      ],
+      "conflicting_sources": null,
+      "notes": "Verified against 2 sources"
+    }
+  ],
+  "test_results": [
+    {
+      "test_name": "File existence: example_implementation.py",
+      "passed": true,
+      "details": "File found at example_implementation.py",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Syntax check: example_implementation.py",
+      "passed": true,
+      "details": "Syntax valid",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Requirement coverage: Implement data processing functionality...",
+      "passed": true,
+      "details": "Coverage: 75.0% (3/4 keywords found)",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Requirement coverage: Include error handling for missing files...",
+      "passed": false,
+      "details": "Coverage: 33.3% (2/6 keywords found)",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Requirement coverage: Provide summary statistics generation...",
+      "passed": false,
+      "details": "Coverage: 50.0% (2/4 keywords found)",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Requirement coverage: Support JSON data input and output...",
+      "passed": false,
+      "details": "Coverage: 66.7% (4/6 keywords found)",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Requirement coverage: Include proper documentation and comments...",
+      "passed": false,
+      "details": "Coverage: 20.0% (1/5 keywords found)",
+      "execution_time": 0.0
+    },
+    {
+      "test_name": "Requirement coverage: Handle edge cases like empty data...",
+      "passed": false,
+      "details": "Coverage: 16.7% (1/6 keywords found)",
+      "execution_time": 0.0
+    }
+  ],
+  "metrics": {
+    "accuracy_score": 95.0,
+    "completeness_score": 37.5,
+    "functionality_score": 37.5,
+    "reliability_score": 85.0,
+    "overall_confidence": 64.25
+  },
+  "recommendations": [
+    "\ud83d\udd27 Address 5 failing tests",
+    "\ud83d\udccb Ensure all requirements are fully addressed",
+    "\u2699\ufe0f Improve functional implementation and testing"
+  ],
+  "overall_status": "NEEDS_IMPROVEMENT"
+}

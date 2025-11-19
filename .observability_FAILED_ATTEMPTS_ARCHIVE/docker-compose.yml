@@ -1,0 +1,35 @@
+services:
+  langfuse-server:
+    image: langfuse/langfuse:2
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/langfuse
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=mini-agent-local-secret-change-in-production
+      - SALT=mini-agent-salt-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse-db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  langfuse-db:
+    driver: local

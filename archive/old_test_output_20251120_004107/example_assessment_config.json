@@ -1,0 +1,20 @@
+{
+  "task_description": "Create a Python data processing script with class-based implementation",
+  "implementation_files": [
+    "example_implementation.py"
+  ],
+  "requirements": [
+    "Implement data processing functionality",
+    "Include error handling for missing files",
+    "Provide summary statistics generation",
+    "Support JSON data input and output",
+    "Include proper documentation and comments",
+    "Handle edge cases like empty data"
+  ],
+  "claims_to_verify": [
+    "Python is the most popular programming language for data processing according to recent surveys",
+    "JSON format is widely used for data interchange in modern applications",
+    "Object-oriented programming improves code maintainability and reusability",
+    "Error handling is essential for production data processing systems"
+  ]
+}

@@ -1,0 +1,7 @@
+# pack-refs with: peeled fully-peeled sorted 
+45c9d6ad978199e1fcb8e0e730e4f409a3c7c3bc refs/remotes/origin/acp-min
+7a820e5730e61f1049b9a5dff3e7ccf122ac202e refs/remotes/origin/acp-support
+1cd17fa3f9ecbcc2a925414348acc79ad7f9756e refs/remotes/origin/claude/acp-support-code-review-01JFzxM8B8T4i8BdmrqtVLfh
+ccab89d8584c02d672bfe44dcdef4537ca07011f refs/remotes/origin/claude/add-agent-client-protocol-011CV24tzSFTdCx1Jc9DHoxU
+4f9ef4d3293e567ccd6c5409090c942b06a87d86 refs/remotes/origin/cursor/review-and-optimize-acp-support-code-a76e
+3759ab4022bfb4636bce73b127174dc8f927e6a8 refs/remotes/origin/main
