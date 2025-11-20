@@ -4,18 +4,15 @@
   "description": "VS Code integration for Mini-Agent using Agent Client Protocol (ACP)",
   "version": "1.0.0",
   "publisher": "MiniMax-AI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zazzles2908/Mini-Agent_ACP"
+  },
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": ["Other", "AI"],
   "keywords": ["ai", "agent", "minimax", "chat", "acp"],
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:miniAgent.start",
-    "onLanguage:markdown"
-  ],
   "main": "./extension.js",
   "contributes": {
     "chatParticipants": [
@@ -50,5 +47,19 @@
         }
       }
     }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.21.1",
+    "eslint": "^8.44.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "@types/mocha": "^10.0.1"
   }
 }
