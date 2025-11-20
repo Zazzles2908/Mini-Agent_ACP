@@ -1,5 +1,5 @@
 # Mini Agent Configuration Example
-# 
+#
 # Configuration File Locations (in priority order):
 # 1) mini_agent/config/config.yaml - Development mode (current directory)
 # 2) ~/.mini-agent/config/config.yaml - User config directory
@@ -22,7 +22,7 @@ api_base: "https://api.minimax.io"   # Global users (default)
 model: "MiniMax-M2"
 # LLM provider: "anthropic" or "openai"
 # The LLMClient will automatically append /anthropic or /v1 to api_base based on provider
-provider: "anthropic"  # Default: anthropic
+provider: "openai"  # FIXED: Changed from "anthropic" to "openai" for MiniMax compatibility
 
 # ===== Retry Configuration =====
 retry:
@@ -45,7 +45,7 @@ tools:
   enable_note: true        # Session note tool (SessionNoteTool)
   
   # Z.AI Coding Plan Tools (requires ZAI_API_KEY environment variable)
-  enable_zai_search: true  # Z.AI Coding Plan: GLM chat + web search + web reader
+  enable_zai_search: true  # Z.AI Coding Plan: GLM chat + web reader
   # Usage optimization settings:
   zai_settings:
     default_model: "GLM-4.6"          # Efficient for routine tasks
