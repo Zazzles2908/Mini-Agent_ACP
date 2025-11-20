@@ -1,0 +1,25 @@
+api_key: "test_key_placeholder"
+api_base: "https://api.minimax.io"
+model: "MiniMax-M2"
+provider: "anthropic"
+
+retry:
+  enabled: true
+  max_retries: 5
+  initial_delay: 1.0
+  max_delay: 60.0
+  exponential_base: 2.0
+
+max_steps: 200
+workspace_dir: "./workspace"
+system_prompt_path: "system_prompt.md"
+
+tools:
+  enable_file_tools: true
+  enable_bash: true
+  enable_note: true
+  enable_zai_search: true
+  enable_skills: true
+  skills_dir: "./skills"
+  enable_mcp: true
+  mcp_config_path: "mcp.json"
