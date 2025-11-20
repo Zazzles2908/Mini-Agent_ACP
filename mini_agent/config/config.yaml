@@ -48,7 +48,7 @@ tools:
   enable_zai_search: true  # Z.AI Coding Plan: GLM chat + web search + web reader
   # Usage optimization settings:
   zai_settings:
-    default_model: "GLM-4.5"          # Efficient for routine tasks
+    default_model: "GLM-4.6"          # Efficient for routine tasks
     max_tokens_per_prompt: 2000       # Stay within quota efficiency
     track_usage: true                 # Monitor prompts within 5-hour windows
     efficiency_mode: true             # Use GLM-4.5 for routine tasks

@@ -1,0 +1,46 @@
+{
+  "name": "mini-agent-vscode",
+  "displayName": "Mini-Agent AI Assistant",
+  "description": "AI coding assistant powered by Mini-Agent with full tool ecosystem",
+  "version": "1.0.0",
+  "publisher": "Mini-Agent",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": ["Other", "Machine Learning", "Extension Packs"],
+  "keywords": ["ai", "assistant", "chat", "mini-agent", "coding"],
+  "activationEvents": [
+    "onCommand:miniAgent.activate",
+    "onStartupFinished",
+    "onChatParticipant:mini-agent"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "miniAgent.activate",
+        "title": "Mini-Agent: Open Chat",
+        "category": "Mini-Agent"
+      },
+      {
+        "command": "miniAgent.help",
+        "title": "Mini-Agent: Help",
+        "category": "Mini-Agent"
+      }
+    ],
+    "chatParticipants": [
+      {
+        "id": "mini-agent",
+        "name": "mini-agent",
+        "description": "AI coding assistant powered by Mini-Agent skill system"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "echo 'JavaScript extension - no compilation needed'",
+    "package": "vsce package"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "license": "MIT"
+}

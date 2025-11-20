@@ -1,11 +1,14 @@
 {
-  "name": "Mini-Agent ACP Integration",
-  "displayName": "Mini-Agent ACP Integration",
-  "description": "VS Code integration for Mini-Agent via ACP",
-  "version": "0.1.0",
+  "name": "mini-agent-acp",
+  "displayName": "Mini-Agent via ACP",
+  "description": "VS Code integration for Mini-Agent using Agent Client Protocol (ACP)",
+  "version": "1.0.0",
+  "publisher": "MiniMax-AI",
   "engines": {
     "vscode": "^1.74.0"
   },
+  "categories": ["Other", "AI"],
+  "keywords": ["ai", "agent", "minimax", "chat", "acp"],
   "categories": [
     "Other"
   ],
@@ -15,6 +18,13 @@
   ],
   "main": "./extension.js",
   "contributes": {
+    "chatParticipants": [
+      {
+        "id": "mini-agent",
+        "name": "mini-agent",
+        "description": "AI assistant powered by Mini-Agent"
+      }
+    ],
     "commands": [
       {
         "command": "miniAgent.start",

@@ -1,0 +1,76 @@
+{
+  "timestamp": "2025-11-20T07:52:28.470328",
+  "api_key_prefix": "1cd42fbb5c474884bddc...",
+  "target_url": "https://docs.z.ai/devpack/tool/claude",
+  "total_tests": 6,
+  "successful_tests": 0,
+  "failed_tests": 6,
+  "results": [
+    {
+      "config": "Coding Plan /reader",
+      "status": 400,
+      "success": false,
+      "error": {
+        "error": {
+          "code": "1211",
+          "message": "Unknown Model, please check the model code."
+        }
+      }
+    },
+    {
+      "config": "Common API /reader",
+      "status": 400,
+      "success": false,
+      "error": {
+        "error": {
+          "code": "1211",
+          "message": "Unknown Model, please check the model code."
+        }
+      }
+    },
+    {
+      "config": "Coding Plan /web_reader",
+      "status": 404,
+      "success": false,
+      "error": {
+        "timestamp": "2025-11-19T20:52:24.380+00:00",
+        "status": 404,
+        "error": "Not Found",
+        "path": "/v4/web_reader"
+      }
+    },
+    {
+      "config": "Common API /web_reader",
+      "status": 404,
+      "success": false,
+      "error": {
+        "timestamp": "2025-11-19T20:52:25.247+00:00",
+        "status": 404,
+        "error": "Not Found",
+        "path": "/v4/web_reader"
+      }
+    },
+    {
+      "config": "Coding Plan /reader with model",
+      "status": 400,
+      "success": false,
+      "error": {
+        "error": {
+          "code": "1211",
+          "message": "Unknown Model, please check the model code."
+        }
+      }
+    },
+    {
+      "config": "Coding Plan /reader with model glm-4.6",
+      "status": 400,
+      "success": false,
+      "error": {
+        "error": {
+          "code": "1211",
+          "message": "Unknown Model, please check the model code."
+        }
+      }
+    }
+  ]
+}
