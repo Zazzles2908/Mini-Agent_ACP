@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "memory": {
+      "description": "Memory - Knowledge graph memory system (long-term memory based on graph database)",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "disabled": false
+    },
+    "git": {
+      "description": "Git - Git repository operations and version control",
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_server_git"
+      ],
+      "env": {},
+      "disabled": false
+    }
+  },
+  "_notes": [
+    "filesystem server removed - redundant with native file tools (read_file, write_file, edit_file)",
+    "minimax_search server removed - using native Z.AI web search instead"
+  ]
+}
