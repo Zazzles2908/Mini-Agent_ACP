@@ -34,6 +34,19 @@ dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
 ]
+docs = [
+    "pypdf>=6.0.0",
+    "pdfplumber>=0.10.0", 
+    "python-docx>=1.0.0",
+    "python-pptx>=1.0.0",
+    "openpyxl>=3.1.0",
+    "pandas>=2.0.0",
+    "reportlab>=4.0.0",
+    "pdf2image>=1.17.0",
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0.0",
+    "xlsxwriter>=3.0.0",
+]
 
 [build-system]
 requires = ["setuptools>=61.0"]
