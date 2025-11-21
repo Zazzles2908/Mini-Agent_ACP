@@ -2,7 +2,7 @@
 
 **Created by**: [MiniMax AI Team](https://github.com/MiniMax-AI/agent-demo)  
 **System**: Teaching-level agent demonstration with community extensions  
-**Primary LLM**: MiniMax-M2 (Anthropic-compatible API)  
+**Primary LLM**: MiniMax-M2 (OpenAI-compatible API)  
 **Original Docs**: [docs/](docs/) directory contains official MiniMax documentation
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](README.md)
@@ -62,7 +62,7 @@ mini-agent
 api_key: "${MINIMAX_API_KEY}"  # Required: MiniMax API key
 api_base: "https://api.minimax.io"  # Global platform
 model: "MiniMax-M2"  # Primary model
-provider: "anthropic"  # Protocol format
+provider: "openai"  # Protocol format (OpenAI-compatible for MiniMax)
 
 # Optional: Z.AI for web search
 tools:

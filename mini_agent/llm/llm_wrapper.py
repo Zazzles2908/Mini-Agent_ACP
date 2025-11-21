@@ -31,7 +31,7 @@ class LLMClient:
     def __init__(
         self,
         api_key: str,
-        provider: LLMProvider = LLMProvider.ANTHROPIC,
+        provider: LLMProvider = LLMProvider.OPENAI,
         api_base: str = "https://api.minimax.io",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,

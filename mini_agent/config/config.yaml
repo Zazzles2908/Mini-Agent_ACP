@@ -53,5 +53,5 @@ tools:
 
   # MCP Tools
   enable_mcp: true         # Enable MCP tools
-  mcp_config_path: "mcp.json"  # MCP configuration file
+  mcp_config_path: ".mcp.json"  # MCP configuration file (standard naming)
                            # Note: API Keys for MCP tools configured in mcp.json

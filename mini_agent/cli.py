@@ -397,7 +397,7 @@ async def run_agent(workspace_dir: Path):
         "zai": LLMProvider.ZAI,
     }
     
-    provider = provider_map.get(config.llm.provider.lower(), LLMProvider.ANTHROPIC)
+    provider = provider_map.get(config.llm.provider.lower(), LLMProvider.OPENAI)
 
     llm_client = LLMClient(
         api_key=config.llm.api_key,

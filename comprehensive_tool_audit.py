@@ -206,7 +206,7 @@ class ComprehensiveToolAudit:
             
             # Test client initialization
             clients_to_test = [
-                ("MiniMax", LLMProvider.ANTHROPIC),
+                ("MiniMax", LLMProvider.OPENAI),  # MiniMax uses OpenAI protocol
                 ("OpenAI", LLMProvider.OPENAI),
                 ("Z.AI", LLMProvider.ZAI)
             ]
