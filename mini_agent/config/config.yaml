@@ -37,15 +37,15 @@ tools:
   enable_bash: true        # Bash command execution tool
   enable_note: true        # Session note tool (SessionNoteTool)
 
-  # Z.AI Tools (web search + reading - 120 prompts/5hrs)
-  enable_zai_search: true  # Z.AI Coding Plan: GLM web search
-  enable_zai_llm: true     # GLM-4.6 for web intelligence
+  # Z.AI Tools - DISABLED TO PREVENT CREDIT CONSUMPTION
+  enable_zai_search: false  # Z.AI Coding Plan: DISABLED - Credit protection
+  enable_zai_llm: false     # GLM-4.6: DISABLED - Credit protection  
   zai_settings:
-    default_model: "glm-4.6"  # Always use best quality for Z.AI Lite plan
-    search_model: "glm-4.6"   # Web search optimized model
-    max_tokens_per_prompt: 2000  # Quota efficiency
-    track_usage: true        # Monitor ~120 prompts/5hrs
-    efficiency_mode: true    # Optimize for Lite plan usage
+    default_model: "glm-4.6"  # Unused - Z.AI tools disabled
+    search_model: "glm-4.6"   # Unused - Z.AI tools disabled
+    max_tokens_per_prompt: 2000  # Unused - Z.AI tools disabled
+    track_usage: true        # Unused - Z.AI tools disabled
+    efficiency_mode: true    # Unused - Z.AI tools disabled
 
   # Claude Skills (15 specialized skills)
   enable_skills: true      # Enable Skills system

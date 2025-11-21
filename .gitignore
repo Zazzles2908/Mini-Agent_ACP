@@ -64,3 +64,8 @@ claude.md
 
 # Session memory
 .agent_memory.json
+# Local configuration overrides
+local_config.yaml
+
+# VS Code extension builds (build from source)
+*.vsix

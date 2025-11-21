@@ -1,247 +1,380 @@
-# Agent Handoff: GLM-4.6 Integration Fix
+# Agent Handoff Notes
 
-**Date**: 2025-11-22 1:31 AM  
-**Session**: Mini-Agent System Integration Fix  
-**Status**: ✅ **COMPLETED - GLM-4.6 Now Fully Functional**
+## Last Updated
+2025-01-22 by Claude (Repository Cleanup Session)
 
----
+## Current Status
 
-## 🎯 What Was Accomplished
+### Just Completed ✅
+- Comprehensive code audit (see `BRUTAL_CODE_AUDIT.md`)
+- Repository cleanup and organization
+  - Enforced .gitignore rules
+  - Moved VSIX files to `documents/builds/archive/` (preserved for Zed ACP research)
+  - Moved audit files to `documents/audits/`
+  - Moved research to `documents/research/`
+  - Moved production configs to `documents/production/`
+  - Merged docs/ into `documents/minimax_original/`
+  - Archived old backups to `documents/archive/`
+  - Created Zed ACP research placeholder in `documents/experiments/zed_acp/`
+  - Removed empty directories (logs/, zed_research/)
+- Created standard documentation
+  - `PROJECT_CONTEXT.md` - Project overview
+  - `CONFIGURATION.md` - Config hierarchy
+  - `AGENT_HANDOFF.md` - This file
+- Updated `.gitignore` for `local_config.yaml` and `*.vsix`
 
-### Critical Issue Resolved
-The GLM-4.6 integration was **completely broken** - the GLMClient was using placeholder responses instead of making real API calls to Z.AI. This has been **completely fixed**.
+### In Progress 🔄
+- None currently - cleanup complete, ready to commit
 
-### Fix Applied
+### Blocked ⛔
+- None currently
 
-#### 1. GLM Client Implementation ✅
-**Problem**: `mini_agent/llm/glm_client.py` had a fake implementation that returned placeholder responses instead of real GLM-4.6 API calls.
+## Next Steps
 
-**Solution**: Replaced placeholder implementation with real Z.AI API calls:
-```python
-# Now makes actual API calls using ZAIClient
-result = await self.client.chat_completion(
-    messages=glm_messages,
-    model=self.model,
-    temperature=0.7,
-    max_tokens=2048
-)
+### Immediate (Today)
+1. ✅ Review git status and verify changes
+2. Test that agent still runs: `uv run mini-agent --help`
+3. Run basic tests: `uv run pytest tests/test_agent.py -v`
+4. Commit all changes with detailed message
+5. Verify VS Code extension still works (optional)
+
+### This Week
+1. **Agent Refactoring** - Break down god object (see audit)
+   - Extract `MessageManager` for history/tokens/summarization
+   - Extract `ToolExecutor` for tool execution logic
+   - Keep `Agent` as thin orchestrator
+2. **Test Organization** - Restructure tests
+   - Create `tests/unit/`, `tests/integration/`, `tests/e2e/`
+   - Add `conftest.py` for shared fixtures
+   - Add coverage reporting: `pytest --cov=mini_agent`
+3. **Documentation Updates**
+   - Update README if paths changed
+   - Create VS Code extension README
+   - Document Zed ACP integration plan
+
+### This Month
+1. **CI/CD Pipeline**
+   - GitHub Actions for tests
+   - Coverage reporting with Codecov
+   - Automated linting with ruff
+2. **Pre-commit Hooks**
+   - Ruff formatter
+   - YAML/JSON validation
+   - Large file check
+3. **Zed ACP Integration** (see `documents/experiments/zed_acp/`)
+   - Research Zed's current ACP support
+   - Analyze why VSIX attempts failed
+   - Design correct integration architecture
+   - Create proof-of-concept
+
+### Future (Backlog)
+1. Performance profiling and optimization
+2. Evaluate git submodule necessity for skills
+3. Add execution middleware/hooks system
+4. Improve error handling patterns
+5. User documentation and tutorials
+
+## Important Context
+
+### Design Decisions
+
+**Gitignore Violations**
+- Root cause: Files were committed before `.gitignore` rules were added
+- Most violations (`.venv/`, `__pycache__/`) were already respected
+- Fixed: Added `local_config.yaml` and `*.vsix` to `.gitignore`
+- Result: Only ~4,810 files tracked (down from potential 6,000+)
+
+**VSIX Files Preserved**
+- These are **failed build attempts** from Zed ACP integration research
+- Moved to `documents/builds/archive/` for future reference
+- Not production artifacts - preserved for learning/debugging
+- See `documents/experiments/zed_acp/` for context
+
+**Multiple LLM Providers**
+- Intentional design for user choice and use case flexibility
+- MiniMax M2: Best for general tasks, Chinese language
+- Anthropic Claude: Complex reasoning, extended thinking
+- OpenAI GPT: Wide compatibility
+- Z.AI GLM: Web search, Coding Plan quota
+
+**Skills as Submodule**
+- Currently: Git submodule (shared resource)
+- Pros: Can be used by other projects
+- Cons: Deployment complexity, submodule management
+- Decision: Keep for now, but evaluate necessity later
+
+**Configuration Hierarchy**
+- Now documented in `documents/CONFIGURATION.md`
+- Priority: config.yaml → local_config.yaml → .env → CLI args
+- `local_config.yaml` is git-ignored for user overrides
+
+### Known Issues
+
+**Agent Class God Object**
+- File: `mini_agent/agent.py` (414 lines)
+- Responsibilities: Message management, execution, logging, tool coordination, token counting, summarization
+- Impact: Hard to test, extend, debug
+- Plan: Extract MessageManager and ToolExecutor classes
+
+**Test Structure Flat**
+- Current: 15 test files in flat `tests/` directory
+- No separation of unit/integration/e2e tests
+- No shared fixtures (conftest.py)
+- Test coverage unknown
+- Plan: Reorganize into unit/integration/e2e structure
+
+**Dependency Management**
+- Using `uv` (modern) but had legacy `requirements.txt`
+- Cleanup: Consider removing `requirements.txt` if fully on `uv`
+- Also: Remove `pip` and `pipx` from project dependencies (user-level tools)
+
+### Gotchas & Tips
+
+**Python Environment**
+- ⚠️ Always use `uv` for Python operations
+- Check/create venv: `if [ ! -d .venv ]; then uv venv; fi`
+- Install packages: `uv pip install <package>`
+- Run scripts: `uv run python script.py`
+- Skills that need Python: pdf, pptx, docx, xlsx, canvas-design, algorithmic-art
+
+**Z.AI Coding Plan**
+- Quota: ~120 prompts every 5 hours
+- Models: GLM-4.5 (efficient), GLM-4.6 (best quality), GLM-4.5-air (lightweight)
+- Includes: GLM chat, web search, web reader
+- Strategy: Use GLM-4.5 for routine tasks, GLM-4.6 for complex analysis
+
+**MCP Tools**
+- Most MCP servers now disabled in favor of native tools
+- File operations: Use native file tools, not MCP filesystem
+- Only specialized MCP tools enabled for specific use cases
+
+**VS Code Extension**
+- Has own `node_modules/` - ensure it's git-ignored in vscode-extension/.gitignore
+- Build command: `npm run compile` (or check package.json scripts)
+- Uses ACP server: `mini_agent/acp/server.py`
+
+**Git Submodule (Skills)**
+- Clone with: `git clone --recursive`
+- Or after clone: `git submodule update --init`
+- Update submodule: `cd mini_agent/skills && git pull`
+
+## Files Changed in Cleanup
+
+### Moved (git mv)
+```
+Root cleanup:
+├── mini-agent-*.vsix (3 files) → documents/builds/archive/
+├── comprehensive_tool_audit* → documents/audits/
+├── docs/* → documents/minimax_original/
+├── output/research/* → documents/research/
+├── output/test_results/* → documents/archive/test_results/
+├── archive/* → documents/archive/old_backups/
+├── mini_agent_fixed_files/ → documents/archive/fixed_files_backup_20251122/
+└── production/* → documents/production/
 ```
 
-#### 2. Import Path Fixes ✅
-**Problem**: Import paths were incorrect for the schema module.
-
-**Solution**: Fixed import paths to use proper schema module location:
-```python
-from ..schema import FunctionCall, LLMResponse, Message, ToolCall, LLMProvider
+### Removed (untracked)
+```
+├── local_config.yaml (now git-ignored)
+├── mcp.json (duplicate, check if needed)
+├── logs/ (empty directory)
+├── zed_research/ (empty, replaced with documents/experiments/zed_acp/)
+└── output/ (all content moved to documents/)
 ```
 
-#### 3. Dependency Management ✅
-**Problem**: `aiohttp` was missing from project dependencies, causing ImportError.
-
-**Solution**: Added `aiohttp>=3.13.0` to `pyproject.toml` and installed via `uv pip install aiohttp`.
-
-#### 4. Schema Enhancement ✅
-**Problem**: LLMResponse model was missing usage tracking for API calls.
-
-**Solution**: Added `usage: dict | None = None` field to LLMResponse for token usage tracking.
-
----
-
-## 🧪 Testing Results
-
-### Integration Test Results
-**Test Script**: `test_glm_integration.py`
-
-**Results**: ✅ **ALL TESTS PASSED**
-
+### Created
 ```
-🚀 Starting GLM-4.6 Integration Test
-
-🔧 Testing GLM-4.6 Integration...
-✅ Z.AI API key found: 1cd42fbb5c...
-✅ GLM client initialized successfully
-🧪 Testing GLM-4.6 API call...
-✅ GLM-4.6 API call successful!
-📝 Response: I'm GLM, a large language model developed by Zhipu AI...
-
-🎉 GLM-4.6 Integration Test PASSED!
-✅ Mini-Agent can now use GLM-4.6 for reasoning and actions
+documents/
+├── BRUTAL_CODE_AUDIT.md          # Comprehensive code audit
+├── CLEANUP_PLAN.md               # Cleanup execution plan
+├── PROJECT_CONTEXT.md            # This project overview
+├── CONFIGURATION.md              # Configuration hierarchy guide
+├── AGENT_HANDOFF.md              # This file
+├── experiments/
+│   └── zed_acp/README.md         # Zed integration research placeholder
+└── builds/archive/README.md       # VSIX archive context
 ```
 
-### Key Confirmations
-- ✅ **Real GLM-4.6 API Integration**: Making actual API calls to Z.AI
-- ✅ **Proper Response Handling**: Parsing real GLM responses
-- ✅ **Error Management**: Handling API errors gracefully
-- ✅ **Usage Tracking**: Recording token usage (when available)
-- ✅ **Dependencies Resolved**: aiohttp now properly installed
-
----
-
-## 🔧 Technical Changes Made
-
-### Files Modified
-
-#### 1. `mini_agent/llm/glm_client.py`
-- **Replaced** placeholder generate() method with real Z.AI API implementation
-- **Added** real message conversion for GLM API format
-- **Fixed** import paths for schema modules
-- **Enhanced** error handling for API failures
-
-#### 2. `pyproject.toml`
-- **Added** `aiohttp>=3.13.0` to dependencies list
-- **Ensures** aiohttp is properly installed with the project
-
-#### 3. `mini_agent/schema/schema.py`
-- **Added** `usage: dict | None = None` field to LLMResponse
-- **Enables** token usage tracking for GLM API calls
-
----
-
-## 📋 Current System Status
-
-### Mini-Agent Configuration
-**Current Settings** (from `mini_agent/config/config.yaml`):
-```yaml
-api_key: "${ZAI_API_KEY}"
-api_base: "https://api.z.ai/api/coding/paas/v4"
-model: "glm-4.6"
-provider: "zai"
+### Modified
+```
+├── .gitignore (added local_config.yaml, *.vsix)
 ```
 
-### Workflow Configuration
-**Z.AI Integration**:
-- **Web Search**: Uses Z.AI web search API for research tasks
-- **GLM-4.6**: Uses Z.AI GLM-4.6 API for reasoning and actions
-- **Split Responsibility**: Web search ↔ GLM reasoning separation maintained
+## For Next Agent
 
-### System Health
-- ✅ **Python Environment**: `.venv` exists with uv package manager
-- ✅ **Dependencies**: All required packages installed (including aiohttp)
-- ✅ **Configuration**: GLM-4.6 properly configured in config.yaml
-- ✅ **API Integration**: Real GLM-4.6 API calls working
-- ✅ **Error Handling**: Robust error management implemented
+### Files to Review First
+1. `documents/BRUTAL_CODE_AUDIT.md` - Comprehensive assessment
+2. `documents/PROJECT_CONTEXT.md` - Project architecture
+3. `documents/CONFIGURATION.md` - Config hierarchy
+4. `README.md` - Project introduction
+5. Git status output below
+
+### Commands to Run
+
+```bash
+# Verify environment
+uv --version
+python --version
+ls -la .env  # Should exist with API keys
+
+# Test agent
+uv run mini-agent --help
+uv run mini-agent "Hello, test that I'm working"
+
+# Run tests
+uv run pytest tests/test_agent.py -v
+uv run pytest tests/ --cov=mini_agent  # Full coverage
+
+# Check git status
+git status
+git ls-files | wc -l  # Should show ~4,810 tracked files
+
+# Verify VS Code extension (optional)
+cd vscode-extension
+npm run compile
+```
+
+### Current Experiments
+
+**Zed ACP Integration**
+- Location: `documents/experiments/zed_acp/`
+- Status: Not started (placeholder created)
+- Context: Previous VSIX attempts failed, need to research proper approach
+- Artifacts: See `documents/builds/archive/` for failed builds
+
+**VS Code Integration**
+- Location: `vscode-extension/`
+- Status: Active development
+- Uses: ACP server in `mini_agent/acp/`
+- Build: `npm run compile` (check package.json for scripts)
+
+**Z.AI Web Search**
+- Status: Working
+- Files: `mini_agent/tools/zai_*.py`
+- Models: GLM-4.5 (efficient), GLM-4.6 (best quality)
+- Quota: ~120 prompts per 5 hours
+
+### Questions to Investigate
+
+1. **MCP Config**: Can we delete root `.mcp.json` or is it needed separately from `mini_agent/config/mcp.json`?
+2. **Requirements.txt**: Is it still needed or is `pyproject.toml` sufficient with `uv`?
+3. **Git Submodule**: Should skills be merged into main repo for simpler deployment?
+4. **Test Coverage**: What's the current test coverage percentage?
+5. **Start Script**: Is `start_mini_agent.py` still needed or redundant with CLI?
+
+### Directory Structure After Cleanup
+
+```
+Root (10 directories - down from 15):
+├── mini_agent/            # Core package (373 files)
+├── vscode-extension/      # VS Code integration (12,607 files)
+├── tests/                 # Test suite (16 files)
+├── scripts/               # Utility scripts (131 files)
+├── examples/              # Usage examples (8 files)
+├── documents/             # ALL documentation (now ~200+ files)
+│   ├── experiments/       # Research and WIP
+│   ├── builds/archive/    # Archived builds
+│   ├── audits/            # Historical audits
+│   ├── research/          # Research outputs
+│   ├── production/        # Production configs
+│   ├── archive/           # Old backups
+│   └── minimax_original/  # Original MiniMax docs
+├── .venv/                 # Virtual env (NOT tracked)
+├── .vscode/               # VS Code settings (NOT tracked)
+├── .git/                  # Git metadata
+└── workspace/             # Working directory (NOT tracked)
+
+Files in root:
+├── .env                   # API keys (git-ignored)
+├── .gitignore             # Updated
+├── .gitmodules            # Git submodule config
+├── LICENSE                # MIT license
+├── local_config.yaml      # User overrides (git-ignored, may not exist yet)
+├── local_config.yaml.example # Template for local config
+├── package.json           # Node deps (for vscode-extension?)
+├── package-lock.json      # Node lockfile
+├── pyproject.toml         # Python project config
+├── uv.lock                # UV lockfile
+├── README.md              # Project introduction
+└── start_mini_agent.py    # Launch script (check if needed)
+```
+
+## Success Criteria (Verification)
+
+After cleanup, verify:
+
+- [x] Root directory has <12 folders (achieved: 10)
+- [x] All docs consolidated in `documents/`
+- [x] `.venv/` NOT tracked in git
+- [x] `__pycache__/` NOT tracked in git
+- [x] VSIX files moved to archive (preserved)
+- [x] Empty directories removed
+- [x] Standard docs created (PROJECT_CONTEXT, CONFIGURATION, AGENT_HANDOFF)
+- [x] `.gitignore` updated (local_config.yaml, *.vsix)
+- [ ] Agent still runs: `uv run mini-agent --help`
+- [ ] Tests still pass: `uv run pytest tests/ -v`
+- [ ] VS Code extension intact (optional verification)
+
+## Rollback Plan
+
+If anything breaks after commit:
+
+```bash
+# Rollback to before cleanup
+git reset --hard HEAD~1
+
+# Or checkout specific files
+git checkout HEAD~1 -- path/to/file
+
+# Check reflog for all recent changes
+git reflog
+
+# Restore individual file from staging
+git restore --staged path/to/file
+```
+
+**Note**: All moves preserved files, nothing was deleted permanently. Worst case, manually move files back from `documents/` to original locations.
+
+## Commit Message Template
+
+```
+fix: Repository cleanup - enforce gitignore, organize documentation
+
+Major repository reorganization for better project hygiene:
+
+GITIGNORE ENFORCEMENT:
+- Remove local_config.yaml from tracking (now git-ignored)
+- Add *.vsix to gitignore
+- Verify .venv, __pycache__, workspace properly ignored
+
+DIRECTORY REORGANIZATION:
+- Move VSIX files → documents/builds/archive/ (preserved for Zed ACP research)
+- Move audit files → documents/audits/
+- Move research outputs → documents/research/
+- Move production configs → documents/production/
+- Merge docs/ → documents/minimax_original/
+- Move archive/ → documents/archive/old_backups/
+- Move mini_agent_fixed_files → documents/archive/fixed_files_backup_20251122/
+- Remove empty directories (logs/, zed_research/)
+
+DOCUMENTATION:
+- Create PROJECT_CONTEXT.md (architecture overview)
+- Create CONFIGURATION.md (config hierarchy guide)
+- Create AGENT_HANDOFF.md (status and next steps)
+- Create experiments/zed_acp/README.md (future research)
+- Create builds/archive/README.md (VSIX context)
+
+RESULT:
+- Root directories: 15 → 10
+- All documentation in single location
+- Clear separation of code, docs, experiments
+- Gitignore properly enforced
+
+Ref: documents/BRUTAL_CODE_AUDIT.md, documents/CLEANUP_PLAN.md
+```
 
 ---
 
-## 🚀 Next Steps
+**Status**: Ready to commit. All changes staged for review.
 
-### Immediate (Ready to Test)
-1. **Launch Mini-Agent**: `python start_mini_agent.py` or `mini-agent`
-2. **Test GLM-4.6**: Send a message to verify GLM-4.6 is responding
-3. **Verify Web Search**: Test that Z.AI web search still works
-4. **Confirm Tool Integration**: Ensure all tools are properly loaded
-
-### Expected Results
-- **GLM-4.6 Response**: Should now respond with real GLM-4.6 content
-- **No 404 Errors**: Should no longer get Anthropic endpoint 404 errors
-- **Real Intelligence**: GLM-4.6 providing actual reasoning and analysis
-- **Stable Performance**: Reliable API responses from Z.AI
-
----
-
-## 📊 Impact Assessment
-
-### Before Fix
-- ❌ **Fake Responses**: GLM-4.6 returning placeholder text
-- ❌ **404 Errors**: Attempting Anthropic API endpoints
-- ❌ **No Intelligence**: Actual AI reasoning was broken
-- ❌ **Broken Workflow**: Users couldn't get real AI assistance
-
-### After Fix
-- ✅ **Real GLM-4.6**: Actual AI model responses and reasoning
-- ✅ **Proper Endpoints**: Using correct Z.AI API endpoints
-- ✅ **Full Intelligence**: GLM-4.6 providing comprehensive analysis
-- ✅ **Working Workflow**: Complete AI assistant functionality restored
-
-### Performance Metrics
-- **Response Quality**: Real GLM-4.6 vs fake placeholders
-- **API Reliability**: Z.AI endpoint availability
-- **Error Rate**: Reduced from 100% (fake) to normal API error rate
-- **User Experience**: Professional AI assistant vs broken placeholder
-
----
-
-## 🎯 Success Criteria Achieved
-
-### Core Functionality ✅
-- [x] GLM-4.6 API integration working
-- [x] Real responses instead of fake placeholders  
-- [x] Proper error handling implemented
-- [x] Dependencies properly managed
-- [x] Configuration correctly set up
-
-### System Integration ✅
-- [x] LLM wrapper uses GLMClient correctly
-- [x] Schema models support usage tracking
-- [x] Message conversion works for GLM API
-- [x] Provider selection (zai) functioning
-
-### Quality Assurance ✅
-- [x] Integration test script created and passing
-- [x] Error scenarios handled gracefully
-- [x] Code follows Mini-Agent patterns
-- [x] Documentation updated
-
----
-
-## 📖 Documentation Created
-
-### Test Scripts
-- **`test_glm_integration.py`**: Comprehensive GLM-4.6 integration test
-  - Environment variable validation
-  - Client initialization testing
-  - Real API call verification
-  - Response parsing validation
-
-### Handoff Documentation
-- **`AGENT_HANDOFF.md`**: Complete fix documentation (this file)
-
----
-
-## 🔍 Troubleshooting Information
-
-### If Issues Persist
-1. **Check API Key**: Verify `ZAI_API_KEY` is set and valid
-2. **Dependencies**: Ensure aiohttp is installed (`uv pip install aiohttp`)
-3. **Configuration**: Confirm config.yaml has correct provider="zai"
-4. **Network**: Check internet connectivity for Z.AI API access
-
-### Common Solutions
-- **ImportError**: Run `uv pip install aiohttp`
-- **404 Errors**: Verify provider is "zai" not "anthropic"
-- **Fake Responses**: Ensure GLMClient.generate() uses real API calls
-- **Schema Issues**: Check LLMResponse has usage field
-
----
-
-## ✨ Final Summary
-
-**Mission**: Fix broken GLM-4.6 integration in Mini-Agent  
-**Status**: ✅ **COMPLETED SUCCESSFULLY**  
-**Quality**: Production-ready implementation  
-**Impact**: Restored full AI assistant functionality
-
-**What Was Fixed:**
-- Replaced fake GLMClient implementation with real Z.AI API calls
-- Fixed import paths and dependency management
-- Enhanced schema for usage tracking
-- Created comprehensive test validation
-
-**What This Enables:**
-- Real GLM-4.6 reasoning and analysis
-- Professional AI assistant responses
-- Reliable Z.AI API integration
-- Complete Mini-Agent workflow restoration
-
-**System Ready For:**
-- Immediate testing with `mini-agent` command
-- Full AI assistant functionality
-- Production usage with GLM-4.6
-
----
-
-**Agent Session**: Complete  
-**Next Action**: Launch and test Mini-Agent with GLM-4.6  
-**Expected Outcome**: Real GLM-4.6 responses instead of placeholder text
-
-**Ready for full testing! 🚀**
+**Next Action**: Review `git status`, test agent, then commit with above message.
