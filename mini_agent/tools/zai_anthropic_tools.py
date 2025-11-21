@@ -4,6 +4,8 @@ This tool provides web search capabilities using Z.AI through the
 Anthropic-compatible endpoint for natural citations and Claude Code integration.
 
 Uses coding plan credits (~120 prompts every 5 hours) instead of direct Z.AI API calls.
+
+🚫 CREDIT PROTECTED - This tool is disabled by default.
 """
 
 import os
@@ -13,7 +15,17 @@ import aiohttp
 from typing import Any, Dict, List
 from datetime import datetime
 
+# CRITICAL: Check credit protection before importing Z.AI dependencies
 from .base import Tool, ToolResult
+
+# Add credit protection check
+try:
+    from ..utils.credit_protection import check_zai_protection
+    if check_zai_protection():
+        raise ImportError("Z.AI tools disabled for credit protection")
+except ImportError:
+    # If we can't import the protection module, allow the tool but log warning
+    print("⚠️  Could not import credit protection - Z.AI tools may be unprotected")
 
 logger = logging.getLogger(__name__)
 

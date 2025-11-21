@@ -2,10 +2,19 @@
 
 This tool enables Claude to cite Z.AI web search results naturally 
 by formatting results as Claude's search_result blocks.
+
+🚫 CREDIT PROTECTED - This tool is disabled by default.
 """
 
 import logging
 from typing import Any
+
+# CRITICAL: Check credit protection before importing Z.AI dependencies
+from ..utils.credit_protection import check_zai_protection
+
+if check_zai_protection():
+    # Block module loading if protection is active
+    raise ImportError("Z.AI tools disabled for credit protection")
 
 from ..llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
 from .base import Tool, ToolResult

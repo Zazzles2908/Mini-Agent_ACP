@@ -2,6 +2,8 @@
 
 This module provides integration with Z.AI's direct REST API endpoints
 for web search and reading capabilities.
+
+🚫 CREDIT PROTECTED - Z.AI client requires explicit config enablement.
 """
 
 import asyncio
@@ -17,6 +19,8 @@ try:
 except ImportError:
     AIOHTTP_AVAILABLE = False
 
+from ..utils.credit_protection import block_zai_usage, check_zai_protection
+
 logger = logging.getLogger(__name__)
 
 
@@ -28,6 +32,9 @@ class ZAIClient:
     """
 
     def __init__(self, api_key: str, use_coding_plan: bool = True):
+        # CRITICAL: Check credit protection before any Z.AI operations
+        if check_zai_protection():
+            block_zai_usage("ZAIClient")
         """Initialize Z.AI client.
         
         Args:

@@ -2,12 +2,15 @@
 
 Provides access to Z.AI's Coding Plan functionality.
 Includes usage quota management and efficiency optimization.
+
+🚫 CREDIT PROTECTED - Z.AI tools are disabled by default to prevent credit consumption.
 """
 
 import logging
 from typing import Any
 
 from ..llm.zai_client import ZAIClient, get_zai_api_key
+from ..utils.credit_protection import block_zai_usage, check_zai_protection
 from .base import Tool, ToolResult
 
 logger = logging.getLogger(__name__)
@@ -27,6 +30,10 @@ class ZAIWebSearchTool(Tool):
         Args:
             api_key: Z.AI API key (if None, loads from ZAI_API_KEY env var)
         """
+        # CRITICAL: Check credit protection before any Z.AI operations
+        if check_zai_protection():
+            block_zai_usage("ZAIWebSearchTool")
+        
         self.api_key = api_key or get_zai_api_key()
         if not self.api_key:
             logger.warning("Z.AI API key not found. Web search will not be available.")
@@ -182,6 +189,10 @@ class ZAIWebReaderTool(Tool):
         Args:
             api_key: Z.AI API key (if None, loads from ZAI_API_KEY env var)
         """
+        # CRITICAL: Check credit protection before any Z.AI operations
+        if check_zai_protection():
+            block_zai_usage("ZAIWebReaderTool")
+        
         self.api_key = api_key or get_zai_api_key()
         if not self.api_key:
             logger.warning("Z.AI API key not found. Web reader will not be available.")
