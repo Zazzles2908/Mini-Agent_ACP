@@ -1,0 +1,1 @@
+{"mcpServers": {"exai-native": {"description": "EXAI Native MCP Server - Advanced development tools, file operations, and custom capabilities", "command": "docker", "args": ["exec", "-i", "exai-mcp-stdio", "python", "-m", "src.daemon.ws_server", "--mode", "stdio"], "env": {}}}}

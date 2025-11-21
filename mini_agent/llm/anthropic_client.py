@@ -24,7 +24,7 @@ class AnthropicClient(LLMClientBase):
     def __init__(
         self,
         api_key: str,
-        api_base: str = "https://api.minimaxi.com/anthropic",
+        api_base: str = "https://api.minimax.io",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,
     ):
@@ -38,11 +38,16 @@ class AnthropicClient(LLMClientBase):
         """
         super().__init__(api_key, api_base, model, retry_config)
 
-        # Initialize Anthropic async client
+        # Initialize Anthropic async client with proper headers for MiniMax
         self.client = anthropic.AsyncAnthropic(
             base_url=api_base,
             api_key=api_key,
         )
+        
+        # For MiniMax JWT tokens, we may need custom headers
+        if "minimax.io" in api_base:
+            # MiniMax specific authentication
+            pass  # Anthropic client should handle it automatically
 
     async def _make_api_request(
         self,

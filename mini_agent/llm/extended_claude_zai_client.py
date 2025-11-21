@@ -251,11 +251,8 @@ class ExtendedClaudeZAIWebReader:
 
 async def test_web_reader_integration():
     """Test web reader functionality."""
-    print("🔍 Testing Web Reader Integration...")
-    
     api_key = os.getenv("ZAI_API_KEY")
     if not api_key:
-        print("❌ Z.AI API key not found")
         return False
     
     reader = ExtendedClaudeZAIWebReader(api_key)
@@ -265,8 +262,6 @@ async def test_web_reader_integration():
         # Test with a reliable URL
         test_url = "https://httpbin.org/html"
         
-        print(f"📖 Reading web page: {test_url}")
-        
         result_blocks = await reader.web_reader_for_claude(
             url=test_url,
             format_type="markdown",
@@ -275,28 +270,18 @@ async def test_web_reader_integration():
         
         if result_blocks and len(result_blocks) > 0:
             block = result_blocks[0]
-            print(f"✅ Web reading successful")
-            print(f"   Title: {block.title}")
-            print(f"   Source: {block.source}")
-            print(f"   Content length: {len(block.content[0]['text'])} characters")
-            print(f"   Citations: {block.citations.get('enabled', False)}")
             return True
         else:
-            print("❌ Web reading returned no results")
             return False
             
     except Exception as e:
-        print(f"❌ Web reader test failed: {e}")
         return False
 
 
 async def test_combined_workflow():
     """Test combined search and read workflow."""
-    print("\n🔄 Testing Combined Search and Read Workflow...")
-    
     api_key = os.getenv("ZAI_API_KEY")
     if not api_key:
-        print("❌ Z.AI API key not found")
         return False
     
     reader = ExtendedClaudeZAIWebReader(api_key)
@@ -310,38 +295,22 @@ async def test_combined_workflow():
         )
         
         if result.get("success"):
-            print("✅ Combined workflow successful")
-            print(f"   Query: {result['query']}")
-            print(f"   Read URL: {result['read_url']}")
-            print(f"   Search blocks: {len(result['search_blocks'])}")
-            print(f"   Read blocks: {len(result['read_blocks'])}")
-            print(f"   Total blocks: {result['total_blocks']}")
-            print(f"   Integration: {result['integration_type']}")
             return True
         else:
-            print(f"❌ Combined workflow failed: {result.get('error')}")
             return False
             
     except Exception as e:
-        print(f"❌ Combined workflow test failed: {e}")
         return False
 
 
 if __name__ == "__main__":
     # Test web reader functionality
-    print("🧪 Z.AI Web Reader Integration Tests")
-    print("=" * 50)
-    
     reader_success = asyncio.run(test_web_reader_integration())
     combined_success = asyncio.run(test_combined_workflow())
     
-    print(f"\n🏆 Results:")
-    print(f"   Web Reader: {'✅ PASS' if reader_success else '❌ FAIL'}")
-    print(f"   Combined Workflow: {'✅ PASS' if combined_success else '❌ FAIL'}")
-    
     if reader_success and combined_success:
-        print(f"\n🎉 Web reader integration is working!")
-        print(f"✅ Can provide web reading results as Claude search_result blocks")
-        print(f"✅ Can combine search and reading for comprehensive results")
+        print("Web reader integration is working!")
+        print("Can provide web reading results as Claude search_result blocks")
+        print("Can combine search and reading for comprehensive results")
     else:
-        print(f"\n⚠️ Web reader integration needs debugging")
+        print("Web reader integration needs debugging")

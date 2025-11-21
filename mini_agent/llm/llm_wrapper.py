@@ -10,6 +10,7 @@ from ..retry import RetryConfig
 from ..schema import LLMProvider, LLMResponse, Message
 from .anthropic_client import AnthropicClient
 from .base import LLMClientBase
+from .glm_client import GLMClient
 from .openai_client import OpenAIClient
 
 logger = logging.getLogger(__name__)
@@ -31,7 +32,7 @@ class LLMClient:
         self,
         api_key: str,
         provider: LLMProvider = LLMProvider.ANTHROPIC,
-        api_base: str = "https://api.minimaxi.com",
+        api_base: str = "https://api.minimax.io",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,
     ):
@@ -40,7 +41,7 @@ class LLMClient:
         Args:
             api_key: API key for authentication
             provider: LLM provider (anthropic or openai)
-            api_base: Base URL for the API (default: https://api.minimaxi.com)
+            api_base: Base URL for the API (default: https://api.minimax.io)
                      Will be automatically suffixed with /anthropic or /v1 based on provider
             model: Model name to use
             retry_config: Optional retry configuration
@@ -58,6 +59,8 @@ class LLMClient:
             full_api_base = f"{api_base.rstrip('/')}/anthropic"
         elif provider == LLMProvider.OPENAI:
             full_api_base = f"{api_base.rstrip('/')}/v1"
+        elif provider == LLMProvider.ZAI:
+            full_api_base = f"{api_base.rstrip('/')}"  # Z.AI doesn't need suffix
         else:
             raise ValueError(f"Unsupported provider: {provider}")
 
@@ -74,6 +77,13 @@ class LLMClient:
             )
         elif provider == LLMProvider.OPENAI:
             self._client = OpenAIClient(
+                api_key=api_key,
+                api_base=full_api_base,
+                model=model,
+                retry_config=retry_config,
+            )
+        elif provider == LLMProvider.ZAI:
+            self._client = GLMClient(
                 api_key=api_key,
                 api_base=full_api_base,
                 model=model,

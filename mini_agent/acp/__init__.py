@@ -1,4 +1,4 @@
-"""ACP (Agent Client Protocol) bridge for Mini-Agent - Fixed version."""
+"""ACP (Agent Client Protocol) bridge for Mini-Agent."""
 
 from __future__ import annotations
 
@@ -6,14 +6,20 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 from uuid import uuid4
 
-import aiohttp
 from acp import (
     PROTOCOL_VERSION,
     AgentSideConnection,
-    Agent,
+    CancelNotification,
+    InitializeRequest,
+    InitializeResponse,
+    NewSessionRequest,
+    NewSessionResponse,
+    PromptRequest,
+    PromptResponse,
+    session_notification,
     start_tool_call,
     stdio_streams,
     text_block,
@@ -22,218 +28,164 @@ from acp import (
     update_agent_thought,
     update_tool_call,
 )
+from pydantic import field_validator
+from acp.schema import AgentCapabilities, Implementation, McpCapabilities
+
+from mini_agent.agent import Agent
+from mini_agent.cli import add_workspace_tools, initialize_base_tools
+from mini_agent.config import Config
+from mini_agent.llm import LLMClient
+from mini_agent.retry import RetryConfig as RetryConfigBase
+from mini_agent.schema import Message
 
 logger = logging.getLogger(__name__)
 
 
+try:
+    class InitializeRequestPatch(InitializeRequest):
+        @field_validator("protocolVersion", mode="before")
+        @classmethod
+        def normalize_protocol_version(cls, value: Any) -> int:
+            if isinstance(value, str):
+                try:
+                    return int(value.split(".")[0])
+                except Exception:
+                    return 1
+            if isinstance(value, (int, float)):
+                return int(value)
+            return 1
+
+    InitializeRequest = InitializeRequestPatch
+    InitializeRequest.model_rebuild(force=True)
+except Exception:  # pragma: no cover - defensive
+    logger.debug("ACP schema patch skipped")
+
+
 @dataclass
 class SessionState:
-    agent: Any  # Will be the Mini-Agent agent
+    agent: Agent
     cancelled: bool = False
 
 
-class MiniMaxACPAgent(Agent):
-    """ACP agent that wraps the existing Mini-Agent runtime."""
+class MiniMaxACPAgent:
+    """Minimal ACP adapter wrapping the existing Agent runtime."""
 
     def __init__(
         self,
-        config: Any,
-        llm: Any,
+        conn: AgentSideConnection,
+        config: Config,
+        llm: LLMClient,
         base_tools: list,
         system_prompt: str,
     ):
-        super().__init__()
+        self._conn = conn
         self._config = config
         self._llm = llm
         self._base_tools = base_tools
         self._system_prompt = system_prompt
         self._sessions: dict[str, SessionState] = {}
 
-    async def initialize(self, params: Any) -> dict[str, Any]:
-        """Initialize the agent with ACP protocol."""
-        return {
-            'protocolVersion': PROTOCOL_VERSION,
-            'agentCapabilities': {
-                'loadSession': False
-            },
-            'agentInfo': {
-                'name': "mini-agent",
-                'title': "Mini-Agent",
-                'version': "0.1.0"
-            }
-        }
+    async def initialize(self, params: InitializeRequest) -> InitializeResponse:  # noqa: ARG002
+        return InitializeResponse(
+            protocolVersion=PROTOCOL_VERSION,
+            agentCapabilities=AgentCapabilities(loadSession=False),
+            agentInfo=Implementation(name="mini-agent", title="Mini-Agent", version="0.1.0"),
+        )
 
-    async def newSession(self, params: Any) -> dict[str, Any]:
-        """Create a new agent session."""
+    async def newSession(self, params: NewSessionRequest) -> NewSessionResponse:
         session_id = f"sess-{len(self._sessions)}-{uuid4().hex[:8]}"
-        workspace = Path(params.get('cwd', "./workspace")).expanduser()
+        workspace = Path(params.cwd or self._config.agent.workspace_dir).expanduser()
         if not workspace.is_absolute():
             workspace = workspace.resolve()
-        
-        # Create agent instance
-        from mini_agent.agent import Agent
-        agent = Agent(
-            llm_client=self._llm, 
-            system_prompt=self._system_prompt, 
-            tools=self._base_tools, 
-            max_steps=self._config.agent.max_steps if self._config else 10, 
-            workspace_dir=str(workspace)
-        )
-        
+        tools = list(self._base_tools)
+        add_workspace_tools(tools, self._config, workspace)
+        agent = Agent(llm_client=self._llm, system_prompt=self._system_prompt, tools=tools, max_steps=self._config.agent.max_steps, workspace_dir=str(workspace))
         self._sessions[session_id] = SessionState(agent=agent)
-        
-        return {'sessionId': session_id}
+        return NewSessionResponse(sessionId=session_id)
 
-    async def prompt(self, params: Any) -> dict[str, Any]:
-        """Process a prompt request in an existing session."""
-        session_id = params.get('sessionId')
-        state = self._sessions.get(session_id)
-        
+    async def prompt(self, params: PromptRequest) -> PromptResponse:
+        state = self._sessions.get(params.sessionId)
         if not state:
-            return {
-                'content': [text_block("Session not found")],
-                'hasError': True
-            }
-        
-        if state.cancelled:
-            return {
-                'content': [text_block("Session cancelled")],
-                'hasError': True
-            }
-        
-        try:
-            # Convert prompt to agent message format
-            from mini_agent.schema import Message
-            messages = [Message(role="user", content=params.get('prompt', ''))]
-            
-            # Run agent
-            response = await state.agent.run(messages)
-            
-            # Convert response back to ACP format
-            content = [text_block(response.content)]
-            
-            return {'content': content}
-            
-        except Exception as e:
-            logger.error("Error processing prompt: %s", e)
-            return {
-                'content': [text_block(f"Error: {str(e)}")],
-                'hasError': True
-            }
+            return PromptResponse(stopReason="refusal")
+        state.cancelled = False
+        user_text = "\n".join(block.get("text", "") if isinstance(block, dict) else getattr(block, "text", "") for block in params.prompt)
+        state.agent.messages.append(Message(role="user", content=user_text))
+        stop_reason = await self._run_turn(state, params.sessionId)
+        return PromptResponse(stopReason=stop_reason)
 
-    async def cancel(self, params: Any) -> dict[str, Any]:
-        """Cancel a running session."""
-        session_id = params.get('sessionId')
-        state = self._sessions.get(session_id)
+    async def cancel(self, params: CancelNotification) -> None:
+        state = self._sessions.get(params.sessionId)
         if state:
             state.cancelled = True
-        return {'cancelled': True}
-    
-    async def loadSession(self, params: Any) -> dict[str, Any]:
-        """Load a session (not implemented yet)."""
-        return {'sessionLoaded': False}
-    
-    async def setSessionMode(self, params: Any) -> dict[str, Any]:
-        """Set session mode (not implemented yet)."""
-        return {'modeSet': True}
-    
-    async def setSessionModel(self, params: Any) -> dict[str, Any]:
-        """Set session model (not implemented yet)."""
-        return {'modelSet': True}
+
+    async def _run_turn(self, state: SessionState, session_id: str) -> str:
+        agent = state.agent
+        for _ in range(agent.max_steps):
+            if state.cancelled:
+                return "cancelled"
+            tool_schemas = [tool.to_schema() for tool in agent.tools.values()]
+            try:
+                response = await agent.llm.generate(messages=agent.messages, tools=tool_schemas)
+            except Exception as exc:
+                logger.exception("LLM error")
+                await self._send(session_id, update_agent_message(text_block(f"Error: {exc}")))
+                return "refusal"
+            if response.thinking:
+                await self._send(session_id, update_agent_thought(text_block(response.thinking)))
+            if response.content:
+                await self._send(session_id, update_agent_message(text_block(response.content)))
+            agent.messages.append(Message(role="assistant", content=response.content, thinking=response.thinking, tool_calls=response.tool_calls))
+            if not response.tool_calls:
+                return "end_turn"
+            for call in response.tool_calls:
+                name, args = call.function.name, call.function.arguments
+                # Show tool name with key arguments for better visibility
+                args_preview = ", ".join(f"{k}={repr(v)[:50]}" for k, v in list(args.items())[:2]) if isinstance(args, dict) else ""
+                label = f"🔧 {name}({args_preview})" if args_preview else f"🔧 {name}()"
+                await self._send(session_id, start_tool_call(call.id, label, kind="execute", raw_input=args))
+                tool = agent.tools.get(name)
+                if not tool:
+                    text, status = f"❌ Unknown tool: {name}", "failed"
+                else:
+                    try:
+                        result = await tool.execute(**args)
+                        status = "completed" if result.success else "failed"
+                        prefix = "✅" if result.success else "❌"
+                        text = f"{prefix} {result.content if result.success else result.error or 'Tool execution failed'}"
+                    except Exception as exc:
+                        status, text = "failed", f"❌ Tool error: {exc}"
+                await self._send(session_id, update_tool_call(call.id, status=status, content=[tool_content(text_block(text))], raw_output=text))
+                agent.messages.append(Message(role="tool", content=text, tool_call_id=call.id, name=name))
+        return "max_turn_requests"
+
+    async def _send(self, session_id: str, update: Any) -> None:
+        await self._conn.sessionUpdate(session_notification(session_id, update))
 
 
-async def main():
-    """Main ACP server entry point."""
-    import argparse
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--workspace", default="./", help="Workspace directory")
-    args = parser.parse_args()
-    
-    # Load configuration
-    try:
-        from mini_agent.config import Config
-        config = Config.from_yaml("mini_agent/config/config.yaml")
-    except Exception as e:
-        logger.error("Failed to load config: %s", e)
-        config = None
-    
-    # Initialize base tools
-    try:
-        from mini_agent.cli import initialize_base_tools
-        tools = []
-        await initialize_base_tools(config or type('Config', (), {
-            'llm': type('LLMConfig', (), {
-                'api_key': 'test',
-                'api_base': 'https://api.minimax.io',
-                'model': 'MiniMax-M2',
-                'retry': type('RetryConfig', (), {
-                    'enabled': False,
-                    'max_retries': 3,
-                    'initial_delay': 1.0,
-                    'max_delay': 60.0,
-                    'exponential_base': 2.0
-                })()
-            })(),
-            'tools': type('ToolsConfig', (), {
-                'enable_file_tools': True,
-                'enable_bash': True,
-                'enable_note': True,
-                'enable_zai_search': True,
-                'enable_skills': True,
-                'enable_mcp': True,
-                'skills_dir': './skills',
-                'mcp_config_path': 'mcp.json'
-            })()
-        })())
-    except Exception as e:
-        logger.error("Failed to initialize tools: %s", e)
-        tools = []
-    
-    # Initialize LLM client
-    try:
-        from mini_agent.llm import LLMClient
-        if config:
-            llm = LLMClient(
-                api_key=config.llm.api_key,
-                api_base=config.llm.api_base,
-                model=config.llm.model,
-                retry_config=config.llm.retry
-            )
-        else:
-            llm = LLMClient(
-                api_key="test",
-                api_base="https://api.minimax.io", 
-                model="MiniMax-M2"
-            )
-    except Exception as e:
-        logger.error("Failed to create LLM client: %s", e)
-        llm = None
-    
-    # Create agent with workspace tools
-    workspace = Path(args.workspace)
-    
-    system_prompt = "You are a helpful AI assistant integrated with the Agent Client Protocol."
-    
-    # Create ACP agent
-    agent = MiniMaxACPAgent(
-        config=config,
-        llm=llm,
-        base_tools=tools,
-        system_prompt=system_prompt,
-    )
-    
-    # Run with stdio streams
-    try:
-        streams = await stdio_streams()
-        read_stream, write_stream = streams
-        
-        # Run the agent with stdio streams
-        await agent.run(read_stream, write_stream)
-            
-    except Exception as e:
-        logger.error("Error starting ACP server: %s", e)
-        raise
+async def run_acp_server(config: Config | None = None) -> None:
+    """Run Mini-Agent as an ACP-compatible stdio server."""
+    config = config or Config.load()
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+    base_tools, skill_loader = await initialize_base_tools(config)
+    prompt_path = Config.find_config_file(config.agent.system_prompt_path)
+    if prompt_path and prompt_path.exists():
+        system_prompt = prompt_path.read_text(encoding="utf-8")
+    else:
+        system_prompt = "You are a helpful AI assistant."
+    if skill_loader:
+        meta = skill_loader.get_skills_metadata_prompt()
+        if meta:
+            system_prompt = f"{system_prompt.rstrip()}\n\n{meta}"
+    rcfg = config.llm.retry
+    llm = LLMClient(api_key=config.llm.api_key, api_base=config.llm.api_base, model=config.llm.model, retry_config=RetryConfigBase(enabled=rcfg.enabled, max_retries=rcfg.max_retries, initial_delay=rcfg.initial_delay, max_delay=rcfg.max_delay, exponential_base=rcfg.exponential_base))
+    reader, writer = await stdio_streams()
+    AgentSideConnection(lambda conn: MiniMaxACPAgent(conn, config, llm, base_tools, system_prompt), writer, reader)
+    logger.info("Mini-Agent ACP server running")
+    await asyncio.Event().wait()
 
 
-__all__ = ["MiniMaxACPAgent", "main"]
+def main() -> None:
+    asyncio.run(run_acp_server())
+
+
+__all__ = ["MiniMaxACPAgent", "run_acp_server", "main"]

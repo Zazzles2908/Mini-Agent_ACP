@@ -9,6 +9,7 @@ class LLMProvider(str, Enum):
 
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    ZAI = "zai"  # Z.AI GLM models
 
 
 class FunctionCall(BaseModel):
@@ -44,3 +45,4 @@ class LLMResponse(BaseModel):
     thinking: str | None = None  # Extended thinking blocks
     tool_calls: list[ToolCall] | None = None
     finish_reason: str
+    usage: dict | None = None  # Token usage information

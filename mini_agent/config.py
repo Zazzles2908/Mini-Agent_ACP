@@ -3,11 +3,26 @@
 Provides unified configuration loading and management functionality
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 import yaml
 from pydantic import BaseModel, Field
+
+# Load .env file if it exists
+def load_env_file():
+    """Load environment variables from .env file if it exists."""
+    env_path = Path.cwd() / ".env"
+    if env_path.exists():
+        with open(env_path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, value = line.split("=", 1)
+                    os.environ[key.strip()] = value.strip()
+
+# Load .env file on module import
+load_env_file()
 
 
 class RetryConfig(BaseModel):
@@ -25,8 +40,8 @@ class LLMConfig(BaseModel):
 
     api_key: str
     api_base: str = "https://api.minimax.io"
-    model: str = "MiniMax-M2"
-    provider: str = "anthropic"  # "anthropic" or "openai"
+    model: str = "glm-4.6"  # Primary: GLM-4.6 for reasoning/actions
+    provider: str = "zai"  # Primary: ZAI (GLM), Secondary: anthropic, openai
     retry: RetryConfig = Field(default_factory=RetryConfig)
 
 
@@ -45,9 +60,6 @@ class ToolsConfig(BaseModel):
     enable_file_tools: bool = True
     enable_bash: bool = True
     enable_note: bool = True
-
-    # Z.AI native web search
-    enable_zai_search: bool = True
 
     # Skills
     enable_skills: bool = True
@@ -68,16 +80,6 @@ class Config(BaseModel):
     @classmethod
     def load(cls) -> "Config":
         """Load configuration from the default search path."""
-        # Try to load .env file from current directory if it exists
-        env_file = Path.cwd() / ".env"
-        if env_file.exists():
-            try:
-                from dotenv import load_dotenv
-                load_dotenv(env_file, override=False)
-                print(f"📝 Loaded environment from: {env_file}")
-            except ImportError:
-                pass  # dotenv not available, continue without it
-        
         config_path = cls.get_default_config_path()
         if not config_path.exists():
             raise FileNotFoundError(
@@ -87,7 +89,7 @@ class Config(BaseModel):
 
     @classmethod
     def from_yaml(cls, config_path: str | Path) -> "Config":
-        """Load configuration from YAML file with environment variable substitution
+        """Load configuration from YAML file
 
         Args:
             config_path: Configuration file path
@@ -99,8 +101,6 @@ class Config(BaseModel):
             FileNotFoundError: Configuration file does not exist
             ValueError: Invalid configuration format or missing required fields
         """
-        import os
-        
         config_path = Path(config_path)
 
         if not config_path.exists():
@@ -112,21 +112,24 @@ class Config(BaseModel):
         if not data:
             raise ValueError("Configuration file is empty")
 
-        # Environment variable substitution function
-        def substitute_env_vars(obj):
-            """Recursively substitute environment variables in nested dict/list structures"""
+        # Handle environment variable substitution
+        def expand_env_vars(obj):
+            """Recursively expand environment variables in config values."""
             if isinstance(obj, dict):
-                return {k: substitute_env_vars(v) for k, v in obj.items()}
+                return {key: expand_env_vars(value) for key, value in obj.items()}
             elif isinstance(obj, list):
-                return [substitute_env_vars(v) for v in obj]
-            elif isinstance(obj, str) and obj.startswith("${") and obj.endswith("}"):
-                env_var = obj[2:-1]  # Remove ${ and }
-                return os.getenv(env_var, obj)  # Return original if env var not found
+                return [expand_env_vars(item) for item in obj]
+            elif isinstance(obj, str):
+                # Handle environment variable substitution like ${VAR_NAME}
+                import re
+                def replacer(match):
+                    var_name = match.group(1)
+                    return os.getenv(var_name, match.group(0))  # Return original if env var not found
+                return re.sub(r'\$\{([^}]+)\}', replacer, obj)
             else:
                 return obj
 
-        # Substitute environment variables in the configuration data
-        data = substitute_env_vars(data)
+        data = expand_env_vars(data)
 
         # Parse LLM configuration
         if "api_key" not in data:
@@ -166,7 +169,6 @@ class Config(BaseModel):
             enable_file_tools=tools_data.get("enable_file_tools", True),
             enable_bash=tools_data.get("enable_bash", True),
             enable_note=tools_data.get("enable_note", True),
-            enable_zai_search=tools_data.get("enable_zai_search", True),
             enable_skills=tools_data.get("enable_skills", True),
             skills_dir=tools_data.get("skills_dir", "./skills"),
             enable_mcp=tools_data.get("enable_mcp", True),

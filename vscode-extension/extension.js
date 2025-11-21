@@ -1,76 +1,82 @@
+// MiniAgent ACP VSCode Extension
 const vscode = require('vscode');
-const { spawn } = require('child_process');
+const http = require('http');
 
 function activate(context) {
-    console.log('Mini-Agent ACP integration activated');
-
-    // Register Chat Participant
-    const miniAgentChat = vscode.chat.createChatParticipant('mini-agent', async (request, context, stream, cancellationToken) => {
-        try {
-            const acpServer = spawn('python', ['-m', 'mini_agent.acp.server'], {
-                stdio: ['pipe', 'pipe', 'inherit']
-            });
-
-            // Send prompt to ACP server
-            const prompt = {
-                jsonrpc: "2.0",
-                id: Date.now(),
-                method: "prompt",
-                params: { text: request.prompt }
-            };
-
-            acpServer.stdin.write(JSON.stringify(prompt) + '\n');
-            
-            acpServer.stdout.on('data', (data) => {
-                try {
-                    const response = JSON.parse(data.toString());
-                    if (response.result) {
-                        stream.markdown(response.result.text);
-                    }
-                } catch (e) {
-                    console.error('Parse error:', e);
-                }
-            });
-
-            // Clean up after timeout
-            setTimeout(() => {
-                acpServer.kill();
-            }, 30000);
-
-        } catch (error) {
-            stream.markdown('Error connecting to Mini-Agent ACP server. Make sure Mini-Agent is installed and accessible.');
-        }
-    });
-
-    context.subscriptions.push(miniAgentChat);
-
-    // Start ACP session command
-    let startCommand = vscode.commands.registerCommand('miniAgent.start', function () {
-        const terminal = vscode.window.createTerminal('Mini-Agent ACP');
-        terminal.sendText('python -m mini_agent.acp.server');
-        terminal.show();
-        
-        vscode.window.showInformationMessage('Mini-Agent ACP server started in terminal');
-    });
-
-    // Send prompt command
-    let promptCommand = vscode.commands.registerCommand('miniAgent.prompt', async function () {
-        const prompt = await vscode.window.showInputBox({
-            prompt: 'Enter your prompt for Mini-Agent'
+    console.log('MiniAgent ACP Extension activated');
+    
+    // Register chat command
+    let disposable = vscode.commands.registerCommand('minimax.chat', async function () {
+        const message = await vscode.window.showInputBox({
+            prompt: 'What would you like to ask MiniAgent?'
         });
         
-        if (prompt) {
-            vscode.window.showInformationMessage(`Prompt sent: ${prompt.substring(0, 50)}...`);
-            // Here you would implement actual ACP protocol communication
+        if (message) {
+            try {
+                const response = await callAgent(message);
+                vscode.window.showInformationMessage(`MiniAgent: ${response}`);
+            } catch (error) {
+                vscode.window.showErrorMessage(`Agent Error: ${error.message}`);
+            }
         }
     });
+    
+    // Create status bar item
+    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    statusBarItem.command = 'minimax.chat';
+    statusBarItem.text = '$(comment-discussion) MiniAgent';
+    statusBarItem.tooltip = 'Chat with MiniAgent';
+    statusBarItem.show();
+    
+    context.subscriptions.push(disposable, statusBarItem);
+}
 
-    context.subscriptions.push(startCommand);
-    context.subscriptions.push(promptCommand);
+async function callAgent(message) {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify({
+            message: message,
+            session_id: 'vscode_extension'
+        });
+        
+        const options = {
+            hostname: 'localhost',
+            port: 8000,
+            path: '/chat',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        };
+        
+        const req = http.request(options, (res) => {
+            let responseData = '';
+            
+            res.on('data', (chunk) => {
+                responseData += chunk;
+            });
+            
+            res.on('end', () => {
+                try {
+                    const response = JSON.parse(responseData);
+                    resolve(response.message);
+                } catch (error) {
+                    reject(new Error('Invalid response from agent'));
+                }
+            });
+        });
+        
+        req.on('error', (error) => {
+            reject(new Error(`Connection failed: ${error.message}`));
+        });
+        
+        req.write(data);
+        req.end();
+    });
 }
 
 function deactivate() {
-    console.log('Mini-Agent ACP integration deactivated');
+    console.log('MiniAgent ACP Extension deactivated');
 }
 
 module.exports = {

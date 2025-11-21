@@ -11,12 +11,10 @@ Examples:
 
 import argparse
 import asyncio
-import os
 from datetime import datetime
 from pathlib import Path
 from typing import List
 
-from dotenv import load_dotenv
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import WordCompleter
@@ -240,56 +238,6 @@ async def initialize_base_tools(config: Config):
         tools.append(bash_kill_tool)
         print(f"{Colors.GREEN}✅ Loaded Bash Kill tool{Colors.RESET}")
 
-    # 2. Z.AI Native Web Search and Reading Tools
-    if config.tools.enable_zai_search:
-        print(f"{Colors.BRIGHT_CYAN}Loading Z.AI web search tools...{Colors.RESET}")
-        try:
-            # Load original Z.AI tools
-            from mini_agent.tools.zai_tools import ZAIWebSearchTool, ZAIWebReaderTool
-            
-            # Initialize with API key from environment
-            zai_search_tool = ZAIWebSearchTool()
-            zai_reader_tool = ZAIWebReaderTool()
-            
-            if zai_search_tool.available:
-                tools.append(zai_search_tool)
-                print(f"{Colors.GREEN}✅ Loaded Z.AI Web Search tool (GLM native search){Colors.RESET}")
-            else:
-                print(f"{Colors.YELLOW}⚠️  Z.AI Web Search unavailable (set ZAI_API_KEY environment variable){Colors.RESET}")
-                
-            if zai_reader_tool.available:
-                tools.append(zai_reader_tool)
-                print(f"{Colors.GREEN}✅ Loaded Z.AI Web Reader tool{Colors.RESET}")
-                
-            # Load Claude-compatible Z.AI tools
-            from mini_agent.tools.claude_zai_tools import ClaudeZAIWebSearchTool, ClaudeZAIRecommendationTool
-            from mini_agent.tools.zai_anthropic_tools import ZAIAnthropicWebSearchTool
-            
-            claude_search_tool = ClaudeZAIWebSearchTool()
-            claude_guide_tool = ClaudeZAIRecommendationTool()
-            
-            # Load Z.AI Anthropic web search tool (uses coding plan credits)
-            zai_anthropic_tool = ZAIAnthropicWebSearchTool()
-            
-            if claude_search_tool.available:
-                tools.append(claude_search_tool)
-                print(f"{Colors.GREEN}✅ Loaded Claude Z.AI Web Search tool (with citations){Colors.RESET}")
-            else:
-                print(f"{Colors.YELLOW}⚠️  Claude Z.AI Web Search unavailable (set ZAI_API_KEY environment variable){Colors.RESET}")
-                
-            if zai_anthropic_tool.available:
-                tools.append(zai_anthropic_tool)
-                print(f"{Colors.GREEN}✅ Loaded Z.AI Anthropic Web Search tool (coding plan, natural citations){Colors.RESET}")
-            else:
-                print(f"{Colors.YELLOW}⚠️  Z.AI Anthropic Web Search unavailable (set ANTHROPIC_AUTH_TOKEN or ZAI_API_KEY){Colors.RESET}")
-                
-            # Always add the guide tool
-            tools.append(claude_guide_tool)
-            print(f"{Colors.GREEN}✅ Loaded Claude Z.AI Setup Guide tool{Colors.RESET}")
-                
-        except Exception as e:
-            print(f"{Colors.YELLOW}⚠️  Failed to load Z.AI tools: {e}{Colors.RESET}")
-
     # 3. Claude Skills (loaded from package directory)
     if config.tools.enable_skills:
         print(f"{Colors.BRIGHT_CYAN}Loading Claude Skills...{Colors.RESET}")
@@ -443,7 +391,13 @@ async def run_agent(workspace_dir: Path):
         print(f"{Colors.DIM}   Retrying in {next_delay:.1f}s (attempt {attempt + 1})...{Colors.RESET}")
 
     # Convert provider string to LLMProvider enum
-    provider = LLMProvider.ANTHROPIC if config.llm.provider.lower() == "anthropic" else LLMProvider.OPENAI
+    provider_map = {
+        "anthropic": LLMProvider.ANTHROPIC,
+        "openai": LLMProvider.OPENAI,
+        "zai": LLMProvider.ZAI,
+    }
+    
+    provider = provider_map.get(config.llm.provider.lower(), LLMProvider.ANTHROPIC)
 
     llm_client = LLMClient(
         api_key=config.llm.api_key,
@@ -628,12 +582,6 @@ async def run_agent(workspace_dir: Path):
 
 def main():
     """Main entry point for CLI"""
-    # Load .env file from current directory if it exists
-    env_file = Path.cwd() / ".env"
-    if env_file.exists():
-        load_dotenv(env_file, override=False)
-        print(f"{Colors.BRIGHT_CYAN}📝 Loaded environment from: {env_file}{Colors.RESET}")
-    
     # Parse command line arguments
     args = parse_args()
 

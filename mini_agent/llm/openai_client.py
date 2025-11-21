@@ -25,7 +25,7 @@ class OpenAIClient(LLMClientBase):
     def __init__(
         self,
         api_key: str,
-        api_base: str = "https://api.minimaxi.com/v1",
+        api_base: str = "https://api.minimax.io/v1",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,
     ):
