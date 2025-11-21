@@ -40,8 +40,8 @@ class LLMConfig(BaseModel):
 
     api_key: str
     api_base: str = "https://api.minimax.io"
-    model: str = "glm-4.6"  # Primary: GLM-4.6 for reasoning/actions
-    provider: str = "zai"  # Primary: ZAI (GLM), Secondary: anthropic, openai
+    model: str = "MiniMax-M2"  # Primary: MiniMax-M2 for reasoning (300 prompts/5hrs)
+    provider: str = "openai"   # Primary: OpenAI-compatible API for MiniMax
     retry: RetryConfig = Field(default_factory=RetryConfig)
 
 
@@ -152,7 +152,7 @@ class Config(BaseModel):
             api_key=data["api_key"],
             api_base=data.get("api_base", "https://api.minimax.io"),
             model=data.get("model", "MiniMax-M2"),
-            provider=data.get("provider", "anthropic"),
+            provider=data.get("provider", "openai"),  # Using OpenAI protocol for MiniMax
             retry=retry_config,
         )
 

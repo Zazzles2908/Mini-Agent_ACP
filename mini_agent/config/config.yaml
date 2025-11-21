@@ -1,61 +1,57 @@
-# Mini Agent Configuration - GLM-4.6 Primary with Z.AI Integration
-# GLM-4.6 for reasoning/actions, Z.AI for web search
+# Mini Agent Configuration - Optimized for MiniMax + Z.AI Integration
+# Primary: MiniMax-M2 (300 prompts/5hrs) for reasoning
+# Secondary: Z.AI GLM-4.6 (120 prompts/5hrs) for web intelligence
 
 # ===== LLM Configuration =====
-# GLM-4.6 Primary LLM Configuration
+# MiniMax API Configuration (Primary - 300 prompts/5hrs)
 api_key: "${MINIMAX_API_KEY}"
-api_base: "https://api.minimax.io"
+api_base: "https://api.minimax.io"   # Global platform
 model: "MiniMax-M2"
-# LLM provider: "anthropic", "openai", or "zai"
-# Primary LLM: MiniMax-M2 for reasoning and actions
-# Z.AI GLM-4.6 for web search functionality only
-provider: "openai"  # MiniMax may use OpenAI-compatible API
-
-# Note: MiniMax requires JWT authentication via Anthropic-compatible API
-
-# Debug configuration
-debug: true
+# LLM provider: "anthropic" or "openai" 
+# MiniMax uses OpenAI-compatible API for broad compatibility
+provider: "openai"
 
 # Optional: OpenAI SDK integration (fallback)
 openai_api_key: "${OPENAI_API_KEY}"
 openai_base: "https://api.openai.com/v1"
-openai_model: "gpt-4"
+openai_model: "gpt-4"  # NOTE: Unused fallback - actual model is MiniMax-M2
 
 # ===== Retry Configuration =====
 retry:
   enabled: true           # Enable retry mechanism
-  max_retries: 3          # Maximum number of retries (vs 5 in your example)
+  max_retries: 3          # Maximum number of retries
   initial_delay: 1.0      # Initial delay time (seconds)
   max_delay: 60.0         # Maximum delay time (seconds)
-  exponential_base: 2.0   # Exponential backoff base (delay = initial_delay * base^attempt)
+  exponential_base: 2.0   # Exponential backoff base
 
 # ===== Agent Configuration =====
-max_steps: 200  # Maximum execution steps (vs 200 in your example)
+max_steps: 200  # Maximum execution steps
 workspace_dir: "./workspace"  # Working directory
 system_prompt_path: "system_prompt.md"  # System prompt file (same config directory)
+debug: true
 
 # ===== Tools Configuration =====
 tools:
   # Basic tool switches
-  enable_file_tools: true  # File read/write/edit tools (ReadTool, WriteTool, EditTool)
+  enable_file_tools: true  # File read/write/edit tools (unlimited operations)
   enable_bash: true        # Bash command execution tool
   enable_note: true        # Session note tool (SessionNoteTool)
 
-  # Z.AI Tools (web search only, reasoning via GLM-4.6)
-  enable_zai_search: true
-  enable_zai_llm: true    # GLM-4.6 for reasoning and actions
+  # Z.AI Tools (web search + reading - 120 prompts/5hrs)
+  enable_zai_search: true  # Z.AI Coding Plan: GLM web search
+  enable_zai_llm: true     # GLM-4.6 for web intelligence
   zai_settings:
-    default_model: "glm-4.6"  # Primary reasoning model
-    search_model: "glm-4.5"   # Optimized for web search
-    max_tokens_per_prompt: 4000
-    track_usage: true
-    efficiency_mode: true
+    default_model: "glm-4.6"  # Always use best quality for Z.AI Lite plan
+    search_model: "glm-4.6"   # Web search optimized model
+    max_tokens_per_prompt: 2000  # Quota efficiency
+    track_usage: true        # Monitor ~120 prompts/5hrs
+    efficiency_mode: true    # Optimize for Lite plan usage
 
-  # Claude Skills
-  enable_skills: true      # Enable Skills
+  # Claude Skills (15 specialized skills)
+  enable_skills: true      # Enable Skills system
   skills_dir: "./skills"   # Skills directory path
 
   # MCP Tools
   enable_mcp: true         # Enable MCP tools
-  mcp_config_path: "mcp.json"  # MCP configuration file (same config directory)
-                           # Note: API Keys for MCP tools are configured in mcp.json
+  mcp_config_path: "mcp.json"  # MCP configuration file
+                           # Note: API Keys for MCP tools configured in mcp.json
