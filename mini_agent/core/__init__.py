@@ -8,12 +8,12 @@ Integrates essential system monitoring and verification tools.
 from .system_monitor import SystemMonitor
 from .fact_checker import FactCheckIntegrator
 from .quota_manager import ZAIQuotaTracker, ZAIUsageMonitor
-from .mcp_interface import ZAIMCPInterface
+from .mcp_interface import ZAIMCPSearchInterface
 
 __all__ = [
     'SystemMonitor',
     'FactCheckIntegrator', 
     'ZAIQuotaTracker',
     'ZAIUsageMonitor',
-    'ZAIMCPInterface'
+    'ZAIMCPSearchInterface'
 ]

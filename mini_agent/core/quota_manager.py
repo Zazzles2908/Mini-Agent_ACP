@@ -12,7 +12,9 @@ from datetime import datetime, timedelta
 from typing import Dict, Any
 
 class ZAIQuotaTracker:
-    def __init__(self, data_file: str = "scripts/utilities/zai_quota_data.json"):
+    def __init__(self, data_file: str = None):
+        if data_file is None:
+            data_file = Path(__file__).parent.parent.parent / "zai_quota_data.json"
         self.data_file = data_file
         self.data = self._load_data()
         
