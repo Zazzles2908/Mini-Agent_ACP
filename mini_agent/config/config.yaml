@@ -42,7 +42,7 @@ tools:
   # ⚠️  CRITICAL: Only GLM-4.6 is FREE with Lite plan - GLM-4.5 CHARGES MONEY!
   # 🔒 CREDIT PROTECTION: Disabled by default to prevent accidental consumption
   #    To enable: Set enable_zai_search: true (will consume ~120 prompts/5hrs)
-  enable_zai_search: false   # Z.AI Web Search: DISABLED - Credit protection active
+  enable_zai_search: true   # Z.AI Web Search: ENABLED - Testing MCP integration
   enable_zai_llm: false     # Direct Z.AI LLM: DISABLED - Credit protection
   zai_settings:
     # ⚠️ CRITICAL: Only use glm-4.6 (FREE) - NEVER use glm-4.5 (PAID)
