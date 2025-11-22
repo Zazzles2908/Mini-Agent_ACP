@@ -12,6 +12,7 @@ from .logger import AgentLogger
 from .schema import Message
 from .tools.base import Tool, ToolResult
 from .utils import calculate_display_width
+from .core.context_overflow_prevention import get_context_manager
 
 
 # ANSI color codes
@@ -89,6 +90,9 @@ class Agent:
 
         # Initialize logger
         self.logger = AgentLogger()
+        
+        # Initialize context overflow prevention
+        self.context_manager = get_context_manager()
 
     def add_user_message(self, content: str):
         """Add a user message to history."""
@@ -434,6 +438,14 @@ Requirements:
         while step < self.max_steps:
             # Check and summarize message history to prevent context overflow
             await self._summarize_messages()
+            
+            # Monitor context overflow status
+            if step > 0 and step % 5 == 0:  # Every 5 steps
+                context_status = self.context_manager.get_status_report()
+                if context_status["needs_optimization"]:
+                    print(f"\n{Colors.BRIGHT_YELLOW}[CONTEXT] Optimization needed - usage: {context_status['usage_percentage']:.1f}%{Colors.RESET}")
+                elif context_status['usage_percentage'] > 40:  # Monitor higher usage
+                    print(f"{Colors.DIM}[CONTEXT] Context usage: {context_status['usage_percentage']:.1f}% ({context_status['current_tokens']:,} tokens){Colors.RESET}")
 
             # Step header with proper width calculation
             BOX_WIDTH = 20  # Reduced from 58 for cleaner output
@@ -444,6 +456,16 @@ Requirements:
             print(f"\n{Colors.DIM}─{'─' * BOX_WIDTH}─{Colors.RESET}")
             print(f"{Colors.DIM}│{Colors.RESET} {step_text}{' ' * padding}{Colors.DIM}│{Colors.RESET}")
             print(f"{Colors.DIM}─{'─' * BOX_WIDTH}─{Colors.RESET}")
+
+            # Check token budget before LLM call
+            context_messages = [msg.__dict__ for msg in self.messages]
+            if not self.context_manager.check_token_budget_before_llm(context_messages):
+                print(f"\n{Colors.BRIGHT_YELLOW}[CONTEXT] Token budget approaching limit - optimization recommended{Colors.RESET}")
+                
+                # Get optimization recommendations
+                recommendations = self.context_manager.get_optimization_recommendations()
+                for rec in recommendations:
+                    print(f"{Colors.DIM}   {ICON_INFO} {rec}{Colors.RESET}")
 
             # Get tool list for LLM call
             tool_list = list(self.tools.values())
@@ -508,8 +530,8 @@ Requirements:
                         honesty_score = 100  # Default to high score for string results
                     
                     if honesty_score >= 80:
-                    # High honesty score - genuine completion
-                    print(f"\n{Colors.BRIGHT_GREEN}[SUCCESS] TASK VALIDATION PASSED{Colors.RESET}")
+                        # High honesty score - genuine completion
+                        print(f"\n{Colors.BRIGHT_GREEN}[SUCCESS] TASK VALIDATION PASSED{Colors.RESET}")
                     if isinstance(validation_result, dict) and validation_result.get('feedback'):
                         print(f"{Colors.DIM}[FEEDBACK] {validation_result['feedback']}{Colors.RESET}")
                     return response.content
