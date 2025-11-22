@@ -1,8 +1,10 @@
 """
-Z.AI Credit Protection Module
+Z.AI Credit Protection Module - FIXED VERSION
 
 This module provides hard protection against Z.AI credit consumption
 by blocking all direct Z.AI tool and client usage when disabled in config.
+
+FIXED: Now properly reads config to determine if Z.AI should be enabled.
 """
 
 import os
@@ -10,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-# Global protection flag
+# Global protection flag - start with safe default (protected)
 _ZAI_PROTECTION_ACTIVE = True
 
 def is_zai_protected() -> bool:
@@ -26,31 +28,45 @@ def get_config_zai_enabled() -> bool:
         True if Z.AI is explicitly enabled in config, False otherwise (safe default)
     """
     try:
-        # Add project root to path if not already there
-        project_root = Path(__file__).parent.parent.parent
-        if str(project_root) not in sys.path:
-            sys.path.insert(0, str(project_root))
-            
-        # Try to load config
-        from mini_agent.config import Config
+        # Import here to avoid circular dependencies
+        import yaml
         
-        config_path = Config.get_default_config_path()
-        if not config_path.exists():
+        # Try multiple config paths
+        config_paths = [
+            Path.cwd() / "mini_agent" / "config" / "config.yaml",
+            Path.cwd() / "config.yaml",
+            Path.home() / ".mini-agent" / "config.yaml"
+        ]
+        
+        config_data = None
+        config_path_used = None
+        
+        for config_path in config_paths:
+            if config_path.exists():
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        config_data = yaml.safe_load(f)
+                        config_path_used = config_path
+                        break
+                except Exception as e:
+                    print(f"Warning: Failed to read config {config_path}: {e}")
+                    continue
+        
+        if config_data is None:
             print("⚠️  No config file found - Z.AI protection active (safe default)")
             return False
             
-        config = Config.from_yaml(config_path)
-        
-        # Check both Z.AI flags - both must be True to enable
-        search_enabled = getattr(config.tools, 'enable_zai_search', False)
-        llm_enabled = getattr(config.tools, 'enable_zai_llm', False)
+        # Check Z.AI configuration
+        tools_data = config_data.get('tools', {})
+        search_enabled = tools_data.get('enable_zai_search', False)
+        llm_enabled = tools_data.get('enable_zai_llm', False)
         
         zai_enabled = search_enabled or llm_enabled
         
         if zai_enabled:
-            print("⚠️  Z.AI enabled in config - Credits will be consumed")
+            print(f"✅ Z.AI enabled in config ({config_path_used}) - Credits will be consumed")
         else:
-            print("✅ Z.AI disabled in config - Credit protection active")
+            print(f"✅ Z.AI disabled in config ({config_path_used}) - Credit protection active")
             
         return zai_enabled
         
@@ -65,7 +81,7 @@ def check_zai_protection() -> bool:
     Returns:
         True if Z.AI is enabled (credits will be consumed), False if protected
     """
-    # Always start with protection active (safe default)
+    # Check config to determine if Z.AI should be enabled
     zai_enabled = get_config_zai_enabled()
     
     # Return True if Z.AI is enabled, False if protection is active
@@ -105,9 +121,15 @@ Current Status:
     print(error_msg)
     raise RuntimeError(f"Z.AI tool '{tool_name}' is disabled for credit protection")
 
-# Global check on module import
-if check_zai_protection():
-    _ZAI_PROTECTION_ACTIVE = False
-else:
+# Initialize protection status on module import
+try:
+    if check_zai_protection():
+        _ZAI_PROTECTION_ACTIVE = False
+        print("✅ Z.AI tools enabled - Credit consumption active")
+    else:
+        _ZAI_PROTECTION_ACTIVE = True
+        print("🔒 Z.AI Credit Protection: ACTIVE - All Z.AI tools blocked")
+except Exception as e:
+    # On any error, default to protection active (safe default)
     _ZAI_PROTECTION_ACTIVE = True
-    print("🔒 Z.AI Credit Protection: ACTIVE - All Z.AI tools blocked")
+    print(f"🔒 Z.AI Credit Protection: ACTIVE (config error) - {e}")

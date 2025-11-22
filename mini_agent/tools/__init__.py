@@ -1,4 +1,7 @@
-"""Tools module."""
+"""Tools module.
+
+Core tools are always available. Z.AI tools require explicit config enablement for credit protection.
+"""
 
 from .base import Tool, ToolResult
 from .bash_tool import BashTool
@@ -26,18 +29,16 @@ try:
     
     if zai_enabled:
         # Z.AI is enabled - allow imports
-        print("✅ Z.AI tools enabled - Credit consumption active")
+        print("✅ Z.AI tools enabled - Credit consumption active (GLM-4.6, ~120 prompts/5hrs)")
         _zai_tools_available = True
     else:
-        # Z.AI is disabled - prevent imports and throw ImportError
+        # Z.AI is disabled - prevent imports
         print("✅ Z.AI tools disabled - Credit protection active")
-        raise ImportError("Z.AI tools disabled for credit protection")
         
-except ImportError:
-    # If config check fails, default to safe (disabled) - should not happen often
+except ImportError as e:
+    # If config check fails, default to safe (disabled)
     if 'zai_enabled' not in locals():
         print("⚠️  Z.AI config check failed - Defaulting to disabled for safety")
-    # Either way, Z.AI tools remain unavailable
     _zai_tools_available = False
 except Exception as e:
     # If any import fails, default to safe (disabled) to prevent credit consumption
@@ -47,12 +48,14 @@ except Exception as e:
 # Only import Z.AI tools if explicitly enabled
 if _zai_tools_available:
     try:
-        from .zai_tools import ZAIWebSearchTool, ZAIWebReaderTool
-        from .claude_zai_tools import ClaudeZAIWebSearchTool, ClaudeZAIRecommendationTool
-        from .zai_anthropic_tools import ZAIAnthropicWebSearchTool
+        # Import the unified Z.AI tools (single source of truth)
+        from .zai_unified_tools import ZAIWebSearchTool, ZAIWebReaderTool, get_zai_tools
+        print("✅ Z.AI unified tools loaded - Web search/reading available")
+        print("   📍 Using Z.AI GLM-4.6 backend (FREE with Lite plan)")
+            
     except ImportError as e:
-        # If individual tools fail to import, log but don't crash
-        print(f"⚠️  Failed to import some Z.AI tools: {e}")
+        # If primary tools fail to import, log but don't crash
+        print(f"⚠️  Failed to import Z.AI unified tools: {e}")
         _zai_tools_available = False
 
 __all__ = [
@@ -66,17 +69,19 @@ __all__ = [
     "RecallNoteTool",
 ]
 
-# Add Z.AI tools to __all__ only if explicitly enabled
+# Add Z.AI tools to __all__ only if explicitly enabled and successfully imported
 if _zai_tools_available:
     __all__.extend([
         "ZAIWebSearchTool",
-        "ZAIWebReaderTool", 
-        "ClaudeZAIWebSearchTool",
-        "ClaudeZAIRecommendationTool",
-        "ZAIAnthropicWebSearchTool",
+        "ZAIWebReaderTool",
+        "get_zai_tools",
     ])
 
-# Function to check if Z.AI tools are available (for agent initialization)
+
 def zai_tools_available() -> bool:
-    """Check if Z.AI tools are available based on configuration"""
+    """Check if Z.AI tools are available.
+    
+    Returns:
+        True if Z.AI tools are enabled and imported successfully
+    """
     return _zai_tools_available

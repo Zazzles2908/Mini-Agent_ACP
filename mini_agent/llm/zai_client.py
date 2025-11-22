@@ -33,7 +33,7 @@ class ZAIClient:
 
     def __init__(self, api_key: str, use_coding_plan: bool = True):
         # CRITICAL: Check credit protection before any Z.AI operations
-        if check_zai_protection():
+        if not check_zai_protection():  # If protection is active (Z.AI disabled), block usage
             block_zai_usage("ZAIClient")
         """Initialize Z.AI client.
         

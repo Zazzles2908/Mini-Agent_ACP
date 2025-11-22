@@ -37,15 +37,24 @@ tools:
   enable_bash: true        # Bash command execution tool
   enable_note: true        # Session note tool (SessionNoteTool)
 
-  # Z.AI Tools - DISABLED TO PREVENT CREDIT CONSUMPTION
-  enable_zai_search: false  # Z.AI Coding Plan: DISABLED - Credit protection
-  enable_zai_llm: false     # GLM-4.6: DISABLED - Credit protection  
+  # Z.AI Tools - PROTECTED for credit consumption prevention
+  # ✅ OpenAI web functions implemented using GLM-4.6 backend
+  # ⚠️  CRITICAL: Only GLM-4.6 is FREE with Lite plan - GLM-4.5 CHARGES MONEY!
+  # 🔒 CREDIT PROTECTION: Disabled by default to prevent accidental consumption
+  #    To enable: Set enable_zai_search: true (will consume ~120 prompts/5hrs)
+  enable_zai_search: false   # Z.AI Web Search: DISABLED - Credit protection active
+  enable_zai_llm: false     # Direct Z.AI LLM: DISABLED - Credit protection
   zai_settings:
-    default_model: "glm-4.6"  # Unused - Z.AI tools disabled
-    search_model: "glm-4.6"   # Unused - Z.AI tools disabled
-    max_tokens_per_prompt: 2000  # Unused - Z.AI tools disabled
-    track_usage: true        # Unused - Z.AI tools disabled
-    efficiency_mode: true    # Unused - Z.AI tools disabled
+    # ⚠️ CRITICAL: Only use glm-4.6 (FREE) - NEVER use glm-4.5 (PAID)
+    default_model: "glm-4.6"       # ✅ FREE with Lite plan - DO NOT CHANGE
+    search_model: "glm-4.6"        # ✅ FREE with Lite plan - DO NOT CHANGE
+    max_tokens_per_prompt: 2000    # Prevent excessive token usage (was 357k!)
+    max_search_results: 10         # Reasonable limit for quota management
+    track_usage: true              # Monitor coding plan usage (~120 prompts/5hrs)
+    efficiency_mode: true          # Optimize for coding plan constraints
+    # Direct Z.AI API integration (correct approach - proven in transaction logs)
+    use_direct_api: true           # Use direct Z.AI API calls (not OpenAI SDK)
+    zai_base: "https://api.z.ai/api/coding/paas/v4"  # Verified working endpoint
 
   # Claude Skills (15 specialized skills)
   enable_skills: true      # Enable Skills system
