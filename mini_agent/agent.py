@@ -42,18 +42,18 @@ class Colors:
 
 
 # Icon replacements for compatibility
-ICON_WARNING = "WARNING"
-ICON_SUCCESS = "SUCCESS"
-ICON_ERROR = "ERROR"
-ICON_INFO = "INFO"
-ICON_STEP = "STEP"
-ICON_THINKING = "THINKING"
-ICON_ASSISTANT = "ASSISTANT"
-ICON_TOOL = "TOOL"
-ICON_RESULT = "RESULT"
-ICON_VALIDATION = "VALIDATION"
-ICON_QUALITY = "QUALITY"
-ICON_FEEDBACK = "FEEDBACK"
+ICON_WARNING = "⚠"
+ICON_SUCCESS = "✅"
+ICON_ERROR = "❌"
+ICON_INFO = "ℹ"
+ICON_STEP = "➤"
+ICON_THINKING = "💭"
+ICON_ASSISTANT = "🤖"
+ICON_TOOL = "🔧"
+ICON_RESULT = "📋"
+ICON_VALIDATION = "🔍"
+ICON_QUALITY = "⭐"
+ICON_FEEDBACK = "💬"
 
 
 class Agent:
@@ -431,14 +431,14 @@ Requirements:
             await self._summarize_messages()
 
             # Step header with proper width calculation
-            BOX_WIDTH = 58
+            BOX_WIDTH = 20  # Reduced from 58 for cleaner output
             step_text = f"{Colors.BOLD}{Colors.BRIGHT_CYAN}[EXECUTION] Step {step + 1}/{self.max_steps}{Colors.RESET}"
             step_display_width = calculate_display_width(step_text)
             padding = max(0, BOX_WIDTH - 1 - step_display_width)  # -1 for leading space
 
-            print(f"\n{Colors.DIM}{ICON_INFO}{ICON_INFO * BOX_WIDTH}{ICON_INFO}{Colors.RESET}")
-            print(f"{Colors.DIM}{ICON_STEP}{Colors.RESET} {step_text}{' ' * padding}{Colors.DIM}{ICON_STEP}{Colors.RESET}")
-            print(f"{Colors.DIM}{ICON_INFO}{ICON_INFO * BOX_WIDTH}{ICON_INFO}{Colors.RESET}")
+            print(f"\n{Colors.DIM}─{'─' * BOX_WIDTH}─{Colors.RESET}")
+            print(f"{Colors.DIM}│{Colors.RESET} {step_text}{' ' * padding}{Colors.DIM}│{Colors.RESET}")
+            print(f"{Colors.DIM}─{'─' * BOX_WIDTH}─{Colors.RESET}")
 
             # Get tool list for LLM call
             tool_list = list(self.tools.values())
