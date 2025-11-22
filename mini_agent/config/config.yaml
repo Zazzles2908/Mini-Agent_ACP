@@ -26,7 +26,7 @@ retry:
 
 # ===== Agent Configuration =====
 max_steps: 200  # Maximum execution steps
-workspace_dir: "./workspace"  # Working directory
+workspace_dir: "."  # Working directory (root directory)
 system_prompt_path: "system_prompt.md"  # System prompt file (same config directory)
 debug: true
 
@@ -37,24 +37,25 @@ tools:
   enable_bash: true        # Bash command execution tool
   enable_note: true        # Session note tool (SessionNoteTool)
 
-  # Z.AI Tools - PROTECTED for credit consumption prevention
-  # ✅ MiniMax-M2 backend) implemented using GLM-4.6 backend
-  # ⚠️  CRITICAL: Only GLM-4.6 is FREE with Lite plan - GLM-4.5 CHARGES MONEY!
-  # 🔒 CREDIT PROTECTION: Disabled by default to prevent accidental consumption
-  #    To enable: Set enable_zai_search: true (will consume ~120 prompts/5hrs)
-  enable_zai_search: true   # Z.AI Web Search: ENABLED - Testing MCP integration
-  enable_zai_llm: false     # Direct Z.AI LLM: DISABLED - Credit protection
+  # Z.AI Tools - MCP Protocol Integration (FREE quotas)
+  # ✅ Using MCP servers for FREE Lite plan quotas
+  # 📊 Quotas: 100 web searches + 100 web readers (FREE with Lite plan)
+  # 🔒 CREDIT PROTECTION: Only MCP tools enabled, direct API calls disabled
+  enable_zai_search: true          # Z.AI MCP Web Search: ENABLED (FREE quotas)
+  enable_zai_llm: false           # Direct Z.AI LLM: DISABLED - Credit protection
   zai_settings:
-    # ⚠️ CRITICAL: Only use glm-4.6 (FREE) - NEVER use glm-4.5 (PAID)
-    default_model: "glm-4.6"       # ✅ FREE with Lite plan - DO NOT CHANGE
-    search_model: "glm-4.6"        # ✅ FREE with Lite plan - DO NOT CHANGE
-    max_tokens_per_prompt: 2000    # Prevent excessive token usage (was 357k!)
-    max_search_results: 10         # Reasonable limit for quota management
-    track_usage: true              # Monitor coding plan usage (~120 prompts/5hrs)
-    efficiency_mode: true          # Optimize for coding plan constraints
-    # Direct Z.AI API integration (correct approach - proven in transaction logs)
-    use_direct_api: true           # Use direct Z.AI API calls (not OpenAI SDK format)
-    zai_base: "https://api.z.ai/api/coding/paas/v4"  # Verified working endpoint
+    # MCP Protocol integration (FREE quotas)
+    use_mcp_protocol: true         # Use MCP servers (FREE quotas)
+    mcp_config_path: "mini_agent/config/z_mcp_servers.json"  # MCP server configuration
+    # ⚠️ OLD PAID ENDPOINTS DISABLED - Migrating to FREE MCP
+    use_direct_api: false          # ❌ DISABLED - was burning credits
+    zai_base: ""                   # ❌ Empty - no longer using paid endpoints
+    # ✅ NEW MCP INTEGRATION - FREE with Lite plan
+    search_quota_limit: 100        # FREE web searches included
+    reader_quota_limit: 100        # FREE web readers included
+    track_mcp_usage: true          # Monitor MCP quota usage
+    enable_web_search_mcp: true    # ✅ Use free MCP web search
+    enable_web_reader_mcp: true    # ✅ Use free MCP web reader
 
   # MiniMax-M2 Skills (15 specialized skills)
   enable_skills: true      # Enable Skills system
