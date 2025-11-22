@@ -18,7 +18,7 @@ When you start working in a new session or project:
    - Python environment: Check for `.venv`, verify `uv` is installed
    - Dependencies: Check `requirements.txt`, `pyproject.toml`, `package.json`
    - Configuration: Verify `mini_agent/config/config.yaml` and environment variables (`.env`)
-   - **Z.AI Setup**: Confirm `ZAI_API_KEY` is set and test with Coding Plan limits (~120 prompts/5hrs)
+   - **Z.AI Setup**: Confirm `ZAI_API_KEY` is set for web search capabilities (FREE Lite plan: 100 searches + 100 readers)
 
 4. **Document Your Work** (See Document Hygiene below)
 
@@ -41,13 +41,12 @@ When you start working in a new session or project:
 ### 2. **Native Web Search & Intelligence**
 Mini-Agent includes built-in web search and content analysis capabilities:
 
-**Z.AI Coding Plan Features** (requires `ZAI_API_KEY` environment variable)
-- **GLM Chat Models**: Up to ~120 prompts every 5 hours (3x MiniMax-M2 Pro usage quota)
-- **Web Search**: Included in Coding Plan quota allocation
-- **Web Reader**: Available with proper authorization
-- **Models Available**: GLM-4.6 (best quality), GLM-4.5 (efficient), GLM-4.5-air (lightweight)
-- **Usage Management**: Track prompts to stay within 5-hour windows
-- **Efficiency Tips**: Use GLM-4.5 for routine tasks, GLM-4.6 for complex analysis
+**Z.AI Lite Plan Features** (requires `ZAI_API_KEY` environment variable)
+- **GLM-4.6**: FREE model for web search and content reading
+- **Web Search**: 100 searches included in Lite plan (no additional cost)
+- **Web Reader**: 100 readers included in Lite plan (no additional cost)
+- **Usage Management**: Track Lite plan usage to stay within quotas
+- **Cost Efficient**: Uses FREE quotas, no expensive upgrades needed
 
 ### 3. **Knowledge Graph & Memory Systems**
 Mini-Agent features built-in knowledge management:

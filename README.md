@@ -26,7 +26,7 @@
 - ✅ Interactive CLI interface
 
 **Community Extensions (10%)**:
-- 🆕 Z.AI Integration - Additional LLM for web search (GLM-4.5/4.6)
+- 🆕 Z.AI Integration - Web search using GLM-4.6 (FREE with Lite plan: 100 searches + 100 readers)
 - 🆕 ACP Server - Protocol bridge for VS Code/Zed integration
 - 🆕 Organizational System - Professional documentation structure
 - 🆕 Fact-Checking Framework - Quality assurance tools
@@ -47,7 +47,7 @@ uv venv && uv pip install -e .
 
 # 3. Configure (get keys from https://platform.minimax.io)
 echo "MINIMAX_API_KEY=your_minimax_key" > .env
-echo "ZAI_API_KEY=your_zai_key" >> .env  # Optional: for web search
+echo "ZAI_API_KEY=your_zai_key" >> .env  # Web search: GLM-4.6 (FREE on Lite plan)
 
 # 4. Initialize MiniMax-M2 Skills (recommended)
 git submodule update --init --recursive
@@ -110,7 +110,7 @@ mini_agent/
 
 ### **LLM Provider Hierarchy**
 1. **MiniMax-M2** (Primary) - Core reasoning and execution
-2. **Z.AI GLM-4.5/4.6** (Additional) - Web search and reading
+2. **Z.AI GLM-4.6** (Additional) - Web search and reading (FREE on Lite plan: 100 searches + 100 readers)
 3. **Anthropic/OpenAI** (Fallback) - Alternative providers
 
 ---
@@ -133,10 +133,9 @@ mini_agent/
 ```python
 # Supports multiple providers with same interface
 providers = [
-    "MiniMax-M2",     # Default - Created by MiniMax
-    "minimax-opus-4",  # MiniMax-M2
-    "glm-4.6 (via Z.AI)",          # OpenAI GPT
-    "glm-4.5"         # Z.AI GLM (Community addition)
+    "MiniMax-M2",     # Default - Primary reasoning model
+    "minimax-opus-4",  # MiniMax-M2 (same model)
+    "glm-4.6 (via Z.AI)"          # Z.AI GLM-4.6 for web search (FREE on Lite plan)
 ]
 ```
 
@@ -145,16 +144,16 @@ providers = [
 ## 🆕 **Community Extensions**
 
 ### **Z.AI Integration**
-**Purpose**: Add web search capabilities using GLM models
+**Purpose**: Add web search capabilities using GLM-4.6 (FREE on Lite plan)
 
 ```python
 # Configuration
 tools:
-  enable_zai_search: true  # Enable Z.AI tools
+  enable_zai_search: true  # Enable Z.AI tools (uses FREE Lite plan quota)
   
 # Available tools
-- zai_web_search: Search the web using GLM-4.5
-- zai_web_reader: Extract and read web content using GLM-4.6
+- zai_web_search: Search the web using GLM-4.6 (100 searches on Lite plan)
+- zai_web_reader: Extract and read web content using GLM-4.6 (100 readers on Lite plan)
 ```
 
 ### **ACP (Agent Client Protocol) Server**
