@@ -9,7 +9,7 @@ api_base: "https://api.minimax.io"   # Global platform
 model: "MiniMax-M2"
 # AI model: "anthropic" or "openai" 
 # MiniMax uses OpenAI-compatible API for broad compatibility
-provider: "openai"  # OpenAI SDK format"
+provider: "anthropic"  # Anthropic SDK format for MiniMax-M2"
 
 # Optional: OpenAI SDK format integration (fallback)
 openai_api_key: "${OPENAI_API_KEY}"
