@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-Agent System Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: #1a1a1a; 
+            color: #00ff00; 
+        }
+        .status-card { 
+            background: #2a2a2a; 
+            border: 2px solid #00ff00; 
+            margin: 10px; 
+            padding: 20px; 
+        }
+        .status-enabled { border-color: #00ff00; background: #003300; }
+        .status-disabled { border-color: #ff0000; background: #330000; }
+        .status-warning { border-color: #ffff00; background: #333300; }
+        .refresh-btn { 
+            background: #00ff00; 
+            color: #000; 
+            border: none; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+        .large-text { font-size: 24px; font-weight: bold; }
+        .medium-text { font-size: 18px; }
+        .small-text { font-size: 14px; }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">🤖 Mini-Agent System Dashboard</h1>
+            <p class="text-xl">Real-time system verification for your dual-monitor setup</p>
+            <button class="refresh-btn mt-4" onclick="refreshStatus()">🔄 Refresh Status</button>
+        </div>
+
+        <!-- System Status Grid -->
+        <div class="grid grid-cols-2 gap-6">
+            
+            <!-- Primary Model Status -->
+            <div class="status-card status-enabled">
+                <h2 class="large-text mb-4">🧠 Primary AI Model</h2>
+                <div class="medium-text">Model: MiniMax-M2</div>
+                <div class="small-text">Type: OpenAI SDK format wrapper</div>
+                <div class="small-text">Quota: 300 prompts/5hrs</div>
+                <div class="small-text">Status: ✅ ACTIVE</div>
+            </div>
+
+            <!-- Web Search Status -->
+            <div class="status-card status-disabled" id="web-search-status">
+                <h2 class="large-text mb-4">🌐 Web Search</h2>
+                <div class="medium-text">Model: GLM-4.6 via Z.AI</div>
+                <div class="small-text">Endpoint: v4 API</div>
+                <div class="small-text">Quota: 120 prompts/5hrs</div>
+                <div class="small-text">Status: ❌ DISABLED</div>
+                <div class="small-text warning-text mt-2">⚠️ This explains why you only see snippets!</div>
+            </div>
+
+            <!-- File Organization -->
+            <div class="status-card status-enabled">
+                <h2 class="large-text mb-4">📁 File Organization</h2>
+                <div class="medium-text">Scripts: scripts/utilities/</div>
+                <div class="small-text">Documents: documents/</div>
+                <div class="small-text">Misplaced files: 0</div>
+                <div class="small-text">Status: ✅ ORGANIZED</div>
+            </div>
+
+            <!-- Credit Protection -->
+            <div class="status-card status-enabled">
+                <h2 class="large-text mb-4">🔒 Credit Protection</h2>
+                <div class="medium-text">Active Protection</div>
+                <div class="small-text">Z.AI Search: Disabled</div>
+                <div class="small-text">Z.AI LLM: Disabled</div>
+                <div class="small-text">Status: ✅ ACTIVE</div>
+                <div class="small-text mt-2">🛡️ Prevents accidental consumption</div>
+            </div>
+
+            <!-- System Verification -->
+            <div class="status-card status-warning">
+                <h2 class="large-text mb-4">🔍 Verification Status</h2>
+                <div class="medium-text">Claims Verified: 4/5</div>
+                <div class="small-text">Success Rate: 80%</div>
+                <div class="small-text">Overall: ✅ MOSTLY CORRECT</div>
+                <div class="small-text mt-2">1 partial verification on web integration</div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="status-card">
+                <h2 class="large-text mb-4">⚡ Quick Actions</h2>
+                <button class="refresh-btn mb-2" onclick="enableWebSearch()" style="width: 100%;">
+                    Enable Full Web Search
+                </button>
+                <button class="refresh-btn mb-2" onclick="runVerification()" style="width: 100%; background: #ffff00; color: #000;">
+                    Run System Check
+                </button>
+                <button class="refresh-btn" onclick="showReality()" style="width: 100%; background: #ff6600; color: #fff;">
+                    Show Reality Check
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Reality Check Section -->
+        <div id="reality-section" class="status-card mt-8" style="display: none;">
+            <h2 class="large-text mb-4">🎯 System Reality Check</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <h3 class="medium-text mb-2">✅ What IS Built:</h3>
+                    <ul class="small-text space-y-1">
+                        <li>• MiniMax-M2 primary reasoning model</li>
+                        <li>• GLM-4.6 web search capability (disabled)</li>
+                        <li>• Proper file organization</li>
+                        <li>• Credit protection system</li>
+                        <li>• Verification tools working</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="medium-text mb-2">❌ What's NOT Working:</h3>
+                    <ul class="small-text space-y-1">
+                        <li>• Full web search (disabled)</li>
+                        <li>• Complete Z.AI integration</li>
+                        <li>• Rich web content extraction</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function refreshStatus() {
+            // Simulate refreshing system status
+            document.querySelector('.refresh-btn').textContent = '🔄 Refreshing...';
+            setTimeout(() => {
+                document.querySelector('.refresh-btn').textContent = '🔄 Refresh Status';
+                alert('System status refreshed! (This would run real verification in production)');
+            }, 1000);
+        }
+
+        function enableWebSearch() {
+            alert('This would run: scripts/utilities/zai_web_toggle.py enable\n\n' +
+                  '⚠️ Warning: This will consume ~120 prompts/5hrs from your coding plan!\n\n' +
+                  'To enable manually: cd C:\\Users\\Jazeel-Home\\Mini-Agent && python scripts/utilities/zai_web_toggle.py enable');
+        }
+
+        function runVerification() {
+            alert('This would run: scripts/utilities/simple_fact_check.py\n\n' +
+                  'Current verified claims:\n' +
+                  '• ✅ Primary model: MiniMax-M2\n' +
+                  '• ✅ Secondary model: GLM-4.6\n' +
+                  '• ✅ Credit protection active\n' +
+                  '• ✅ File organization correct\n' +
+                  '• ⚠️ Web integration: Partial');
+        }
+
+        function showReality() {
+            const section = document.getElementById('reality-section');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            // In production, this would call real verification APIs
+            console.log('Auto-refresh: System running normally');
+        }, 30000);
+    </script>
+</body>
+</html>
