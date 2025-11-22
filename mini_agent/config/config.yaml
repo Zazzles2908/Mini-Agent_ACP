@@ -42,7 +42,7 @@ tools:
   # 📊 Quotas: 100 web searches + 100 web readers (FREE with Lite plan)
   # 🔒 CREDIT PROTECTION: Only MCP tools enabled, direct API calls disabled
   enable_zai_search: true          # Z.AI MCP Web Search: ENABLED (FREE quotas)
-  enable_zai_llm: false           # Direct Z.AI LLM: DISABLED - Credit protection
+  enable_zai_llm: true           # Direct Z.AI LLM: DISABLED - Credit protection
   zai_settings:
     # MCP Protocol integration (FREE quotas)
     use_mcp_protocol: true         # Use MCP servers (FREE quotas)
