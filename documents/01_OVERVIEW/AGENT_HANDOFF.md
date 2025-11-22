@@ -8,7 +8,7 @@
 
 ### What was just completed:
 1. **Comprehensive repository cleanup** - Removed 800+ node_modules files from vscode-extension
-2. **MiniMax-M2 backend) integration** - Full implementation with documentation
+2. **MiniMax-M2 integration** - Full implementation with documentation
 3. **ZAI architecture cleanup** - Deprecated legacy tools, unified interface
 4. **Documentation update** - Added 12+ new documentation files
 5. **Git commit and push** - All changes committed and pushed to origin/main
@@ -96,7 +96,7 @@ Mini-Agent/
 ### Dependencies to be aware of:
 - Python packages managed via `uv` (use `uv pip install` for dependencies)
 - Z.AI API requires `ZAI_API_KEY` environment variable
-- MiniMax-M2 backend) may require additional API keys
+- MiniMax-M2 requires MINIMAX_API_KEY environment variable (300 prompts/5hrs)
 - VS Code extension requires npm/node.js for building
 
 ## For Next Agent

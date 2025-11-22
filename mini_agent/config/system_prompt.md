@@ -92,20 +92,20 @@ Skills are loaded dynamically using **Progressive Disclosure**:
 5. **Report** progress and any issues encountered
 
 ### Available Tools Overview
-Mini-Agent now provides comprehensive built-in capabilities with Coding Plan quota management:
+Mini-Agent now provides comprehensive built-in capabilities with Lite Plan quota management:
 - **File Operations**: Native file tools (no MCP dependency needed)
-- **GLM Chat**: Z.AI Coding Plan (~120 prompts every 5 hours, use efficiently)
-- **Web Search**: Included in Coding Plan quota (optimize search parameters)
+- **GLM Chat**: Z.AI Lite Plan (100 searches + 100 readers, use efficiently)
+- **Web Search**: Included in Lite Plan quota (optimize search parameters)
 - **Web Reader**: Available with proper authorization (use selectively)
 - **Bash Execution**: Native system commands (PowerShell on Windows, bash on Unix)
 - **Knowledge Management**: Built-in session notes and entity management
 - **Skills System**: Specialized domain knowledge loaded on demand
 
-**Coding Plan Optimization Guidelines:**
-- Default model: GLM-4.5 for efficiency, GLM-4.6 for complex tasks only
-- Track usage within 5-hour windows to avoid quota exhaustion
+**Lite Plan Optimization Guidelines:**
+- Default model: GLM-4.6 (only model available on Lite plan)
+- Track usage within Lite Plan quotas (100 searches + 100 readers)
 - Use web search efficiently: targeted queries, relevant results
-- Monitor token usage: aim for <2000 tokens per prompt for optimal quota
+- Monitor Lite Plan usage to stay within FREE quotas
 
 ### File Operations
 - Use native file tools for all operations (no MCP filesystem sandbox needed)
@@ -134,28 +134,26 @@ Mini-Agent now provides comprehensive built-in capabilities with Coding Plan quo
 **Python-based skills:** pdf, pptx, docx, xlsx, canvas-design, algorithmic-art 
 
 ### Web Tool Usage Management
-**CRITICAL for Z.AI Coding Plan users:**
+**CRITICAL for Z.AI Lite Plan users:**
 
 1. **Usage Quota Understanding**:
-   - ~120 prompts every 5 hours (3x MiniMax-M2 Pro usage)
-   - Includes GLM chat, web search, web reader
+   - 100 web searches + 100 web readers (FREE on Lite plan)
+   - GLM-4.6 model only (no choice of models on Lite plan)
    - Track usage to avoid quota exhaustion
 
 2. **Optimize Model Selection**:
-   - **GLM-4.5**: Use for routine coding tasks, efficient token usage
-   - **GLM-4.6**: Use for complex analysis, code reviews, debugging
-   - **GLM-4.5-air**: Use for lightweight tasks, quick responses
+   - **GLM-4.6**: Use for all web search and reading tasks (only model available)
 
 3. **Quota-Smart Usage**:
-   - Plan complex tasks in batches to maximize quota efficiency
-   - Use web search first to gather information before expensive GLM calls
-   - Monitor token usage: aim for <2000 tokens per prompt
-   - Use session management to reuse context efficiently
+   - Plan web research tasks efficiently to maximize FREE quotas
+   - Use web search strategically before complex reasoning tasks
+   - Monitor Lite Plan usage to stay within 100 searches + 100 readers
+   - Web functionality is FREE, no additional costs
 
 4. **Usage Monitoring**:
-   - Track prompts used within 5-hour windows
-   - Plan heavy tasks around quota reset times
-   - Use efficiency mode (GLM-4.5) for routine operations
+   - Track searches and readers used within Lite Plan quotas
+   - Use Z.AI web capabilities before alternative solutions
+   - Web search is completely FREE on Lite plan
 
 ### Communication
 - Be concise but thorough in responses

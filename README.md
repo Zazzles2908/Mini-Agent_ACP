@@ -2,7 +2,7 @@
 
 **Created by**: [MiniMax AI Team](https://github.com/MiniMax-AI/agent-demo)  
 **System**: Teaching-level agent demonstration with community extensions  
-**Primary LLM**: MiniMax-M2 (OpenAI-compatible API)  
+**Primary LLM**: MiniMax-M2 (300 prompts/5hrs)  
 **Original Docs**: [docs/](docs/) directory contains official MiniMax documentation
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](README.md)
@@ -19,14 +19,14 @@
 
 **From MiniMax (Core - 90%)**:
 - ✅ Agent execution loop with tool calling
-- ✅ Multi-provider: "openai"  # OpenAI SDK format)
+- ✅ MiniMax-M2 (primary reasoning, 300 prompts/5hrs)
 - ✅ Tool framework (File, Bash, MCP integration)
 - ✅ MiniMax-M2 Skills integration (20+ professional capabilities)
 - ✅ Configuration system and retry mechanism
 - ✅ Interactive CLI interface
 
 **Community Extensions (10%)**:
-- 🆕 Z.AI Integration - Web search using GLM-4.6 (FREE with Lite plan: 100 searches + 100 readers)
+- 🆕 Z.AI Integration - Web search using GLM-4.6 (FREE with Lite plan: 100 searches + 100 readers, direct API calls)
 - 🆕 ACP Server - Protocol bridge for VS Code/Zed integration
 - 🆕 Organizational System - Professional documentation structure
 - 🆕 Fact-Checking Framework - Quality assurance tools
@@ -45,9 +45,9 @@ cd agent-demo
 # 2. Setup environment
 uv venv && uv pip install -e .
 
-# 3. Configure (get keys from https://platform.minimax.io)
+# 3. Configure (get keys from respective platforms)
 echo "MINIMAX_API_KEY=your_minimax_key" > .env
-echo "ZAI_API_KEY=your_zai_key" >> .env  # Web search: GLM-4.6 (FREE on Lite plan)
+echo "ZAI_API_KEY=your_zai_key" >> .env  # Web search: GLM-4.6 (FREE: 100 searches + 100 readers)
 
 # 4. Initialize MiniMax-M2 Skills (recommended)
 git submodule update --init --recursive
@@ -62,7 +62,7 @@ mini-agent
 api_key: "${MINIMAX_API_KEY}"  # Required: MiniMax API key
 api_base: "https://api.minimax.io"  # Global platform
 model: "MiniMax-M2"  # Primary model
-provider: "openai"  # OpenAI SDK format"  # Protocol format (OpenAI-compatible for MiniMax)
+provider: "minimax"  # Primary provider
 
 # Optional: Z.AI for web search
 tools:
@@ -109,9 +109,8 @@ mini_agent/
 ```
 
 ### **LLM Provider Hierarchy**
-1. **MiniMax-M2** (Primary) - Core reasoning and execution
-2. **Z.AI GLM-4.6** (Additional) - Web search and reading (FREE on Lite plan: 100 searches + 100 readers)
-3. **Anthropic/OpenAI** (Fallback) - Alternative providers
+1. **MiniMax-M2** (Primary) - Core reasoning and execution (300 prompts/5hrs)
+2. **Z.AI GLM-4.6** (Additional) - Web search and reading (FREE: 100 searches + 100 readers)
 
 ---
 
@@ -133,9 +132,8 @@ mini_agent/
 ```python
 # Supports multiple providers with same interface
 providers = [
-    "MiniMax-M2",     # Default - Primary reasoning model
-    "minimax-opus-4",  # MiniMax-M2 (same model)
-    "glm-4.6 (via Z.AI)"          # Z.AI GLM-4.6 for web search (FREE on Lite plan)
+    "MiniMax-M2",     # Default - Primary reasoning model (300 prompts/5hrs)
+    "GLM-4.6"         # Z.AI GLM-4.6 for web search (FREE: 100 searches + 100 readers)
 ]
 ```
 

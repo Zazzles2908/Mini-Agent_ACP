@@ -10,10 +10,8 @@
 ### Core Components (by MiniMax - ~90%)
 - **Agent Loop**: `mini_agent/agent.py` - Execution loop with tool calling and message management
 - **LLM Clients**: `mini_agent/llm/` - Multi-provider support
-  - MiniMax-M2 (primary)
-  - MiniMax-M2
-  - OpenAI GPT
-  - Z.AI GLM-4.5/4.6 (community extension)
+  - MiniMax-M2 (primary reasoning, 300 prompts/5hrs)
+  - Z.AI GLM-4.6 (web search, 100 searches + 100 readers FREE)
 - **Tools**: `mini_agent/tools/` - Extensible tool framework
   - File operations (read, write, edit)
   - Bash execution (PowerShell on Windows)
@@ -31,7 +29,7 @@
 - **Logging**: Structured logging for debugging
 
 ### Community Extensions (~10%)
-- **Z.AI Integration**: GLM-4.5/4.6 models with web search capabilities
+- **Z.AI Integration**: GLM-4.6 model with web search capabilities
 - **ACP Server**: `mini_agent/acp/` - Agent Client Protocol bridge for editor integration
 - **VS Code Extension**: `vscode-extension/` - Native Chat API integration
 - **Zed Integration**: (Planned) - See `documents/experiments/zed_acp/`
@@ -135,7 +133,7 @@ documents/                # ALL project documentation
 ## Key Technologies
 - **Language**: Python 3.10+
 - **Package Manager**: uv (modern pip replacement)
-- **LLM APIs**: Anthropic, MiniMax-M2, GLM-4.6
+- **LLM APIs**: MiniMax-M2 (primary), GLM-4.6 via Z.AI (web search)
 - **Testing**: pytest with async support
 - **Configuration**: YAML + environment variables
 - **Protocol**: Agent Client Protocol (ACP) for editor integration

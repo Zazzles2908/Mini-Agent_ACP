@@ -43,9 +43,8 @@ max_steps: 100  # Increase max steps
 ```bash
 # .env
 MINIMAX_API_KEY=your_minimax_key_here
-ZAI_API_KEY=your_zai_key_here          # Optional: for web search
-OPENAI_API_KEY=your_openai_key_here    # Optional: for GPT models
-ANTHROPIC_API_KEY=your_anthropic_key   # Optional: for MiniMax-M2
+ZAI_API_KEY=your_zai_key_here          # Required: for web search (Lite plan: 100 searches + 100 readers)
+MINIMAX_API_KEY=your_minimax_key_here  # Required: for MiniMax-M2 primary model
 ```
 
 ### 4. MCP Server Configuration
@@ -168,26 +167,25 @@ tools:
 
 ## Provider-Specific Notes
 
-### MiniMax M2
-- **Best for**: General tasks, Chinese language, cost-effective
-- **API Key**: Get from https://platform.minimax.io
-- **Models**: MiniMax-Text-01
-
-### MiniMax-M2
-- **Best for**: Complex reasoning, extended thinking
+### MiniMax-M2 (Primary)
+- **Best for**: Complex reasoning, extended thinking, primary agent
 - **API Key**: Get from https://console.anthropic.com
-- **Models**: minimax-MiniMax-M2-4-20250514, minimax-opus-4-20250514
+- **Models**: minimax-MiniMax-M2-4-20250514
+- **Quota**: 300 prompts every 5 hours
 
-### OpenAI GPT
-- **Best for**: Wide compatibility, function calling
-- **API Key**: Get from https://platform.openai.com
-- **Models**: glm-4.6 (via Z.AI)o, glm-4.6 (via Z.AI)-turbo
-
-### Z.AI GLM
-- **Best for**: Web search, Coding Plan (120 prompts/5hrs)
+### Z.AI GLM-4.6 (Secondary)
+- **Best for**: Web search and web reading capabilities
 - **API Key**: Get from Z.AI platform
-- **Models**: glm-4.6 (best quality), glm-4.5 (efficient), glm-4.5-air (lightweight)
-- **Features**: Built-in web search and web reader
+- **Models**: glm-4.6 (via direct API, NOT OpenAI SDK)
+- **Quota**: 100 searches + 100 readers (FREE on Lite plan)
+- **Architecture**: Direct HTTP API calls, not OpenAI SDK format
+
+### Z.AI GLM-4.6
+- **Best for**: Web search, Lite Plan (100 searches + 100 readers - FREE)
+- **API Key**: Get from Z.AI platform  
+- **Models**: glm-4.6 (only model available on Lite plan)
+- **Features**: Built-in web search and web reader via direct API calls
+- **Cost**: FREE on Lite plan, no additional charges
 
 ## Troubleshooting
 

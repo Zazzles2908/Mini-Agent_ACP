@@ -185,11 +185,10 @@ You were using **MiniMax-M2 Desktop** (Context 3), which has its own MCP filesys
 │  • Built into GLM models                                            │
 │  • Reliable and fast                                                │
 │                                                                     │
-│  Available Models:                                                  │
-│  • glm-4.6        → Complex reasoning (default)                     │
-│  • glm-4.5        → Agent-focused tasks                             │
-│  • glm-4-air      → Quick responses                                 │
-│  • glm-4.6-plus   → High performance                                │
+│  Available Model:                                                  │
+│  • glm-4.6        → Only model available on Lite plan               │
+│                   → Web search and web reading capabilities          │
+│                   → FREE: 100 searches + 100 readers                │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
