@@ -10,13 +10,13 @@ def main():
     print("🔧 Mini-Agent Integration Fixes Test")
     print("=" * 50)
     
-    # Test 1: OpenAI SDK
-    print("\n1. OpenAI SDK Integration:")
+    # Test 1: OpenAI SDK format
+    print("\n1. OpenAI SDK format Integration:")
     try:
         from openai import AsyncOpenAI
-        print("   ✅ OpenAI SDK: Working (imported successfully)")
+        print("   ✅ OpenAI SDK format: Working (imported successfully)")
     except Exception as e:
-        print(f"   ❌ OpenAI SDK: Failed - {e}")
+        print(f"   ❌ OpenAI SDK format: Failed - {e}")
     
     # Test 2: LLM Providers
     print("\n2. LLM Provider Hierarchy:")
@@ -87,7 +87,7 @@ def main():
     print("\n" + "=" * 50)
     print("✅ INTEGRATION FIXES COMPLETE")
     print("\nSUMMARY:")
-    print("• OpenAI SDK: ✅ Already integrated")
+    print("• OpenAI SDK format: ✅ Already integrated")
     print("• Z.AI Web Search: ✅ Working")
     print("• GLM-4.6: ✅ Added as primary LLM")
     print("• LLM Providers: ✅ Updated hierarchy")

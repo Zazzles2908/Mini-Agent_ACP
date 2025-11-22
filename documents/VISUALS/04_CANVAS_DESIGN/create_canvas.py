@@ -108,10 +108,10 @@ create_modular_node(ax, 3.2, 0.5, 2.3, 1.8, COLORS['infrastructure'],
                     'Utilities', 
                     ['Credit Protection', 'File Ops', 'Logging'])
 
-# ============ LAYER 2: LLM Integration ============
+# ============ LAYER 2: AI Model Integration ============
 create_modular_node(ax, 6.2, 0.5, 2.0, 2.2, COLORS['integration'],
                     'OpenAI',
-                    ['GPT-4', 'Web Tools'])
+                    ['MiniMax-M2', 'Web Tools'])
 create_modular_node(ax, 8.5, 0.5, 2.0, 2.2, COLORS['integration'],
                     'MiniMax',
                     ['GLM-4.6', 'GLM-4.5'])
@@ -180,7 +180,7 @@ create_modular_node(ax, 7.2, 7.9, 2.8, 0.9, COLORS['user_interface'],
 
 # ============ Organic Connections (mycelium network) ============
 
-# Config/Utils → LLM Integration
+# Config/Utils → AI Model Integration
 for llm_x in [7.2, 9.5, 11.8]:
     create_connection(ax, (1.65, 2.3), (llm_x, 0.5), COLORS['infrastructure'])
     create_connection(ax, (4.35, 2.3), (llm_x, 0.5), COLORS['infrastructure'])

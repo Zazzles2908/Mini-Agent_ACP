@@ -1,4 +1,4 @@
-"""Extended Z.AI integration with web reader support for Claude."""
+"""Extended Z.AI integration with web reader support for MiniMax-M2."""
 
 import asyncio
 import logging
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SearchResultBlock:
-    """Claude-compatible search result block."""
+    """MiniMax-M2-compatible search result block."""
     type: str = "search_result"
     source: str = ""
     title: str = ""
@@ -32,8 +32,8 @@ class SearchResultBlock:
             self.citations = {"enabled": True}
 
 
-class ExtendedClaudeZAIWebReader:
-    """Extended web reader that can provide web reading results as Claude blocks."""
+class ExtendedMiniMax-M2ZAIWebReader:
+    """Extended web reader that can provide web reading results as MiniMax-M2 blocks."""
     
     def __init__(self, api_key: str):
         """Initialize extended web reader.
@@ -49,13 +49,13 @@ class ExtendedClaudeZAIWebReader:
             "Accept-Language": "en-US,en",
         }
 
-    async def web_reader_for_claude(
+    async def web_reader_for_minimax(
         self,
         url: str,
         format_type: str = "markdown",
         include_images: bool = True,
     ) -> List[SearchResultBlock]:
-        """Read web page and format as Claude search_result block.
+        """Read web page and format as MiniMax-M2 search_result block.
         
         Args:
             url: URL to read
@@ -63,7 +63,7 @@ class ExtendedClaudeZAIWebReader:
             include_images: Whether to retain images
             
         Returns:
-            List of SearchResultBlock objects for Claude citation
+            List of SearchResultBlock objects for MiniMax-M2 citation
         """
         try:
             import aiohttp
@@ -91,7 +91,7 @@ class ExtendedClaudeZAIWebReader:
                         description = reader_result.get("description", "Web page content")
                         content = reader_result.get("content", "No content found")
                         
-                        # Create Claude-compatible search result block
+                        # Create MiniMax-M2-compatible search result block
                         # Note: Web reader content is formatted as a single search result
                         search_block = SearchResultBlock(
                             type="search_result",
@@ -160,13 +160,13 @@ class ExtendedClaudeZAIWebReader:
         Returns:
             Dict with combined search and reading results
         """
-        from .claude_zai_client import ClaudeZAIWebSearchClient
+        from .minimax_zai_client import MiniMax-M2ZAIWebSearchClient
         
         # We'll create a simplified search client inline to avoid circular imports
-        from .claude_zai_client import get_zai_api_key
+        from .minimax_zai_client import get_zai_api_key
         
         # Create a simple client for search
-        class SimpleClaudeZAIWebSearchClient:
+        class SimpleMiniMax-M2ZAIWebSearchClient:
             def __init__(self, api_key: str):
                 self.api_key = api_key
                 self.base_url = "https://api.z.ai/api/coding/paas/v4"
@@ -176,7 +176,7 @@ class ExtendedClaudeZAIWebReader:
                     "Accept-Language": "en-US,en",
                 }
 
-            async def web_search_for_claude(self, query: str, count: int, search_engine: str):
+            async def web_search_for_minimax(self, query: str, count: int, search_engine: str):
                 payload = {
                     "search_engine": search_engine,
                     "search_query": query,
@@ -195,7 +195,7 @@ class ExtendedClaudeZAIWebReader:
                             result = await response.json()
                             search_results = result.get("search_result", [])
                             
-                            claude_blocks = []
+                            minimax_blocks = []
                             for search_item in search_results:
                                 content_text = search_item.get("content", "")
                                 title = search_item.get("title", "Untitled")
@@ -211,23 +211,23 @@ class ExtendedClaudeZAIWebReader:
                                     citations={"enabled": True}
                                 )
                                 
-                                claude_blocks.append(search_block)
+                                minimax_blocks.append(search_block)
                             
-                            return claude_blocks
+                            return minimax_blocks
                         else:
                             return []
                 
-        search_client = SimpleClaudeZAIWebSearchClient(self.api_key)
+        search_client = SimpleMiniMax-M2ZAIWebSearchClient(self.api_key)
         
         # Perform search
-        search_blocks = await search_client.web_search_for_claude(
+        search_blocks = await search_client.web_search_for_minimax(
             query=query,
             count=search_count,
             search_engine="search-prime"
         )
         
         # Perform web reading
-        read_blocks = await self.web_reader_for_claude(
+        read_blocks = await self.web_reader_for_minimax(
             url=read_url,
             format_type="markdown",
             include_images=False  # Avoid large content in search results
@@ -255,14 +255,14 @@ async def test_web_reader_integration():
     if not api_key:
         return False
     
-    reader = ExtendedClaudeZAIWebReader(api_key)
+    reader = ExtendedMiniMax-M2ZAIWebReader(api_key)
     
     # Test web reading
     try:
         # Test with a reliable URL
         test_url = "https://httpbin.org/html"
         
-        result_blocks = await reader.web_reader_for_claude(
+        result_blocks = await reader.web_reader_for_minimax(
             url=test_url,
             format_type="markdown",
             include_images=False
@@ -284,7 +284,7 @@ async def test_combined_workflow():
     if not api_key:
         return False
     
-    reader = ExtendedClaudeZAIWebReader(api_key)
+    reader = ExtendedMiniMax-M2ZAIWebReader(api_key)
     
     try:
         # Test combined workflow
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     
     if reader_success and combined_success:
         print("Web reader integration is working!")
-        print("Can provide web reading results as Claude search_result blocks")
+        print("Can provide web reading results as MiniMax-M2 search_result blocks")
         print("Can combine search and reading for comprehensive results")
     else:
         print("Web reader integration needs debugging")

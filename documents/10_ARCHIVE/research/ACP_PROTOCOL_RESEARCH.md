@@ -97,9 +97,9 @@ Zed supports **terminal-based agents through ACP**, including:
    - Authentication: Google OAuth or API key
    - Managed by Zed, updated automatically
 
-2. **Claude Code** (included by default)
-   - Installation: `@zed-industries/claude-code-acp`
-   - Authentication: Separate from Zed (API key or Claude Pro)
+2. **MiniMax-M2 Code** (included by default)
+   - Installation: `@zed-industries/minimax-code-acp`
+   - Authentication: Separate from Zed (API key or MiniMax-M2 Pro)
    - Runs via ACP adapter
 
 3. **Custom ACP-compatible agents**
@@ -114,9 +114,9 @@ Zed supports **terminal-based agents through ACP**, including:
     "gemini": {
       "ignore_system_version": false
     },
-    "claude": {
+    "minimax": {
       "env": {
-        "CLAUDE_CODE_EXECUTABLE": "/path/to/executable"
+        "MINIMAX_CODE_EXECUTABLE": "/path/to/executable"
       }
     }
   }
@@ -308,7 +308,7 @@ class MiniMaxACPAgent:
 - **Zed External Agents:** https://zed.dev/docs/ai/external-agents
 - **ACP Python Package:** `acp` (already used in Mini-Agent)
 - **Gemini CLI:** `@google/gemini-cli` (reference implementation)
-- **Claude Code:** `@zed-industries/claude-code-acp`
+- **MiniMax-M2 Code:** `@zed-industries/minimax-code-acp`
 
 ---
 

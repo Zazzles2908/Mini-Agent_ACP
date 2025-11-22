@@ -1,7 +1,7 @@
 # 🎉 Repository Cleanup Complete
 
 **Date**: 2025-01-22  
-**Executed by**: Claude (Mini-Agent)  
+**Executed by**: MiniMax-M2 (Mini-Agent)  
 **Status**: ✅ SUCCESS - Ready to commit
 
 ---

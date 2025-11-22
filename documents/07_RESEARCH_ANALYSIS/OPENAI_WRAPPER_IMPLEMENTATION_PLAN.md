@@ -2,12 +2,12 @@
 
 ## 🎯 Problem Solved
 **Original Issue**: GLM Lite plan doesn't provide direct web function access  
-**Solution**: OpenAI SDK wrapper around Z.AI backend  
+**Solution**: MiniMax-M2 backend  
 **Benefit**: MiniMax-M2 compatibility + proven Z.AI implementation
 
 ## 🏗️ Architecture
 ```
-MiniMax-M2 (OpenAI SDK)
+MiniMax-M2 (OpenAI SDK format)
        ↓
 OpenAI Web Functions Wrapper
        ↓  
@@ -18,7 +18,7 @@ Direct API calls to https://api.z.ai/api/coding/paas/v4
 
 ## 📦 Package Components
 1. **base.py**: Tool framework (Tool, ToolResult classes)
-2. **openai_web_functions.py**: OpenAI SDK compatible interface
+2. **openai_web_functions.py**: OpenAI SDK format compatible interface
 3. **zai_unified_tools.py**: Z.AI backend implementation (GLM-4.6)
 4. **integration_example.py**: Integration examples
 5. **test_openai_integration.py**: Safe testing without API calls
@@ -46,7 +46,7 @@ Direct API calls to https://api.z.ai/api/coding/paas/v4
 - [ ] Commit changes
 
 ## ✅ Key Benefits
-- **OpenAI SDK Format**: Direct compatibility with MiniMax-M2
+- **OpenAI SDK format Format**: Direct compatibility with MiniMax-M2
 - **Proven Backend**: Uses existing Z.AI implementation
 - **Cost Control**: GLM-4.6 (FREE) + 2k token limits
 - **Safety**: Maintains all credit protection mechanisms

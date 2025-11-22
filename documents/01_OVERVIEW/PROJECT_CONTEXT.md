@@ -11,7 +11,7 @@
 - **Agent Loop**: `mini_agent/agent.py` - Execution loop with tool calling and message management
 - **LLM Clients**: `mini_agent/llm/` - Multi-provider support
   - MiniMax-M2 (primary)
-  - Anthropic Claude
+  - MiniMax-M2
   - OpenAI GPT
   - Z.AI GLM-4.5/4.6 (community extension)
 - **Tools**: `mini_agent/tools/` - Extensible tool framework
@@ -135,7 +135,7 @@ documents/                # ALL project documentation
 ## Key Technologies
 - **Language**: Python 3.10+
 - **Package Manager**: uv (modern pip replacement)
-- **LLM APIs**: Anthropic, OpenAI, MiniMax, Z.AI
+- **LLM APIs**: Anthropic, MiniMax-M2, GLM-4.6
 - **Testing**: pytest with async support
 - **Configuration**: YAML + environment variables
 - **Protocol**: Agent Client Protocol (ACP) for editor integration

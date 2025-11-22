@@ -112,7 +112,7 @@ Users will be able to:
 **Required Mini-Agent Setup:**
 - Mini-Agent installed and working
 - Configuration file set up (`config.yaml`)
-- API keys configured (if using LLM providers)
+- API keys configured (if using AI models)
 
 ### Quick Start (30 Minutes)
 

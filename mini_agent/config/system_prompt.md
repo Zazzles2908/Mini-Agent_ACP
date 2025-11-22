@@ -42,7 +42,7 @@ When you start working in a new session or project:
 Mini-Agent includes built-in web search and content analysis capabilities:
 
 **Z.AI Coding Plan Features** (requires `ZAI_API_KEY` environment variable)
-- **GLM Chat Models**: Up to ~120 prompts every 5 hours (3x Claude Pro usage quota)
+- **GLM Chat Models**: Up to ~120 prompts every 5 hours (3x MiniMax-M2 Pro usage quota)
 - **Web Search**: Included in Coding Plan quota allocation
 - **Web Reader**: Available with proper authorization
 - **Models Available**: GLM-4.6 (best quality), GLM-4.5 (efficient), GLM-4.5-air (lightweight)
@@ -138,7 +138,7 @@ Mini-Agent now provides comprehensive built-in capabilities with Coding Plan quo
 **CRITICAL for Z.AI Coding Plan users:**
 
 1. **Usage Quota Understanding**:
-   - ~120 prompts every 5 hours (3x Claude Pro usage)
+   - ~120 prompts every 5 hours (3x MiniMax-M2 Pro usage)
    - Includes GLM chat, web search, web reader
    - Track usage to avoid quota exhaustion
 

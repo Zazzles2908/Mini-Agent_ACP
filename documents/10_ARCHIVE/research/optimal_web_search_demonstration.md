@@ -2,7 +2,7 @@
 
 ## 🎯 **Raw Demonstration Output**
 
-**Query**: `docs.z.ai/devpack/tool/claude installation configuration setup steps`  
+**Query**: `docs.z.ai/devpack/tool/minimax installation configuration setup steps`  
 **Depth**: `comprehensive` (7 sources)  
 **Engine**: `search-prime` (cost-effective)
 
@@ -11,23 +11,23 @@
 ## ✅ **Search Results (Full Output)**
 
 ```
-**Claude Z.AI Web Search Results**
+**MiniMax-M2 Z.AI Web Search Results**
 
-📊 **Query:** docs.z.ai/devpack/tool/claude installation configuration setup steps
-🔍 **Model:** Z.AI Search Prime (Claude Compatible)  
+📊 **Query:** docs.z.ai/devpack/tool/minimax installation configuration setup steps
+🔍 **Model:** Z.AI Search Prime (MiniMax-M2 Compatible)  
 📈 **Depth:** comprehensive
 📚 **Sources:** 7 search result blocks
 ⏰ **Timestamp:** 2025-11-20T07:45:24.080100
 
 ---
 
-**Generated Claude Search Result Blocks:**
-These results are formatted as Claude's search_result blocks and can be cited naturally:
+**Generated MiniMax-M2 Search Result Blocks:**
+These results are formatted as MiniMax-M2's search_result blocks and can be cited naturally:
 
 
-**Result 1:** Claude Code - Z.AI DEVELOPER DOCUMENT
-🔗 Source: https://docs.z.ai/devpack/tool/claude
-📝 Content Preview: Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and he...
+**Result 1:** MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT
+🔗 Source: https://docs.z.ai/devpack/tool/minimax
+📝 Content Preview: MiniMax-M2 Code is an agentic coding tool that lives in your terminal, understands your codebase, and he...
 ✅ Citations: Enabled
 
 ---
@@ -39,9 +39,9 @@ These results are formatted as Claude's search_result blocks and can be cited na
 
 ---
 
-**Result 3:** Claude Code IDE Plugin - Z.AI DEVELOPER DOCUMENT
-🔗 Source: https://docs.z.ai/devpack/tool/claude-for-ide
-📝 Content Preview: Step 1: Install Claude Code & Configure GLM Coding Plan; Step 2: Install and Use the IDE Plugin. Too...
+**Result 3:** MiniMax-M2 Code IDE Plugin - Z.AI DEVELOPER DOCUMENT
+🔗 Source: https://docs.z.ai/devpack/tool/minimax-for-ide
+📝 Content Preview: Step 1: Install MiniMax-M2 Code & Configure GLM Coding Plan; Step 2: Install and Use the IDE Plugin. Too...
 ✅ Citations: Enabled
 
 ---
@@ -49,9 +49,9 @@ These results are formatted as Claude's search_result blocks and can be cited na
 *... and 4 more search result blocks*
 
 
-**Claude Integration Benefits:**
-✅ **Natural Citations** - Claude can cite these sources like web search
-✅ **Search Result Blocks** - Formatted per Claude's search_result schema  
+**MiniMax-M2 Integration Benefits:**
+✅ **Natural Citations** - MiniMax-M2 can cite these sources like web search
+✅ **Search Result Blocks** - Formatted per MiniMax-M2's search_result schema  
 ✅ **Usage Efficiency** - ~120 prompts every 5 hours (Coding Plan)
 ✅ **Web Search Quality** - Same citation format as native web search
 ```
@@ -60,8 +60,8 @@ These results are formatted as Claude's search_result blocks and can be cited na
 
 ## 🔗 **Key URLs Successfully Found**
 
-✅ `https://docs.z.ai/devpack/tool/claude`  
-✅ `https://docs.z.ai/devpack/tool/claude-for-ide`  
+✅ `https://docs.z.ai/devpack/tool/minimax`  
+✅ `https://docs.z.ai/devpack/tool/minimax-for-ide`  
 ✅ `https://docs.z.ai/devpack/quick-start`  
 
 ---
@@ -72,7 +72,7 @@ These results are formatted as Claude's search_result blocks and can be cited na
 1. **Finds Real Documentation** - Located the exact Z.AI DevPack pages
 2. **Provides URLs** - Direct links to the documentation
 3. **Content Previews** - Brief descriptions to understand page relevance
-4. **Citation Format** - Proper Claude-compatible source attribution
+4. **Citation Format** - Proper MiniMax-M2-compatible source attribution
 5. **Comprehensive Results** - 7 sources vs 3 with "quick" depth
 
 ### ✅ **Use Case Workflow**:
@@ -85,7 +85,7 @@ These results are formatted as Claude's search_result blocks and can be cited na
 - **Real API Integration** - Actual calls to Z.AI servers
 - **Proper Authentication** - Bearer token working
 - **Cost Optimized** - Search Prime engine (most efficient)
-- **Claude Compatible** - Natural citation format
+- **MiniMax-M2 Compatible** - Natural citation format
 
 ---
 

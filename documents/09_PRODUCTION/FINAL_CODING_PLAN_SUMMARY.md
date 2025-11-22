@@ -11,7 +11,7 @@ You were absolutely right - I had the wrong understanding! The 1113 errors were 
 
 ### ✅ **What I Now Understand Correctly**
 - **Reality**: Coding Plan with usage quota management
-- **Limit**: ~120 prompts every 5 hours (3x Claude Pro usage)
+- **Limit**: ~120 prompts every 5 hours (3x MiniMax-M2 Pro usage)
 - **Focus**: Usage efficiency, not cost optimization
 - **Pricing**: Included in subscription, not per-call billing
 

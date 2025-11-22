@@ -166,10 +166,10 @@ def show_tools_status():
         ("✅", "file_tools", "File operations (Read, Write, Edit)"),
         ("✅", "bash_tool", "Bash command execution"),
         ("✅", "note_tool", "Session note taking"),
-        ("✅", "skill_tool", "Claude Skills integration"),
+        ("✅", "skill_tool", "MiniMax-M2 Skills integration"),
         ("⚠️", "minimax_search", "Disabled (use Z.AI instead)"),
         ("✅", "memory", "Knowledge graph memory"),
-        ("⚠️", "filesystem", "Limited to /tmp (Claude Desktop)"),
+        ("⚠️", "filesystem", "Limited to /tmp (MiniMax-M2 Desktop)"),
         ("✅", "git", "Git repository operations"),
     ]
     

@@ -190,7 +190,7 @@ graph LR
     subgraph "Foundation Layer"
         CORE[Mini-Agent Core]
         CONFIG[Configuration]
-        LLM[LLM Integration]
+        LLM[AI Model Integration]
     end
     
     subgraph "Application Layer"

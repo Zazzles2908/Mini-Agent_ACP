@@ -17,7 +17,7 @@ The Z.AI web search implementation has been successfully corrected and tested. I
 ## 🔧 Corrections Made
 
 ### 1. Fixed Misleading Naming
-- **Before**: `ZAIOpenAIWebSearchTool` (incorrectly suggested OpenAI SDK)
+- **Before**: `ZAIOpenAIWebSearchTool` (incorrectly suggested OpenAI SDK format)
 - **After**: `ZAIWebSearchTool` (correctly reflects Z.AI direct API)
 - **File**: `mini_agent/tools/zai_web_tools.py`
 
@@ -82,7 +82,7 @@ tools:
 - ✅ Research with source attribution
 - ✅ Fact-checking current information  
 - ✅ Web intelligence gathering
-- ✅ Claude Code integration for natural citations
+- ✅ MiniMax-M2 Code integration for natural citations
 
 ### Credit Management:
 - **Plan**: ~120 prompts every 5 hours (Lite Plan)
@@ -95,11 +95,11 @@ tools:
 The Z.AI web search tool integrates seamlessly with:
 - **Mini-Agent**: Primary reasoning via MiniMax-M2 (300 prompts/5hrs)
 - **Z.AI Web Search**: Supplementary web intelligence (120 prompts/5hrs)
-- **Claude Code**: Natural citation integration for research tasks
+- **MiniMax-M2 Code**: Natural citation integration for research tasks
 
 ## 📝 Summary
 
-The Z.AI implementation was **already working correctly** and consuming your credits as expected. The issue was the misleading naming convention that suggested OpenAI SDK usage when it was actually using Z.AI direct API. 
+The Z.AI implementation was **already working correctly** and consuming your credits as expected. The issue was the misleading naming convention that suggested OpenAI SDK format usage when it was actually using Z.AI direct API. 
 
 **Fixed**: Naming convention now correctly reflects Z.AI direct API usage.  
 **Confirmed**: Web search functionality is fully operational.  

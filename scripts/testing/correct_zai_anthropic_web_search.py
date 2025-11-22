@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Correct Z.AI web search implementation using Anthropic-compatible API.
-Formats results as Claude search_result blocks for natural citations.
+Formats results as MiniMax-M2 search_result blocks for natural citations.
 """
 
 import asyncio
@@ -19,7 +19,7 @@ class ZAIAnthropicWebSearchTool:
     """Z.AI web search tool using Anthropic-compatible API endpoint.
     
     This tool uses the Z.AI Anthropic-compatible endpoint (https://api.z.ai/api/anthropic)
-    to provide web search capabilities that Claude can cite naturally through 
+    to provide web search capabilities that MiniMax-M2 can cite naturally through 
     search_result blocks.
     """
     
@@ -51,7 +51,7 @@ class ZAIAnthropicWebSearchTool:
     
     @property
     def description(self) -> str:
-        return "Web search using Z.AI's Anthropic-compatible API with natural citation support. Returns search_result blocks that Claude can cite directly."
+        return "Web search using Z.AI's Anthropic-compatible API with natural citation support. Returns search_result blocks that MiniMax-M2 can cite directly."
     
     def parameters(self) -> dict:
         return {
@@ -76,7 +76,7 @@ class ZAIAnthropicWebSearchTool:
                 },
                 "enable_citations": {
                     "type": "boolean",
-                    "description": "Enable citations for Claude natural referencing",
+                    "description": "Enable citations for MiniMax-M2 natural referencing",
                     "default": True
                 }
             },
@@ -96,10 +96,10 @@ class ZAIAnthropicWebSearchTool:
             query: Search query
             model: GLM model (glm-4.6, glm-4.5, glm-4.5-air)
             max_results: Maximum results to return
-            enable_citations: Enable citations for Claude
+            enable_citations: Enable citations for MiniMax-M2
             
         Returns:
-            ToolResult with search_result blocks formatted for Claude citation
+            ToolResult with search_result blocks formatted for MiniMax-M2 citation
         """
         try:
             print(f"🕷️  Executing Z.AI web search...")
@@ -113,7 +113,7 @@ class ZAIAnthropicWebSearchTool:
                     "role": "system",
                     "content": """You are a web search tool. When asked about web information, you must perform a web search and return results in the exact format specified. Do not use your training data for current information - always perform actual web searches.
 
-Return your response as Claude search_result blocks in this exact format:
+Return your response as MiniMax-M2 search_result blocks in this exact format:
 {
   "role": "assistant",
   "content": [
@@ -187,8 +187,8 @@ Important:
                             # Parse the search_result blocks from the response
                             search_results = self._parse_search_results(response_content)
                             
-                            # Format for Claude tool result
-                            formatted_content = self._format_for_claude(search_results, enable_citations)
+                            # Format for MiniMax-M2 tool result
+                            formatted_content = self._format_for_minimax(search_results, enable_citations)
                             
                             success_message = f"""✅ **Z.AI Web Search Results**
 
@@ -201,7 +201,7 @@ Important:
 
 ---
 *Search completed using Z.AI's Anthropic-compatible API*
-*Results formatted as Claude search_result blocks for natural citations*"""
+*Results formatted as MiniMax-M2 search_result blocks for natural citations*"""
 
                             return ToolResult(
                                 success=True,
@@ -250,8 +250,8 @@ Important:
             }
         ]
     
-    def _format_for_claude(self, search_results, enable_citations: bool = True):
-        """Format search results as Claude search_result blocks."""
+    def _format_for_minimax(self, search_results, enable_citations: bool = True):
+        """Format search results as MiniMax-M2 search_result blocks."""
         if not isinstance(search_results, list):
             return str(search_results)
         
@@ -281,7 +281,7 @@ async def demonstrate_correct_approach():
         
         # Test search
         result = await search_tool.execute(
-            query="Z.AI DevPack Claude integration documentation",
+            query="Z.AI DevPack MiniMax-M2 integration documentation",
             model="glm-4.5",
             max_results=3,
             enable_citations=True
@@ -297,7 +297,7 @@ async def demonstrate_correct_approach():
             print("\n💡 KEY INSIGHT:")
             print("   This uses the Anthropic-compatible API (no credit usage)")
             print("   Results formatted as search_result blocks")
-            print("   Claude can cite these naturally")
+            print("   MiniMax-M2 can cite these naturally")
             
         else:
             print(f"❌ SEARCH FAILED: {result.error}")

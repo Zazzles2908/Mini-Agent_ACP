@@ -4,16 +4,16 @@ Enable natural citations for RAG applications by providing search results with s
 
 ---
 
-Search result content blocks enable natural citations with proper source attribution, bringing web search-quality citations to your custom applications. This feature is particularly powerful for RAG (Retrieval-Augmented Generation) applications where you need Claude to cite sources accurately.
+Search result content blocks enable natural citations with proper source attribution, bringing web search-quality citations to your custom applications. This feature is particularly powerful for RAG (Retrieval-Augmented Generation) applications where you need MiniMax-M2 to cite sources accurately.
 
 The search results feature is available on the following models:
 
-- Claude Opus 4.1 (`claude-opus-4-1-20250805`)
-- Claude Opus 4 (`claude-opus-4-20250514`)
-- Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`)
-- Claude Sonnet 4 (`claude-sonnet-4-20250514`)
-- Claude Sonnet 3.7 ([deprecated](/docs/en/about-claude/model-deprecations)) (`claude-3-7-sonnet-20250219`)
-- Claude 3.5 Haiku (`claude-3-5-haiku-20241022`)
+- MiniMax-M2 Opus 4.1 (`minimax-opus-4-1-20250805`)
+- MiniMax-M2 Opus 4 (`minimax-opus-4-20250514`)
+- MiniMax-M2 MiniMax-M2 4.5 (`minimax-MiniMax-M2-4-5-20250929`)
+- MiniMax-M2 MiniMax-M2 4 (`minimax-MiniMax-M2-4-20250514`)
+- MiniMax-M2 MiniMax-M2 3.7 ([deprecated](/docs/en/about-minimax/model-deprecations)) (`minimax-3-7-MiniMax-M2-20250219`)
+- MiniMax-M2 3.5 Haiku (`minimax-3-5-haiku-20241022`)
 
 ## Key benefits
 
@@ -21,7 +21,7 @@ The search results feature is available on the following models:
 - **Flexible integration** - Use in tool returns for dynamic RAG or as top-level content for pre-fetched data
 - **Proper source attribution** - Each result includes source and title information for clear attribution
 - **No document workarounds needed** - Eliminates the need for document-based workarounds
-- **Consistent citation format** - Matches the citation quality and format of Claude's web search functionality
+- **Consistent citation format** - Matches the citation quality and format of MiniMax-M2's web search functionality
 
 ## How it works
 
@@ -30,7 +30,7 @@ Search results can be provided in two ways:
 1. **From tool calls** - Your custom tools return search results, enabling dynamic RAG applications
 2. **As top-level content** - You provide search results directly in user messages for pre-fetched or cached content
 
-In both cases, Claude can automatically cite information from the search results with proper source attribution.
+In both cases, MiniMax-M2 can automatically cite information from the search results with proper source attribution.
 
 ### Search result schema
 
@@ -140,7 +140,7 @@ def search_knowledge_base(query):
 
 # Create a message with the tool
 response = client.messages.create(
-    model="claude-sonnet-4-5",  # Works with all supported models
+    model="minimax-MiniMax-M2-4-5",  # Works with all supported models
     max_tokens=1024,
     tools=[knowledge_base_tool],
     messages=[
@@ -151,13 +151,13 @@ response = client.messages.create(
     ]
 )
 
-# When Claude calls the tool, provide the search results
+# When MiniMax-M2 calls the tool, provide the search results
 if response.content[0].type == "tool_use":
     tool_result = search_knowledge_base(response.content[0].input["query"])
     
     # Send the tool result back
     final_response = client.messages.create(
-        model="claude-sonnet-4-5",  # Works with all supported models
+        model="minimax-MiniMax-M2-4-5",  # Works with all supported models
         max_tokens=1024,
         messages=[
             MessageParam(role="user", content="How do I configure the timeout settings?"),
@@ -231,7 +231,7 @@ function searchKnowledgeBase(query: string) {
 
 // Create a message with the tool
 const response = await anthropic.messages.create({
-  model: "claude-sonnet-4-5", // Works with all supported models
+  model: "minimax-MiniMax-M2-4-5", // Works with all supported models
   max_tokens: 1024,
   tools: [knowledgeBaseTool],
   messages: [
@@ -247,7 +247,7 @@ if (response.content[0].type === "tool_use") {
   const toolResult = searchKnowledgeBase(response.content[0].input.query);
   
   const finalResponse = await anthropic.messages.create({
-    model: "claude-sonnet-4-5", // Works with all supported models
+    model: "minimax-MiniMax-M2-4-5", // Works with all supported models
     max_tokens: 1024,
       messages: [
       { role: "user", content: "How do I configure the timeout settings?" },
@@ -291,7 +291,7 @@ client = Anthropic()
 
 # Provide search results directly in the user message
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     max_tokens=1024,
     messages=[
         MessageParam(
@@ -340,7 +340,7 @@ const anthropic = new Anthropic();
 
 // Provide search results directly in the user message
 const response = await anthropic.messages.create({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   max_tokens: 1024,
   messages: [
     {
@@ -390,7 +390,7 @@ curl https://api.anthropic.com/v1/messages \
      --header "content-type: application/json" \
      --data \
 '{
-    "model": "claude-sonnet-4-5",
+    "model": "minimax-MiniMax-M2-4-5",
     "max_tokens": 1024,
     "messages": [
         {
@@ -435,9 +435,9 @@ curl https://api.anthropic.com/v1/messages \
 ```
 </CodeGroup>
 
-## Claude's response with citations
+## MiniMax-M2's response with citations
 
-Regardless of how search results are provided, Claude automatically includes citations when using information from them:
+Regardless of how search results are provided, MiniMax-M2 automatically includes citations when using information from them:
 
 ```json
 {
@@ -534,7 +534,7 @@ Search results can contain multiple text blocks in the `content` array:
 }
 ```
 
-Claude can cite specific blocks using the `start_block_index` and `end_block_index` fields.
+MiniMax-M2 can cite specific blocks using the `start_block_index` and `end_block_index` fields.
 
 ## Advanced usage
 
@@ -565,7 +565,7 @@ messages = [
     )
 ]
 
-# Claude might respond and call a tool to search for pricing
+# MiniMax-M2 might respond and call a tool to search for pricing
 # Then you provide tool results with more search results
 ```
 
@@ -641,7 +641,7 @@ By default, citations are disabled for search results. You can enable citations 
 }
 ```
 
-When `citations.enabled` is set to `true`, Claude will include citation references when using information from the search result. This enables:
+When `citations.enabled` is set to `true`, MiniMax-M2 will include citation references when using information from the search result. This enables:
 - Natural citations for your custom RAG applications
 - Source attribution when interfacing with proprietary knowledge bases
 - Web search-quality citations for any custom tool that returns search results
@@ -692,6 +692,6 @@ Citations are all-or-nothing: either all search results in a request must have c
 
 ## Limitations
 
-- Search result content blocks are available on Claude API and Google Cloud's Vertex AI
+- Search result content blocks are available on MiniMax-M2 API and Google Cloud's Vertex AI
 - Only text content is supported within search results (no images or other media)
 - The `content` array must contain at least one text block

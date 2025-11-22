@@ -9,7 +9,7 @@ This visualization uses the native knowledge graph system to represent Mini-Agen
 - Utility Modules
 - Credit Protection System
 
-### 2️⃣ **LLM Providers** (Intelligence Layer)
+### 2️⃣ **AI Models** (Intelligence Layer)
 - OpenAI GPT
 - MiniMax GLM
 - Z.AI Coding Plan
@@ -47,7 +47,7 @@ This visualization uses the native knowledge graph system to represent Mini-Agen
 └─────────────────────────────────────────────────────────────────────┘
 
 [Configuration Manager] ──depends_on──> [Environment Variables]
-                       └──provides────> [LLM Providers]
+                       └──provides────> [AI Models]
                        └──provides────> [Tools]
 
 [Credit Protection] ──manages──> [Z.AI Usage]
@@ -91,7 +91,7 @@ This visualization uses the native knowledge graph system to represent Mini-Agen
 ## Query Examples
 
 ### "What does Canvas Design depend on?"
-- **Direct**: MiniMax GLM (LLM provider)
+- **Direct**: MiniMax GLM (AI model)
 - **Indirect**: Configuration Manager, Utility Modules
 - **Philosophy**: Design Philosophy documentation
 - **Output**: Visual Artifacts (PNG/PDF)
@@ -112,7 +112,7 @@ This visualization uses the native knowledge graph system to represent Mini-Agen
 | Entity Type | Count | Primary Relations | Key Dependencies |
 |-------------|-------|-------------------|------------------|
 | Infrastructure | 3 | provides, manages | None (foundation) |
-| LLM Providers | 3 | provides, integrates | Configuration |
+| AI Models | 3 | provides, integrates | Configuration |
 | Tools | 4 | used_by, uses | Configuration |
 | Skills | 14 | uses, produces | LLM + Tools |
 | User Interfaces | 3 | accesses, exposes | Skills Framework |
@@ -148,7 +148,7 @@ results = search_nodes("PDF DOCX PPTX XLSX")
 config_details = open_nodes(["Configuration Manager"])
 
 # Explore relationships
-llm_providers = search_nodes("LLM provider")
+llm_providers = search_nodes("AI model")
 ```
 
 ---

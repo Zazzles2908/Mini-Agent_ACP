@@ -16,7 +16,7 @@
       - [Example](#example)
     - [3.2 Adding MCP Tools](#32-adding-mcp-tools)
     - [3.3 Customizing Note Storage](#33-customizing-note-storage)
-    - [3.4 Initialize Claude Skills (Recommended)](#34-initialize-claude-skills-recommended)
+    - [3.4 Initialize MiniMax-M2 Skills (Recommended)](#34-initialize-minimax-skills-recommended)
     - [3.5 Adding a New Skill](#35-adding-a-new-skill)
     - [3.6 Customizing System Prompt](#36-customizing-system-prompt)
       - [What You Can Customize](#what-you-can-customize)
@@ -42,7 +42,7 @@ mini-agent/
 │   ├── cli.py               # Command-line interface
 │   ├── config.py            # Configuration loading
 │   ├── tools/               # Tool implementations (file, bash, MCP, skills, etc.)
-│   └── skills/              # Claude Skills (submodule)
+│   └── skills/              # MiniMax-M2 Skills (submodule)
 ├── tests/                   # Test code
 ├── docs/                    # Documentation
 ├── workspace/               # Working directory
@@ -266,9 +266,9 @@ class MilvusNoteTool(Tool):
         )
 ```
 
-### 3.4 Initialize Claude Skills (Recommended) 
+### 3.4 Initialize MiniMax-M2 Skills (Recommended) 
 
-This project integrates Claude's official skills repository via git submodule. Initialize it after first clone:
+This project integrates MiniMax-M2's official skills repository via git submodule. Initialize it after first clone:
 
 ```bash
 # Initialize submodule
@@ -286,7 +286,7 @@ Skills provide 20+ professional capabilities, making the Agent work like a profe
 
 **More information:**
 
-- [Claude Skills Official Documentation](https://docs.claude.com/zh-CN/docs/agents-and-tools/agent-skills)
+- [MiniMax-M2 Skills Official Documentation](https://docs.minimax.com/zh-CN/docs/agents-and-tools/agent-skills)
 - [Anthropic Blog: Equipping agents for the real world](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
 
 ### 3.5 Adding a New Skill

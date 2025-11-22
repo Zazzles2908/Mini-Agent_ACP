@@ -45,7 +45,7 @@ Moved to `mini_agent/tools/_deprecated_zai/`:
 5. zai_tools.py (11,810 bytes)
 6. zai_web_search_with_citations.py (10,563 bytes)
 7. zai_web_tools.py (12,757 bytes)
-8. claude_zai_extended_tools.py
+8. minimax_zai_extended_tools.py
 
 ### 4. Documentation Cleanup ✅
 
@@ -54,7 +54,7 @@ Moved to `documents/_deprecated_zai_docs/`:
 - AGENT_SETUP_GUIDE_ZAI_LITE_PLAN.md (claimed $0.01/search - INCORRECT)
 - LITE_PLAN_IMPLEMENTATION_STATUS.md (claimed billing errors - OUTDATED)
 - ZAI_ANTHROPIC_*.md files (architecture confusion)
-- ZAI_CLAUDE_*.md files (integration attempts)
+- ZAI_MINIMAX_*.md files (integration attempts)
 - ZAI_GUIDE_ANALYSIS_ASSESSMENT.md
 - ZAI_IMPLEMENTATION_*.md files (trial-and-error docs)
 - ZAI_RESEARCH_ANALYSIS.md
@@ -110,14 +110,14 @@ zai_settings:
 
 **Base URL**: `https://api.z.ai/api/coding/paas/v4`  
 **Model**: `glm-4.6` (NEVER use `glm-4.5`)  
-**Architecture**: Direct Z.AI API (NOT OpenAI SDK)
+**Architecture**: Direct Z.AI API (NOT OpenAI SDK format)
 
 ### Active Files
 
 **Tools**:
 - `mini_agent/tools/zai_unified_tools.py` - Single correct implementation
-- `mini_agent/tools/claude_zai_client.py` - Reference implementation (kept for compatibility)
-- `mini_agent/tools/claude_zai_tools.py` - Legacy tools (may use unified internally)
+- `mini_agent/tools/minimax_zai_client.py` - Reference implementation (kept for compatibility)
+- `mini_agent/tools/minimax_zai_tools.py` - Legacy tools (may use unified internally)
 
 **Documentation**:
 - `documents/ZAI_UPDATED_VIEWPOINT_AFTER_RESEARCH.md` - Current ground truth
@@ -196,8 +196,8 @@ COST IMPACT: Prevents future credit charges by enforcing correct model"
 mini_agent/
 ├── tools/
 │   ├── zai_unified_tools.py       ✅ NEW - Single correct implementation
-│   ├── claude_zai_client.py       ✅ KEPT - Reference implementation
-│   ├── claude_zai_tools.py        ✅ KEPT - Legacy compatibility
+│   ├── minimax_zai_client.py       ✅ KEPT - Reference implementation
+│   ├── minimax_zai_tools.py        ✅ KEPT - Legacy compatibility
 │   ├── _deprecated_zai/           📁 NEW - Archived implementations
 │   │   ├── README.md              ✅ Documents deprecation
 │   │   ├── zai_corrected_tools.py
@@ -207,7 +207,7 @@ mini_agent/
 │   │   ├── zai_tools.py
 │   │   ├── zai_web_search_with_citations.py
 │   │   ├── zai_web_tools.py
-│   │   └── claude_zai_extended_tools.py
+│   │   └── minimax_zai_extended_tools.py
 │   └── __init__.py                ✅ UPDATED - Imports unified tools
 
 documents/
@@ -224,9 +224,9 @@ documents/
     ├── ZAI_ANTHROPIC_FACT_CHECKING_ASSESSMENT.md
     ├── ZAI_ANTHROPIC_INTEGRATION_GUIDE.md
     ├── ZAI_ARCHITECTURE_ANALYSIS.md
-    ├── ZAI_CLAUDE_CITATIONS_INTEGRATION.md
-    ├── ZAI_CLAUDE_INTEGRATION_COMPLETE.md
-    ├── ZAI_CLAUDE_SEARCH_RESULTS_INTEGRATION.md
+    ├── ZAI_MINIMAX_CITATIONS_INTEGRATION.md
+    ├── ZAI_MINIMAX_INTEGRATION_COMPLETE.md
+    ├── ZAI_MINIMAX_SEARCH_RESULTS_INTEGRATION.md
     ├── ZAI_GUIDE_ANALYSIS_ASSESSMENT.md
     ├── ZAI_IMPLEMENTATION_ASSESSMENT.md
     ├── ZAI_IMPLEMENTATION_CORRECTED_COMPLETE.md

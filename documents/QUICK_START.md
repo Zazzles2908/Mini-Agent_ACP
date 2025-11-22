@@ -45,7 +45,7 @@ documents/VISUALS/MINI_AGENT_SKILLS_NETWORK.png
 #### 📊 **Advanced Features**
 - **Visualization Tools**: Multiple visualization options available
 - **Python Integration**: Full data analysis capabilities
-- **Web Integration**: OpenAI, MiniMax, Z.AI platforms
+- **Web Integration**: MiniMax-M2, GLM-4.6 platforms
 - **Development Environment**: Complete VS Code extension
 
 ### 5. **Documentation Structure**

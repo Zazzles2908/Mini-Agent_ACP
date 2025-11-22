@@ -8,7 +8,7 @@
 
 ### What was just completed:
 1. **Comprehensive repository cleanup** - Removed 800+ node_modules files from vscode-extension
-2. **OpenAI web functions integration** - Full implementation with documentation
+2. **MiniMax-M2 backend) integration** - Full implementation with documentation
 3. **ZAI architecture cleanup** - Deprecated legacy tools, unified interface
 4. **Documentation update** - Added 12+ new documentation files
 5. **Git commit and push** - All changes committed and pushed to origin/main
@@ -16,7 +16,7 @@
 ### Current branch status:
 - Branch: `main`
 - Remote: `origin` (https://github.com/Zazzles2908/Mini-Agent_ACP.git)
-- Commit: `5abf030` - "feat: Comprehensive repository cleanup and OpenAI web functions integration"
+- Commit: `5abf030` - "feat: Comprehensive repository cleanup and MiniMax-M2 backend) integration"
 - Previous: `95d1097` - "feat: Implement comprehensive Z.AI credit protection system"
 - **Working tree: CLEAN** ✅
 
@@ -68,7 +68,7 @@ Mini-Agent/
 1. ✅ **DONE**: Push all changes to GitHub
 2. **TODO**: Create PROJECT_CONTEXT.md with full project overview
 3. **TODO**: Review and test credit protection system
-4. **TODO**: Verify OpenAI web functions integration works
+4. **TODO**: Verify MiniMax-M2 backend) integration works
 5. **TODO**: Test unified ZAI tools interface
 
 ### Future tasks:
@@ -96,7 +96,7 @@ Mini-Agent/
 ### Dependencies to be aware of:
 - Python packages managed via `uv` (use `uv pip install` for dependencies)
 - Z.AI API requires `ZAI_API_KEY` environment variable
-- OpenAI web functions may require additional API keys
+- MiniMax-M2 backend) may require additional API keys
 - VS Code extension requires npm/node.js for building
 
 ## For Next Agent

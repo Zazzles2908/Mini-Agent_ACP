@@ -3,7 +3,7 @@
 ## ⚠️ **Why My Previous Approach Was Wrong**
 
 My `install.py` script would have **deleted your advanced setup** and replaced it with basic versions. Your original project had:
-- 16 Claude Skills  
+- 16 MiniMax-M2 Skills  
 - 21 MCP tools (memory + git servers)
 - Complex configuration files
 - Custom tools and extensions
@@ -101,7 +101,7 @@ from typing import Any
 from pydantic import BaseModel
 
 class LLMProvider(str, Enum):
-    """LLM provider types."""
+    """AI model types."""
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
 

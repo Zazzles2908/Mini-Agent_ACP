@@ -47,7 +47,7 @@
 │  • MiniMax-M2 LLM (Primary)                           │
 │  • 21 tools (File, Bash, Z.AI, MCP, Skills)          │
 │  • Knowledge graph persistence                        │
-│  • Claude Skills (20+ capabilities)                   │
+│  • MiniMax-M2 Skills (20+ capabilities)                   │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -57,7 +57,7 @@
 3. **File Tools** - Read, Write, Edit files
 4. **Bash Tools** - Command execution
 5. **MCP Integration** - Memory, Git, external tools
-6. **Claude Skills** - 20+ professional capabilities
+6. **MiniMax-M2 Skills** - 20+ professional capabilities
 7. **Knowledge Graph** - Persistent context management
 
 ---
@@ -90,12 +90,12 @@
 ## 📊 **Current System Status**
 
 ### **Production Components**
-- **Mini-Max Core**: ✅ Operational (agent loop, tools, LLM integration)
+- **Mini-Max Core**: ✅ Operational (agent loop, tools, AI model integration)
 - **ACP Server**: ✅ Complete (stdio-based, protocol-compliant)
 - **Z.AI Integration**: ✅ Functional (web search capabilities)
 - **Tool Ecosystem**: ✅ 21 tools operational
 - **Knowledge Graph**: ✅ Persistent context management
-- **Claude Skills**: ✅ 20+ professional capabilities
+- **MiniMax-M2 Skills**: ✅ 20+ professional capabilities
 
 ### **In Development**
 - **VS Code Extension**: 📋 Core implementation needed
@@ -156,7 +156,7 @@ tools:
   enable_zai_search: true            # Enable Z.AI web search
   enable_file_tools: true            # File operations
   enable_bash: true                  # Bash execution
-  enable_skills: true                # Claude Skills
+  enable_skills: true                # MiniMax-M2 Skills
   enable_mcp: true                   # MCP integration
 ```
 

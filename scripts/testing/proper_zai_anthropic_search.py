@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Proper Z.AI web search implementation using Anthropic SDK with Z.AI endpoint.
-This approach uses your environment variables and provides Claude with search_result blocks.
+This approach uses your environment variables and provides MiniMax-M2 with search_result blocks.
 """
 
 import asyncio
@@ -34,7 +34,7 @@ class ZAIAuthropicWebSearch:
     - ANTHROPIC_AUTH_TOKEN environment variable
     - ANTHROPIC_BASE_URL environment variable  
     - Z.AI endpoint: https://api.z.ai/api/anthropic
-    - Claude search_result blocks for natural citations
+    - MiniMax-M2 search_result blocks for natural citations
     """
     
     def __init__(self):
@@ -65,7 +65,7 @@ class ZAIAuthropicWebSearch:
     
     @property
     def description(self) -> str:
-        return "Z.AI web search using Anthropic-compatible API. Returns search_result blocks that Claude can cite naturally with proper source attribution."
+        return "Z.AI web search using Anthropic-compatible API. Returns search_result blocks that MiniMax-M2 can cite naturally with proper source attribution."
     
     def parameters(self) -> dict:
         return {
@@ -120,14 +120,14 @@ class ZAIAuthropicWebSearch:
     async def _search_with_sdk(self, query: str, model: str, max_results: int) -> ToolResult:
         """Search using Anthropic SDK."""
         
-        # Create system prompt to guide Claude to perform web search
+        # Create system prompt to guide MiniMax-M2 to perform web search
         system_prompt = f"""You are a web search tool integrated with Z.AI's web search capabilities. 
 
 When asked about web information, you must:
 1. Use Z.AI's web search API to find current information
-2. Return results in Claude search_result block format for natural citations
+2. Return results in MiniMax-M2 search_result block format for natural citations
 3. Include source URLs, titles, and relevant content snippets
-4. Format as structured search results that Claude can cite
+4. Format as structured search results that MiniMax-M2 can cite
 
 For the query "{query}", perform web search and return results in this exact format:
 
@@ -191,7 +191,7 @@ Do not use your training data - perform actual web searches using Z.AI capabilit
 
 ---
 *Search completed using Z.AI via Anthropic-compatible API*
-*Results formatted for natural Claude citations*""",
+*Results formatted for natural MiniMax-M2 citations*""",
                     error=None
                 )
             else:
@@ -302,7 +302,7 @@ async def demonstrate_correct_approach():
         
         # Test search
         result = await search_tool.execute(
-            query="Z.AI DevPack Claude integration documentation",
+            query="Z.AI DevPack MiniMax-M2 integration documentation",
             model="glm-4.5",
             max_results=3
         )
@@ -319,7 +319,7 @@ async def demonstrate_correct_approach():
             print("✅ Uses ANTHROPIC_BASE_URL environment variable")  
             print("✅ Calls Z.AI via Anthropic-compatible endpoint")
             print("✅ No direct credit usage - uses coding plan")
-            print("✅ Results formatted for Claude natural citations")
+            print("✅ Results formatted for MiniMax-M2 natural citations")
             print("✅ Format: search_result blocks with citations")
             
         else:

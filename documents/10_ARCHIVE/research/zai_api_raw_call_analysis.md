@@ -1,8 +1,8 @@
-# Z.AI API Call Raw Analysis - docs.z.ai/devpack/tool/claude
+# Z.AI API Call Raw Analysis - docs.z.ai/devpack/tool/minimax
 
 **Timestamp**: 2025-11-20 16:31:49  
 **Request ID**: 202511200431478810ea7ad9a349a4  
-**Search Query**: site:docs.z.ai/devpack/tool/claude
+**Search Query**: site:docs.z.ai/devpack/tool/minimax
 
 ---
 
@@ -30,7 +30,7 @@
 ```json
 {
   "search_engine": "search-prime",
-  "search_query": "site:docs.z.ai/devpack/tool/claude",
+  "search_query": "site:docs.z.ai/devpack/tool/minimax",
   "count": 10,
   "search_recency_filter": "noLimit"
 }
@@ -58,28 +58,28 @@ X-LOG-ID: 202511200431478810ea7ad9a349a4
   "search_intent": [
     {
       "intent": "SEARCH_ALWAYS",
-      "keywords": "site:docs.z.ai/devpack/tool/claude",
-      "query": "site:docs.z.ai/devpack/tool/claude"
+      "keywords": "site:docs.z.ai/devpack/tool/minimax",
+      "query": "site:docs.z.ai/devpack/tool/minimax"
     }
   ],
   "search_result": [
     {
-      "content": "Claude Code · ​. Step 1: Installing the Claude Code · ​. Step 2: Config GLM Coding Plan · ​. Step 3: Start with Claude Code · ​. FAQ. ​. How ...",
+      "content": "MiniMax-M2 Code · ​. Step 1: Installing the MiniMax-M2 Code · ​. Step 2: Config GLM Coding Plan · ​. Step 3: Start with MiniMax-M2 Code · ​. FAQ. ​. How ...",
       "icon": "",
-      "link": "https://docs.z.ai/devpack/tool/claude",
+      "link": "https://docs.z.ai/devpack/tool/minimax",
       "media": "",
       "publish_date": "",
       "refer": "ref_1",
-      "title": "Claude Code - Z.AI DEVELOPER DOCUMENT"
+      "title": "MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT"
     },
     {
-      "content": "Claude Code is an intelligent coding tool that can run in the terminal, and it can also be used by installing plugins in IDEs such as VS Code and JetBrains.",
+      "content": "MiniMax-M2 Code is an intelligent coding tool that can run in the terminal, and it can also be used by installing plugins in IDEs such as VS Code and JetBrains.",
       "icon": "",
-      "link": "https://docs.z.ai/devpack/tool/claude-for-ide",
+      "link": "https://docs.z.ai/devpack/tool/minimax-for-ide",
       "media": "",
       "publish_date": "",
       "refer": "ref_2",
-      "title": "Claude Code IDE Plugin - Z.AI DEVELOPER DOCUMENT"
+      "title": "MiniMax-M2 Code IDE Plugin - Z.AI DEVELOPER DOCUMENT"
     }
   ]
 }
@@ -89,29 +89,29 @@ X-LOG-ID: 202511200431478810ea7ad9a349a4
 
 ## 🔍 Extracted Search Results
 
-### Result 1: Main Claude Code Documentation
+### Result 1: Main MiniMax-M2 Code Documentation
 ```json
 {
-  "content": "Claude Code · ​. Step 1: Installing the Claude Code · ​. Step 2: Config GLM Coding Plan · ​. Step 3: Start with Claude Code · ​. FAQ. ​. How ...",
+  "content": "MiniMax-M2 Code · ​. Step 1: Installing the MiniMax-M2 Code · ​. Step 2: Config GLM Coding Plan · ​. Step 3: Start with MiniMax-M2 Code · ​. FAQ. ​. How ...",
   "icon": "",
-  "link": "https://docs.z.ai/devpack/tool/claude",
+  "link": "https://docs.z.ai/devpack/tool/minimax",
   "media": "",
   "publish_date": "",
   "refer": "ref_1",
-  "title": "Claude Code - Z.AI DEVELOPER DOCUMENT"
+  "title": "MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT"
 }
 ```
 
-### Result 2: Claude Code IDE Plugin
+### Result 2: MiniMax-M2 Code IDE Plugin
 ```json
 {
-  "content": "Claude Code is an intelligent coding tool that can run in the terminal, and it can also be used by installing plugins in IDEs such as VS Code and JetBrains.",
+  "content": "MiniMax-M2 Code is an intelligent coding tool that can run in the terminal, and it can also be used by installing plugins in IDEs such as VS Code and JetBrains.",
   "icon": "",
-  "link": "https://docs.z.ai/devpack/tool/claude-for-ide",
+  "link": "https://docs.z.ai/devpack/tool/minimax-for-ide",
   "media": "",
   "publish_date": "",
   "refer": "ref_2",
-  "title": "Claude Code IDE Plugin - Z.AI DEVELOPER DOCUMENT"
+  "title": "MiniMax-M2 Code IDE Plugin - Z.AI DEVELOPER DOCUMENT"
 }
 ```
 
@@ -125,7 +125,7 @@ X-LOG-ID: 202511200431478810ea7ad9a349a4
 3. **Search Engine Selection**: "search-prime" engine is being used
 4. **Query Processing**: Site-specific searches work correctly
 5. **Response Parsing**: Raw JSON response properly parsed
-6. **Result Formatting**: Results converted to Claude-compatible format
+6. **Result Formatting**: Results converted to MiniMax-M2-compatible format
 
 ### API Response Structure:
 - `created`: Unix timestamp of request

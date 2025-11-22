@@ -27,7 +27,7 @@ A **VS Code Chat Extension** that:
 
 #### ✅ What We Have
 1. **Mini-Agent Core Runtime**
-   - LLM integration (Anthropic, OpenAI, Z.AI)
+   - AI model integration (Anthropic, OpenAI, Z.AI)
    - Tool ecosystem (file ops, bash, web search, git, knowledge graph)
    - Skills system with progressive loading
    - Configuration management

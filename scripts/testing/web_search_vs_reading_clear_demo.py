@@ -20,7 +20,7 @@ from mini_agent.tools.base import ToolResult
 async def demonstrate_web_capabilities():
     """Demonstrate the exact difference between web search and web reading."""
     
-    target_url = "https://docs.z.ai/devpack/tool/claude"
+    target_url = "https://docs.z.ai/devpack/tool/minimax"
     
     print("🔍 Z.AI WEB CAPABILITIES DEMONSTRATION")
     print("=" * 60)
@@ -40,7 +40,7 @@ async def demonstrate_web_capabilities():
     
     try:
         search_result = await search_tool.execute(
-            query="Z.AI DevPack Claude integration",
+            query="Z.AI DevPack MiniMax-M2 integration",
             depth="comprehensive",
             search_engine="search-prime",
             model="glm-4.5"

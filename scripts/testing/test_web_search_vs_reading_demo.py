@@ -20,7 +20,7 @@ from mini_agent.tools.zai_tools import ZAIWebSearchTool, ZAIWebReaderTool
 async def demonstrate_web_search_vs_reading():
     """Demonstrate the difference between web search and web reading."""
     
-    target_url = "https://docs.z.ai/devpack/tool/claude"
+    target_url = "https://docs.z.ai/devpack/tool/minimax"
     
     print("🔍 Z.AI Web Search vs Web Reading Demonstration")
     print("=" * 60)
@@ -45,7 +45,7 @@ async def demonstrate_web_search_vs_reading():
     print("-" * 30)
     try:
         search_result = await search_tool.execute(
-            query="Z.AI DevPack Claude integration tools",
+            query="Z.AI DevPack MiniMax-M2 integration tools",
             depth="comprehensive",
             search_engine="search-prime",
             model="glm-4.5"
@@ -143,7 +143,7 @@ async def demonstrate_web_search_vs_reading():
         
         # Direct web search API call
         search_payload = {
-            "query": "Z.AI DevPack Claude integration documentation",
+            "query": "Z.AI DevPack MiniMax-M2 integration documentation",
             "depth": "comprehensive",
             "search_engine": "search-prime",
             "model": "glm-4.5",

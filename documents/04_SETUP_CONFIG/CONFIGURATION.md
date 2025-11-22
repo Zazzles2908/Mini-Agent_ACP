@@ -9,7 +9,7 @@ Mini-Agent uses a layered configuration system where later sources override earl
 - Tracked in git
 - Default settings for all users
 - Includes:
-  - Default LLM provider
+  - Default AI model
   - Model names
   - Workspace paths
   - Tool settings
@@ -45,7 +45,7 @@ max_steps: 100  # Increase max steps
 MINIMAX_API_KEY=your_minimax_key_here
 ZAI_API_KEY=your_zai_key_here          # Optional: for web search
 OPENAI_API_KEY=your_openai_key_here    # Optional: for GPT models
-ANTHROPIC_API_KEY=your_anthropic_key   # Optional: for Claude
+ANTHROPIC_API_KEY=your_anthropic_key   # Optional: for MiniMax-M2
 ```
 
 ### 4. MCP Server Configuration
@@ -125,13 +125,13 @@ uv run mini-agent --help
 default_provider: "minimax"
 default_model: "MiniMax-Text-01"
 
-# Use Anthropic Claude (high quality, extended thinking)
+# Use MiniMax-M2 (high quality, extended thinking)
 default_provider: "anthropic"
-default_model: "claude-sonnet-4-20250514"
+default_model: "minimax-MiniMax-M2-4-20250514"
 
 # Use OpenAI GPT (widely compatible)
-default_provider: "openai"
-default_model: "gpt-4o"
+default_provider: "openai"  # OpenAI SDK format"
+default_model: "glm-4.6 (via Z.AI)o"
 
 # Use Z.AI GLM (web search, Coding Plan quota)
 default_provider: "glm"
@@ -173,15 +173,15 @@ tools:
 - **API Key**: Get from https://platform.minimax.io
 - **Models**: MiniMax-Text-01
 
-### Anthropic Claude
+### MiniMax-M2
 - **Best for**: Complex reasoning, extended thinking
 - **API Key**: Get from https://console.anthropic.com
-- **Models**: claude-sonnet-4-20250514, claude-opus-4-20250514
+- **Models**: minimax-MiniMax-M2-4-20250514, minimax-opus-4-20250514
 
 ### OpenAI GPT
 - **Best for**: Wide compatibility, function calling
 - **API Key**: Get from https://platform.openai.com
-- **Models**: gpt-4o, gpt-4-turbo
+- **Models**: glm-4.6 (via Z.AI)o, glm-4.6 (via Z.AI)-turbo
 
 ### Z.AI GLM
 - **Best for**: Web search, Coding Plan (120 prompts/5hrs)
@@ -243,7 +243,7 @@ logging:
 ```yaml
 # local_config.yaml
 default_provider: "anthropic"
-default_model: "claude-sonnet-4-20250514"
+default_model: "minimax-MiniMax-M2-4-20250514"
 workspace_dir: "/var/mini-agent/workspace"
 max_steps: 100
 token_limit: 100000

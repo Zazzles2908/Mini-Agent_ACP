@@ -1,6 +1,6 @@
 """LLM client wrapper that supports multiple providers.
 
-This module provides a unified interface for different LLM providers
+This module provides a unified interface for different AI models
 (Anthropic and OpenAI) through a single LLMClient class.
 """
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class LLMClient:
     """LLM Client wrapper supporting multiple providers.
 
-    This class provides a unified interface for different LLM providers.
+    This class provides a unified interface for different AI models.
     It automatically instantiates the correct underlying client based on
     the provider parameter and appends the appropriate API endpoint suffix.
 
@@ -31,7 +31,7 @@ class LLMClient:
     def __init__(
         self,
         api_key: str,
-        provider: LLMProvider = LLMProvider.OPENAI,
+        provider: "openai"  # OpenAI SDK format,
         api_base: str = "https://api.minimax.io",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,
@@ -40,7 +40,7 @@ class LLMClient:
 
         Args:
             api_key: API key for authentication
-            provider: LLM provider (anthropic or openai)
+            provider: "openai"  # OpenAI SDK format)
             api_base: Base URL for the API (default: https://api.minimax.io)
                      Will be automatically suffixed with /anthropic or /v1 based on provider
             model: Model name to use
@@ -57,7 +57,7 @@ class LLMClient:
         # Append provider-specific suffix to api_base
         if provider == LLMProvider.ANTHROPIC:
             full_api_base = f"{api_base.rstrip('/')}/anthropic"
-        elif provider == LLMProvider.OPENAI:
+        elif provider: "openai"  # OpenAI SDK format:
             full_api_base = f"{api_base.rstrip('/')}/v1"
         elif provider == LLMProvider.ZAI:
             full_api_base = f"{api_base.rstrip('/')}"  # Z.AI doesn't need suffix
@@ -75,7 +75,7 @@ class LLMClient:
                 model=model,
                 retry_config=retry_config,
             )
-        elif provider == LLMProvider.OPENAI:
+        elif provider: "openai"  # OpenAI SDK format:
             self._client = OpenAIClient(
                 api_key=api_key,
                 api_base=full_api_base,

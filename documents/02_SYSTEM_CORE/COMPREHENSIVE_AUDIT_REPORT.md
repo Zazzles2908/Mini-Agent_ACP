@@ -14,7 +14,7 @@ After conducting a comprehensive audit of the entire Mini-Agent system, I can co
 ### Key Findings
 - ✅ **Z.AI web search IS actually working** and returning real results
 - ✅ **aiohttp import issue was resolved** - version 3.13.2 available
-- ✅ **MiniMax LLM integration functional** with correct API endpoints
+- ✅ **MiniMax AI model integration functional** with correct API endpoints
 - ✅ **MCP configuration properly structured** with dual-level support
 - ✅ **All core tools operational** (File, Bash, Skills, Knowledge Graph)
 
@@ -44,7 +44,7 @@ Z.AI Search Type: ✅ Direct REST API (Success: true)
 Content Extraction: ✅ Real web content extracted
 ```
 
-#### 2. **MiniMax LLM Integration** ✅ FULLY OPERATIONAL
+#### 2. **MiniMax AI Model Integration** ✅ FULLY OPERATIONAL
 **Verification**: LLM client initialization successful
 - **API Key**: Valid JWT token (`eyJhbGciOi...S0A6w`)
 - **Provider**: Anthropic protocol format
@@ -64,7 +64,7 @@ Content Extraction: ✅ Real web content extracted
 **Verification**: All required packages available
 - **aiohttp**: Version 3.13.2 (✅ No import errors)
 - **openai**: Available for optional integrations
-- **anthropic**: Available for Claude integration
+- **anthropic**: Available for MiniMax-M2 integration
 - **tiktoken**: Available for token counting
 - **uv**: Package manager operational
 
@@ -96,7 +96,7 @@ mini_agent/
 │   ├── mcp_loader.py           # MCP integration (MiniMax)
 │   ├── skill_loader.py         # Skills framework (MiniMax)
 │   └── zai_tools.py            # Z.AI tools (Extended)
-└── skills/                     # Claude Skills (20+ capabilities)
+└── skills/                     # MiniMax-M2 Skills (20+ capabilities)
     ├── algorithmic-art/         # Creative coding tools
     ├── artifacts-builder/      # Frontend development
     ├── canvas-design/          # Visual design tools
@@ -207,7 +207,7 @@ MINIMAX_API_KEY=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
 - **Z.AI Web Search**: Real-time web search with GLM models
 - **Z.AI Web Reader**: Content extraction from URLs
 - **Knowledge Graph**: Entity creation, search, management
-- **Claude Skills**: 20+ professional capabilities
+- **MiniMax-M2 Skills**: 20+ professional capabilities
 - **MCP Tools**: Git, memory, and custom tool access
 - **Progressive Loading**: Skills loaded on-demand (Level 2 disclosure)
 
@@ -287,7 +287,7 @@ The Mini-Agent system is **fully operational and production-ready**. The previou
 - Full MiniMax LLM access
 - Complete tools ecosystem
 - Comprehensive documentation
-- 20+ Claude Skills available
+- 20+ MiniMax-M2 Skills available
 - Professional organizational system
 
 ### No Action Required

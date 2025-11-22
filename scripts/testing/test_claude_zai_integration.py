@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Test script for Claude Z.AI Web Search Integration.
+"""Test script for MiniMax-M2 Z.AI Web Search Integration.
 
-This script validates the Claude Code integration with Z.AI web search
-by testing search result formatting and Claude compatibility.
+This script validates the MiniMax-M2 Code integration with Z.AI web search
+by testing search result formatting and MiniMax-M2 compatibility.
 """
 
 import asyncio
@@ -14,8 +14,8 @@ from typing import Any, Dict
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from mini_agent.llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
-from mini_agent.tools.claude_zai_tools import ClaudeZAIWebSearchTool, ClaudeZAIRecommendationTool
+from mini_agent.llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient, get_zai_api_key
+from mini_agent.tools.minimax_zai_tools import MiniMax-M2ZAIWebSearchTool, MiniMax-M2ZAIRecommendationTool
 
 
 async def test_zai_api_connection():
@@ -27,11 +27,11 @@ async def test_zai_api_connection():
         print("❌ Z.AI API key not found in environment")
         return False
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
     # Test basic connection with a simple search
     try:
-        result = await client.web_search_for_claude(
+        result = await client.web_search_for_minimax(
             query="Python programming",
             count=2,
             search_engine="search-prime"
@@ -52,7 +52,7 @@ async def test_zai_api_connection():
 
 
 async def test_search_result_formatting():
-    """Test that search results are formatted correctly for Claude."""
+    """Test that search results are formatted correctly for MiniMax-M2."""
     print("\n📄 Testing Search Result Formatting...")
     
     api_key = get_zai_api_key()
@@ -60,10 +60,10 @@ async def test_search_result_formatting():
         print("❌ Z.AI API key not found")
         return False
         
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
     try:
-        result = await client.web_search_for_claude(
+        result = await client.web_search_for_minimax(
             query="best practices Python 2024",
             count=3,
             search_engine="search-prime"
@@ -73,7 +73,7 @@ async def test_search_result_formatting():
             print("❌ No search results returned")
             return False
             
-        # Validate Claude search_result block format
+        # Validate MiniMax-M2 search_result block format
         for i, block in enumerate(result):
             print(f"\n✅ Search Result Block {i+1}:")
             print(f"   Type: {block.type}")
@@ -90,7 +90,7 @@ async def test_search_result_formatting():
             assert hasattr(block, 'content') and block.content, f"Block {i} missing content"
             assert hasattr(block, 'citations'), f"Block {i} missing citations"
             
-        print(f"\n✅ All {len(result)} search blocks formatted correctly for Claude")
+        print(f"\n✅ All {len(result)} search blocks formatted correctly for MiniMax-M2")
         return True
         
     except Exception as e:
@@ -103,10 +103,10 @@ async def test_tool_integration():
     print("\n🔧 Testing Mini-Agent Tool Integration...")
     
     try:
-        tool = ClaudeZAIWebSearchTool()
+        tool = MiniMax-M2ZAIWebSearchTool()
         
         if not tool.available:
-            print("❌ Claude Z.AI web search tool not available")
+            print("❌ MiniMax-M2 Z.AI web search tool not available")
             return False
             
         print(f"✅ Tool initialized: {tool.name}")
@@ -124,7 +124,7 @@ async def test_tool_integration():
             print("✅ Tool execution successful")
             metadata = result.metadata
             print(f"   Total blocks: {metadata.get('total_blocks', 0)}")
-            print(f"   Claude compatible: {metadata.get('claude_compatible', False)}")
+            print(f"   MiniMax-M2 compatible: {metadata.get('minimax_compatible', False)}")
             print(f"   Integration type: {metadata.get('integration_type', 'unknown')}")
             return True
         else:
@@ -145,10 +145,10 @@ async def test_research_integration():
         print("❌ Z.AI API key not found")
         return False
         
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
     try:
-        result = await client.research_and_analyze_for_claude(
+        result = await client.research_and_analyze_for_minimax(
             query="web scraping ethics and legal considerations",
             depth="comprehensive",
             search_engine="search-prime"
@@ -183,7 +183,7 @@ async def test_setup_guide():
     print("\n📚 Testing Setup Guide Tool...")
     
     try:
-        tool = ClaudeZAIRecommendationTool()
+        tool = MiniMax-M2ZAIRecommendationTool()
         
         result = await tool.execute(section="all")
         
@@ -194,7 +194,7 @@ async def test_setup_guide():
             
             # Check for key sections
             content = result.content.lower()
-            required_sections = ["setup", "configuration", "usage", "claude code", "z.ai"]
+            required_sections = ["setup", "configuration", "usage", "minimax code", "z.ai"]
             missing_sections = []
             
             for section in required_sections:
@@ -216,12 +216,12 @@ async def test_setup_guide():
         return False
 
 
-def validate_claude_schema_compatibility():
-    """Validate that the schema matches Claude's search_result specification."""
-    print("\n🔍 Validating Claude Schema Compatibility...")
+def validate_minimax_schema_compatibility():
+    """Validate that the schema matches MiniMax-M2's search_result specification."""
+    print("\n🔍 Validating MiniMax-M2 Schema Compatibility...")
     
     try:
-        from mini_agent.llm.claude_zai_client import SearchResultBlock
+        from mini_agent.llm.minimax_zai_client import SearchResultBlock
         
         # Test schema with sample data
         test_block = SearchResultBlock(
@@ -232,7 +232,7 @@ def validate_claude_schema_compatibility():
             citations={"enabled": True}
         )
         
-        # Validate required fields per Claude spec
+        # Validate required fields per MiniMax-M2 spec
         required_fields = ["type", "source", "title", "content", "citations"]
         missing_fields = []
         
@@ -261,7 +261,7 @@ def validate_claude_schema_compatibility():
             print("❌ Invalid citations field")
             return False
             
-        print("✅ Schema matches Claude's search_result specification")
+        print("✅ Schema matches MiniMax-M2's search_result specification")
         return True
         
     except Exception as e:
@@ -271,12 +271,12 @@ def validate_claude_schema_compatibility():
 
 async def run_comprehensive_test():
     """Run all tests and provide a comprehensive report."""
-    print("🚀 Claude Z.AI Web Search Integration Test Suite")
+    print("🚀 MiniMax-M2 Z.AI Web Search Integration Test Suite")
     print("=" * 60)
     
     tests = [
         ("API Connection", test_zai_api_connection),
-        ("Schema Compatibility", validate_claude_schema_compatibility), 
+        ("Schema Compatibility", validate_minimax_schema_compatibility), 
         ("Search Result Formatting", test_search_result_formatting),
         ("Tool Integration", test_tool_integration),
         ("Research Integration", test_research_integration),
@@ -312,11 +312,11 @@ async def run_comprehensive_test():
     print(f"\n🏆 Overall: {passed}/{total} tests passed ({passed/total*100:.1f}%)")
     
     if passed == total:
-        print("\n🎉 All tests passed! Claude Z.AI integration is ready.")
+        print("\n🎉 All tests passed! MiniMax-M2 Z.AI integration is ready.")
         print("\nNext steps:")
-        print("1. Configure Claude Code with Z.AI endpoint")
-        print("2. Use claude_zai_web_search tool for web results with citations")
-        print("3. Test integration with your Claude Code workflow")
+        print("1. Configure MiniMax-M2 Code with Z.AI endpoint")
+        print("2. Use minimax_zai_web_search tool for web results with citations")
+        print("3. Test integration with your MiniMax-M2 Code workflow")
     else:
         print(f"\n⚠️  {total - passed} tests failed. Please check the errors above.")
     

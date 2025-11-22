@@ -136,7 +136,7 @@ async def main():
     print(f"⏰ Test Time: {datetime.now().isoformat()}")
     print(f"🔑 API Key: 1cd42fbb5c474884bddce3b534577199.dy9Fpa1x5TMES0qQ")
     print(f"📊 Plan Type: Coding Plan")
-    print(f"💰 Usage Limit: ~120 prompts every 5 hours (3x Claude Pro usage)")
+    print(f"💰 Usage Limit: ~120 prompts every 5 hours (3x MiniMax-M2 Pro usage)")
     print(f"⚠️  Focus: Usage quota management, not pricing")
     print("=" * 60)
     

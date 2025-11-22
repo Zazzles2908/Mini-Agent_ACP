@@ -1,7 +1,7 @@
 # Z.AI Web Search Content Demonstration
 
 **Timestamp**: 2025-11-20T07:50:56.424541
-**Query**: Z.AI DevPack Claude integration tools documentation
+**Query**: Z.AI DevPack MiniMax-M2 integration tools documentation
 
 ## What Web Search Returns
 
@@ -16,7 +16,7 @@ Web search provides **summaries and metadata**, not full page content:
 
 **Z.AI Web Search Results**
 
-**Query:** Z.AI DevPack Claude integration tools documentation
+**Query:** Z.AI DevPack MiniMax-M2 integration tools documentation
 **Model:** GLM-4.5 (Optimized for tool invocation, web browsing, software engineering)
 **Analysis Depth:** comprehensive
 **Timestamp:** 2025-11-20T07:50:56.424024
@@ -26,12 +26,12 @@ Web search provides **summaries and metadata**, not full page content:
 **Analysis:**
 
 
-**Result 1: Claude Code - Z.AI DEVELOPER DOCUMENT**
-Source: https://docs.z.ai/devpack/tool/claude
+**Result 1: MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT**
+Source: https://docs.z.ai/devpack/tool/minimax
 Media: 
 Date: 
 
-Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, ...
+MiniMax-M2 Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, ...
 
 ---
 
@@ -40,16 +40,16 @@ Source: https://docs.z.ai/devpack/overview
 Media: 
 Date: 
 
-The plan can be applied to coding tools such as Claude Code, Cline, and OpenCode, covering a wide range of development scenarios:.
+The plan can be applied to coding tools such as MiniMax-M2 Code, Cline, and OpenCode, covering a wide range of development scenarios:.
 
 ---
 
-**Result 3: Claude Code - Z.AI DEVELOPER DOCUMENT**
-Source: https://docs.z.ai/scenario-example/develop-tools/claude
+**Result 3: MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT**
+Source: https://docs.z.ai/scenario-example/develop-tools/minimax
 Media: 
 Date: 
 
-Z.AI's GLM-4.6 models can be integrated with Claude Code through an Anthropic API-compatible endpoint. This allows Claude Code to communicate with GLM-4.6 ...
+Z.AI's GLM-4.6 models can be integrated with MiniMax-M2 Code through an Anthropic API-compatible endpoint. This allows MiniMax-M2 Code to communicate with GLM-4.6 ...
 
 ---
 
@@ -58,16 +58,16 @@ Source: https://docs.z.ai/devpack/tool/others
 Media: 
 Date: 
 
-You can easily integrate the GLM-4.6 model into any tool that supports the OpenAI API protocol. Simply replace the default API endpoint with the one provided by ...
+You can easily integrate the GLM-4.6 model: MiniMax-M2 API protocol. Simply replace the default API endpoint with the one provided by ...
 
 ---
 
-**Result 5: Claude Code IDE Plugin - Z.AI DEVELOPER DOCUMENT**
-Source: https://docs.z.ai/devpack/tool/claude-for-ide
+**Result 5: MiniMax-M2 Code IDE Plugin - Z.AI DEVELOPER DOCUMENT**
+Source: https://docs.z.ai/devpack/tool/minimax-for-ide
 Media: 
 Date: 
 
-Claude Code is an intelligent coding tool that can run in the terminal, and it can also be used by installing plugins in IDEs such as VS Code and JetBrains.
+MiniMax-M2 Code is an intelligent coding tool that can run in the terminal, and it can also be used by installing plugins in IDEs such as VS Code and JetBrains.
 
 ---
 
@@ -76,7 +76,7 @@ Source: https://docs.z.ai/devpack/quick-start
 Media: 
 Date: 
 
-Other Tools · 1. Install Claude Code · 2. Configure Environment Variables · Method 1: Using a Script (Recommended for First-Time Users) · Method 2: Manual ...
+Other Tools · 1. Install MiniMax-M2 Code · 2. Configure Environment Variables · Method 1: Using a Script (Recommended for First-Time Users) · Method 2: Manual ...
 
 ---
 
@@ -85,7 +85,7 @@ Source: https://docs.z.ai/devpack/mcp/vision-mcp-server
 Media: 
 Date: 
 
-Easy Integration. One-click installation, quick integration with Claude Code and other MCP-compatible clients. ​. Supported Tools. This server implements the ...
+Easy Integration. One-click installation, quick integration with MiniMax-M2 Code and other MCP-compatible clients. ​. Supported Tools. This server implements the ...
 
 
 ---

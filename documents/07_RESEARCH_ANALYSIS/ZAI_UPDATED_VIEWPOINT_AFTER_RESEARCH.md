@@ -81,7 +81,7 @@ minimax_base: "https://api.minimax.io"
 
 **Implementation Approach**:
 - ✅ **Direct Z.AI API** (proven working, transaction verified)
-- ❌ **NOT OpenAI SDK compatibility** (misleading documentation)
+- ❌ **NOT OpenAI SDK format compatibility** (misleading documentation)
 
 ---
 
@@ -95,7 +95,7 @@ minimax_base: "https://api.minimax.io"
 - Transaction reality: **Depends on model selection** (GLM-4.6 vs GLM-4.5)
 
 **Issue 2: Architecture Description Confusion**
-- Some files claim: "OpenAI SDK → Z.AI" approach
+- Some files claim: "OpenAI SDK format → Z.AI" approach
 - Other files claim: "Direct Z.AI API" approach
 - Transaction reality: **Direct API is what's actually working**
 
@@ -148,7 +148,7 @@ minimax_base: "https://api.minimax.io"
 
 1. **7 different Z.AI implementations exist** (cleanup needed)
 2. **Credit protection system exists** (multi-layer)
-3. **Working implementation in**: `claude_zai_client.py` ✅
+3. **Working implementation in**: `minimax_zai_client.py` ✅
 4. **Configuration properly structured** in `config.yaml` ✅
 
 ### **From Current Configuration**
@@ -186,7 +186,7 @@ zai_settings:
 - ❌ "Web search costs $0.01 per search"
 - ❌ "Need special billing setup from Z.AI support"
 - ❌ "API key needs configuration"
-- ❌ "OpenAI SDK compatibility approach"
+- ❌ "OpenAI SDK format compatibility approach"
 
 **After (Correct)**:
 - ✅ "Web search FREE with GLM-4.6 (quota limited)"
@@ -213,7 +213,7 @@ zai_web_search_with_citations.py
 
 **Target State**: 1 correct implementation
 ```
-claude_zai_client.py (working reference implementation)
+minimax_zai_client.py (working reference implementation)
 + One clean tool wrapper (to be determined)
 ```
 
@@ -265,7 +265,7 @@ def validate_model(model: str):
 ```yaml
 # MiniMax for complex reasoning (300 prompts/5hrs)
 primary_llm: "MiniMax-M2"
-provider: "openai"  # OpenAI-compatible endpoint
+provider: "openai"  # OpenAI SDK format"  # OpenAI-compatible endpoint
 
 # Z.AI for web intelligence only (120 prompts/5hrs)
 web_search:
@@ -328,7 +328,7 @@ web_search:
 ### **What We Know Now**
 
 1. **GLM-4.6 is FREE** with Lite plan annotation
-2. **Direct API approach** is correct (not OpenAI SDK)
+2. **Direct API approach** is correct (not OpenAI SDK format)
 3. **Token limits essential** to prevent quota exhaustion
 4. **Single implementation** better than multiple conflicting versions
 

@@ -41,15 +41,15 @@ The previous agent broke the system with an incomplete git merge. This plan prov
 **Resolution Strategy:**
 ```python
 # Target: Consistent OpenAI protocol for MiniMax
-# Update all provider logic to match "openai" provider
+# Update all provider: "openai"  # OpenAI SDK format" provider
 ```
 
-#### **2. GPT-4 Reference Confusion**
+#### **2. MiniMax-M2 Reference Confusion**
 ```yaml
 # LOCATION: mini_agent/config/config.yaml lines 15-17
 openai_api_key: "${OPENAI_API_KEY}"
 openai_base: "https://api.openai.com/v1"
-openai_model: "gpt-4"  # ← This causes confusion but is unused
+minimax_model: "glm-4.6 (via Z.AI)"  # ← This causes confusion but is unused
 ```
 
 **Resolution Strategy:**
@@ -98,7 +98,7 @@ README.md line 65: Example shows provider: "anthropic"
 #### **Priority 2: Code Standardization**
 1. **LLM Client Logic**:
    - Update `llm_wrapper.py` for consistent OpenAI protocol
-   - Remove Anthropic-specific conversions where provider is "openai"
+   - Remove Anthropic-specific conversions where provider: "openai"  # OpenAI SDK format"
    - Standardize message format handling
 
 2. **CLI Integration**:
@@ -112,7 +112,7 @@ README.md line 65: Example shows provider: "anthropic"
    - Add clarity about MiniMax vs OpenAI distinction
 
 2. **Configuration Examples**:
-   - All examples should show `provider: "openai"`
+   - All examples should show `provider: "openai"  # OpenAI SDK format"`
    - Add explanations for OpenAI vs Anthropic protocol
 
 ---
@@ -210,7 +210,7 @@ Secondary: Z.AI GLM-4.6 (Anthropic protocol for web tools)
 - Migration notes for any breaking changes
 
 ### 3. Consistent Codebase
-- All provider logic standardized to OpenAI protocol
+- All provider: "openai"  # OpenAI SDK format protocol
 - Removed Anthropic protocol remnants
 - Clean git history with proper merge
 

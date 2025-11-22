@@ -14,7 +14,7 @@
 - **Website**: [agentclientprotocol.com](https://agentclientprotocol.com)
 - **Protocol**: JSON-RPC 2.0 over stdio
 - **Standard**: Open protocol for agent-client communication
-- **Used by**: Zed Editor, Claude Code, and other professional tools
+- **Used by**: Zed Editor, MiniMax-M2 Code, and other professional tools
 
 ### **Why ACP Matters**
 1. **Protocol Compliance**: Standard approach instead of custom implementations

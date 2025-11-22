@@ -1,7 +1,7 @@
 {
   "timestamp": "2025-11-20T07:52:28.470328",
   "api_key_prefix": "1cd42fbb5c474884bddc...",
-  "target_url": "https://docs.z.ai/devpack/tool/claude",
+  "target_url": "https://docs.z.ai/devpack/tool/minimax",
   "total_tests": 6,
   "successful_tests": 0,
   "failed_tests": 6,

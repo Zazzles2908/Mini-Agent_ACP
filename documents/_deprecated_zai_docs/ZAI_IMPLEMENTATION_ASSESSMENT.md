@@ -32,7 +32,7 @@ Sources found: 3
 **API Key Configuration**: ✅ Properly configured  
 **Authentication**: ✅ Bearer token authentication working  
 **Search Engine**: Search Prime (cost-effective)  
-**Result Format**: Claude-compatible search_result blocks
+**Result Format**: MiniMax-M2-compatible search_result blocks
 
 ---
 
@@ -40,14 +40,14 @@ Sources found: 3
 
 ### 1. ✅ Mini-Agent Patterns Compliance
 
-**Tool Implementation** (`mini_agent/tools/claude_zai_tools.py`):
+**Tool Implementation** (`mini_agent/tools/minimax_zai_tools.py`):
 - ✅ Follows `Tool` base class pattern
 - ✅ Implements `name`, `description`, `parameters` properties
 - ✅ Uses `async execute()` method with proper error handling
 - ✅ Returns `ToolResult` objects with success/error states
 - ✅ Proper logging and error reporting
 
-**Client Implementation** (`mini_agent/llm/claude_zai_client.py`):
+**Client Implementation** (`mini_agent/llm/minimax_zai_client.py`):
 - ✅ Async/await pattern consistent with codebase
 - ✅ Proper HTTP client usage (aiohttp)
 - ✅ Comprehensive error handling with try/catch
@@ -81,7 +81,7 @@ Sources found: 3
 ### ✅ Working Components
 
 1. **Web Search API**: Confirmed working with real results
-2. **Search Result Blocks**: Proper Claude-compatible formatting
+2. **Search Result Blocks**: Proper MiniMax-M2-compatible formatting
 3. **API Client**: Proper authentication and error handling
 4. **Tool Integration**: Follows Mini-Agent patterns
 5. **Research Mode**: Comprehensive search with depth control
@@ -148,7 +148,7 @@ Sources found: 3
 - ✅ Real API calls working (evidenced by Python.org results)
 - ✅ Proper error handling and fallbacks
 - ✅ Cost optimization (Search Prime engine)
-- ✅ Claude-compatible result formatting
+- ✅ MiniMax-M2-compatible result formatting
 - ✅ Async performance patterns
 - ✅ Structured logging
 
@@ -168,7 +168,7 @@ Sources found: 3
 
 ### Immediate Actions (Priority 1)
 
-1. **Verify Tool Registration**: Check if `claude_zai_web_search` tool loads in agent
+1. **Verify Tool Registration**: Check if `minimax_zai_web_search` tool loads in agent
 2. **Update Configuration**: Ensure `enable_zai_search: true` in config.yaml
 3. **System Prompt Integration**: Add web search guidance and cost awareness
 
@@ -198,6 +198,6 @@ The Z.AI web search implementation demonstrates:
 - **Production readiness**: 90% complete and functional
 - **Quality code**: Comprehensive error handling and async patterns
 
-The implementation provides Claude with web search capabilities through properly formatted search_result blocks, enabling natural source citations exactly as intended. The architecture alignment is strong, with only minor integration steps needed for full deployment.
+The implementation provides MiniMax-M2 with web search capabilities through properly formatted search_result blocks, enabling natural source citations exactly as intended. The architecture alignment is strong, with only minor integration steps needed for full deployment.
 
 **Confidence Score**: 95% - This implementation is solid and ready for production use.

@@ -5,7 +5,7 @@ Simple Z.AI Web Search Evidence Test
 
 import asyncio
 import os
-from mini_agent.llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
+from mini_agent.llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient, get_zai_api_key
 
 async def test_web_search():
     print("🔍 Z.AI Web Search Raw Evidence Test")
@@ -18,12 +18,12 @@ async def test_web_search():
     
     print(f"✅ API Key: {api_key[:20]}...{api_key[-10:]}")
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     print(f"🌐 Base URL: {client.base_url}")
     
     try:
         print("\n🧪 Testing web search...")
-        result = await client.web_search_for_claude(
+        result = await client.web_search_for_minimax(
             query="Python web scraping libraries",
             count=3,
             search_engine="search-prime"
@@ -36,7 +36,7 @@ async def test_web_search():
             print(f"Content length: {len(result[0].content[0]['text'])}")
         
         print("\n🧪 Testing research...")
-        research = await client.research_and_analyze_for_claude(
+        research = await client.research_and_analyze_for_minimax(
             query="AI coding assistants",
             depth="quick"
         )

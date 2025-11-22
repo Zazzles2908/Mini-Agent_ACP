@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Test Z.AI Web Search with Claude Citations
+Test Z.AI Web Search with MiniMax-M2 Citations
 
 Demonstrates the correct implementation that formats Z.AI web search results
-as Claude's search_result blocks with proper citations.
+as MiniMax-M2's search_result blocks with proper citations.
 """
 
 import asyncio
@@ -11,14 +11,14 @@ import os
 import json
 from typing import List, Dict, Any
 
-from mini_agent.tools.zai_web_search_with_citations import ZAIWebSearchWithCitationsTool, ClaudeCitationSearchResult
+from mini_agent.tools.zai_web_search_with_citations import ZAIWebSearchWithCitationsTool, MiniMax-M2CitationSearchResult
 from mini_agent.schema import Message
 
 
-async def test_claude_citation_format():
-    """Test the Claude citation formatting functionality."""
+async def test_minimax_citation_format():
+    """Test the MiniMax-M2 citation formatting functionality."""
     
-    print("🔍 Testing Z.AI Web Search with Claude Citations")
+    print("🔍 Testing Z.AI Web Search with MiniMax-M2 Citations")
     print("=" * 60)
     
     # Get API key
@@ -44,7 +44,7 @@ async def test_claude_citation_format():
         
         # Test 1: Basic Search Result Formatting
         print("\n" + "=" * 60)
-        print("🧪 Test 1: Claude Search Result Formatting")
+        print("🧪 Test 1: MiniMax-M2 Search Result Formatting")
         print("=" * 60)
         
         # Create a mock search result to show the format
@@ -71,10 +71,10 @@ async def test_claude_citation_format():
             "timestamp": "2025-11-20T10:00:00Z"
         }
         
-        # Format as Claude search results
+        # Format as MiniMax-M2 search results
         formatted_results = search_tool._format_search_results(mock_result, max_results=3)
         
-        print("📋 Formatted Claude Search Result Blocks:")
+        print("📋 Formatted MiniMax-M2 Search Result Blocks:")
         for i, result in enumerate(formatted_results, 1):
             print(f"\n{i}. Search Result Block:")
             print(f"   Type: {result['type']}")
@@ -88,23 +88,23 @@ async def test_claude_citation_format():
         print("🧪 Test 2: Individual Citation Block Creation")
         print("=" * 60)
         
-        citation_block = ClaudeCitationSearchResult(
+        citation_block = MiniMax-M2CitationSearchResult(
             source="https://openai.com/blog/ai-safety",
             title="OpenAI's Approach to AI Safety",
             content="OpenAI has implemented several safety measures including constitutional AI and reinforcement learning from human feedback."
         )
         
-        formatted_block = citation_block.to_claude_search_result_block()
+        formatted_block = citation_block.to_minimax_search_result_block()
         print("📄 Individual Citation Block:")
         print(json.dumps(formatted_block, indent=2))
         
         # Test 3: Tool Schema
         print("\n" + "=" * 60)
-        print("🧪 Test 3: Claude Tool Schema")
+        print("🧪 Test 3: MiniMax-M2 Tool Schema")
         print("=" * 60)
         
-        tool_schema = search_tool.get_claude_tool_schema()
-        print("🛠️  Claude Tool Schema:")
+        tool_schema = search_tool.get_minimax_tool_schema()
+        print("🛠️  MiniMax-M2 Tool Schema:")
         print(f"   Name: {tool_schema['name']}")
         print(f"   Description: {tool_schema['description']}")
         print(f"   Parameters: {list(tool_schema['input_schema']['properties'].keys())}")
@@ -120,15 +120,15 @@ async def test_claude_citation_format():
         
         # Show the integration pattern
         print("\n💡 Integration Pattern:")
-        print("1. User asks Claude: 'Search for AI developments'")
-        print("2. Claude calls zai_web_search_with_citations tool")
+        print("1. User asks MiniMax-M2: 'Search for AI developments'")
+        print("2. MiniMax-M2 calls zai_web_search_with_citations tool")
         print("3. Tool searches Z.AI and formats results as search_result blocks")
-        print("4. Claude receives results with citations enabled")
-        print("5. Claude provides response with natural citations")
+        print("4. MiniMax-M2 receives results with citations enabled")
+        print("5. MiniMax-M2 provides response with natural citations")
         
-        # Test 5: Expected Claude Response
+        # Test 5: Expected MiniMax-M2 Response
         print("\n" + "=" * 60)
-        print("🧪 Test 5: Expected Claude Response with Citations")
+        print("🧪 Test 5: Expected MiniMax-M2 Response with Citations")
         print("=" * 60)
         
         expected_response = {
@@ -152,23 +152,23 @@ async def test_claude_citation_format():
             ]
         }
         
-        print("🎯 Expected Claude Response Format:")
+        print("🎯 Expected MiniMax-M2 Response Format:")
         print(json.dumps(expected_response, indent=2))
         
         print("\n" + "=" * 60)
-        print("✅ Z.AI Claude Citations Integration Test Complete!")
+        print("✅ Z.AI MiniMax-M2 Citations Integration Test Complete!")
         print("=" * 60)
         
         print("\n📊 Summary:")
-        print("✅ Claude Search Result Blocks: Proper format with citations")
+        print("✅ MiniMax-M2 Search Result Blocks: Proper format with citations")
         print("✅ Z.AI Web Search Integration: Formats GLM results correctly")
-        print("✅ Anthropic Client Ready: Tool schema ready for Claude")
+        print("✅ Anthropic Client Ready: Tool schema ready for MiniMax-M2")
         print("✅ Citation System: Enables natural source attribution")
         
         print("\n🔄 Next Steps:")
         print("1. Test with actual Z.AI API calls")
-        print("2. Integrate with Claude Code setup")
-        print("3. Verify citation behavior in Claude responses")
+        print("2. Integrate with MiniMax-M2 Code setup")
+        print("3. Verify citation behavior in MiniMax-M2 responses")
         print("4. Deploy to production!")
         
     except Exception as e:
@@ -190,7 +190,7 @@ async def demonstrate_citation_workflow():
 
 1. **User Query**: "What are the latest AI safety developments?"
 
-2. **Claude Tool Call**: 
+2. **MiniMax-M2 Tool Call**: 
    {
      "name": "zai_web_search_with_citations",
      "input": {
@@ -216,23 +216,23 @@ async def demonstrate_citation_workflow():
      }
    ]
 
-5. **Claude Response with Citations**:
+5. **MiniMax-M2 Response with Citations**:
    "Recent AI safety developments include [1] new regulatory frameworks..."
    
    Where [1] automatically links to the search result with full citation info
 
-This gives Claude natural web search capabilities with proper citations!
+This gives MiniMax-M2 natural web search capabilities with proper citations!
     """)
 
 
 async def main():
     """Main demonstration function."""
     
-    print("🚀 Z.AI Web Search with Claude Citations Test")
-    print("Testing proper integration with Claude's citation system")
+    print("🚀 Z.AI Web Search with MiniMax-M2 Citations Test")
+    print("Testing proper integration with MiniMax-M2's citation system")
     print()
     
-    await test_claude_citation_format()
+    await test_minimax_citation_format()
     await demonstrate_citation_workflow()
 
 

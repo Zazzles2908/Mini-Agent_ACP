@@ -14,14 +14,14 @@ def audit_minimax_integration():
     print("🔍 AUDIT: Mini-Agent System Integration Issues")
     print("=" * 60)
     
-    # 1. Check OpenAI SDK Integration
-    print("\n📦 1. OpenAI SDK Integration")
+    # 1. Check OpenAI SDK format Integration
+    print("\n📦 1. OpenAI SDK format Integration")
     try:
         from openai import AsyncOpenAI
-        print("✅ OpenAI SDK: Available and importable")
-        print("   OpenAI SDK used by: mini_agent/llm/openai_client.py")
+        print("✅ OpenAI SDK format: Available and importable")
+        print("   OpenAI SDK format used by: mini_agent/llm/openai_client.py")
     except ImportError as e:
-        print(f"❌ OpenAI SDK: Import failed - {e}")
+        print(f"❌ OpenAI SDK format: Import failed - {e}")
     
     # 2. Check Z.AI Integration
     print("\n🌐 2. Z.AI Integration")
@@ -54,7 +54,7 @@ def audit_minimax_integration():
     print("\n🔧 4. Model Configuration")
     print("Current system supports:")
     print("   • MiniMax-M2 (Primary, via Anthropic protocol)")
-    print("   • OpenAI SDK (Fallback, official OpenAI)")
+    print("   • OpenAI SDK format (Fallback, official OpenAI)")
     print("   • Z.AI GLM-4.5/4.6 (Web search only)")
     
     # 5. Check VS Code Import Issues
@@ -72,7 +72,7 @@ def audit_minimax_integration():
     print("   LLM Provider Hierarchy:")
     print("     1. MiniMax-M2 (Primary) - Core reasoning")
     print("     2. Z.AI GLM (Web search) - Additional capability")
-    print("     3. OpenAI SDK (Fallback) - Alternative provider")
+    print("     3. OpenAI SDK format (Fallback) - Alternative provider")
     
     # 7. Issues Summary
     print("\n🚨 7. IDENTIFIED ISSUES")
@@ -93,10 +93,10 @@ def audit_minimax_integration():
     print("   🔧 GLM-4.6 Configuration Issue:")
     print("      Current: Z.AI GLM models used for web search only")
     print("      Required: GLM-4.6 should be primary LLM for reasoning")
-    print("      Solution: Configure GLM-4.6 in LLM provider hierarchy")
+    print("      Solution: Configure GLM-4.6 in AI model hierarchy")
     
-    # OpenAI SDK integration
-    print("   ✅ OpenAI SDK: Already integrated (from openai import AsyncOpenAI)")
+    # OpenAI SDK format integration
+    print("   ✅ OpenAI SDK format: Already integrated (from openai import AsyncOpenAI)")
     
     if issues:
         print(f"\n❌ Found {len(issues)} integration issues:")
@@ -110,7 +110,7 @@ def audit_minimax_integration():
 def main():
     """Main audit function"""
     print("🎯 Mini-Agent System Integration Assessment")
-    print("Focusing on OpenAI SDK, Z.AI, GLM-4.6, and aiohttp issues")
+    print("Focusing on OpenAI SDK format, Z.AI, GLM-4.6, and aiohttp issues")
     
     issues = audit_minimax_integration()
     
@@ -119,7 +119,7 @@ def main():
     print(f"{'='*60}")
     
     print("✅ WORKING:")
-    print("   • OpenAI SDK integration (already implemented)")
+    print("   • OpenAI SDK format integration (already implemented)")
     print("   • Z.AI client initialization")
     print("   • MiniMax API integration")
     print("   • aiohttp availability (VS Code warning only)")
@@ -127,7 +127,7 @@ def main():
     print("\n🔧 NEEDS CONFIGURATION:")
     print("   • GLM-4.6 as primary LLM for reasoning/actions")
     print("   • Proper Z.AI key validation (may be GLM/MiniMax key)")
-    print("   • LLM provider hierarchy adjustment")
+    print("   • AI model hierarchy adjustment")
     
     print(f"\n🎯 INTEGRATION SCORE: 7/10")
     print("   Major components working, needs GLM-4.6 configuration")

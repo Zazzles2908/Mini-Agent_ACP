@@ -9,10 +9,10 @@
 ## 🎯 **What Was Accomplished**
 
 ### **Problem Resolved**
-The previous agent had created unnecessary duplication and confusion about "OpenAI web functions" when the existing architecture already provided OpenAI compatibility through the base `Tool` class.
+The previous agent had created unnecessary duplication and confusion about "MiniMax-M2 backend)" when the existing architecture already provided OpenAI compatibility through the base `Tool` class.
 
 ### **Root Cause Analysis**
-1. **Misunderstanding**: The agent thought MiniMax-M2 needed special "OpenAI SDK format"
+1. **Misunderstanding**: The agent thought MiniMax-M2 needed special "OpenAI SDK format format"
 2. **Reality**: All tools already inherit `to_openai_schema()` method from base class
 3. **Result**: Created 4-layer wrapper architecture instead of simple 2-layer
 
@@ -30,7 +30,7 @@ The previous agent had created unnecessary duplication and confusion about "Open
 ```
 User Request
     ↓
-MiniMax-M2 (OpenAI protocol via provider="openai")
+MiniMax-M2 (OpenAI protocol via provider: "openai"  # OpenAI SDK format")
     ↓
 Tool.to_openai_schema() [INHERITED FROM BASE CLASS]
     ↓
@@ -41,7 +41,7 @@ Z.AI Direct API (https://api.z.ai/api/coding/paas/v4)
 
 ### **No Wrapper Needed**
 - Base `Tool` class already provides `to_openai_schema()` method
-- MiniMax-M2 uses OpenAI protocol (`provider: "openai"`)
+- MiniMax-M2 uses OpenAI protocol (`provider: "openai"  # OpenAI SDK format"`)
 - Z.AI backend is already OpenAI-compatible
 
 ---
@@ -165,7 +165,7 @@ tools:
 
 ## 🎯 **Conclusion**
 
-**The previous agent's confusion about "OpenAI web functions" has been resolved.**
+**The previous agent's confusion about "MiniMax-M2 backend)" has been resolved.**
 
 **What was wrong**:
 - Creating wrapper when base class already provides compatibility

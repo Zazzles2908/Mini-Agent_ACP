@@ -20,7 +20,7 @@ api_key: "YOUR_API_KEY_HERE"  # Replace with your MiniMax API Key
 api_base: "https://api.minimax.io"   # Global users (default)
 # api_base: "https://api.minimaxi.com"  # China users
 model: "MiniMax-M2"
-# LLM provider: "anthropic" or "openai"
+# AI model: "anthropic" or "openai"
 # The LLMClient will automatically append /anthropic or /v1 to api_base based on provider
 provider: "anthropic"  # Default: anthropic
 
@@ -44,7 +44,7 @@ tools:
   enable_bash: true        # Bash command execution tool
   enable_note: true        # Session note tool (SessionNoteTool)
   
-  # Claude Skills
+  # MiniMax-M2 Skills
   enable_skills: true      # Enable Skills
   skills_dir: "./skills"   # Skills directory path
   

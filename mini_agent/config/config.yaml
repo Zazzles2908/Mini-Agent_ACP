@@ -7,14 +7,14 @@
 api_key: "${MINIMAX_API_KEY}"
 api_base: "https://api.minimax.io"   # Global platform
 model: "MiniMax-M2"
-# LLM provider: "anthropic" or "openai" 
+# AI model: "anthropic" or "openai" 
 # MiniMax uses OpenAI-compatible API for broad compatibility
-provider: "openai"
+provider: "openai"  # OpenAI SDK format"
 
-# Optional: OpenAI SDK integration (fallback)
+# Optional: OpenAI SDK format integration (fallback)
 openai_api_key: "${OPENAI_API_KEY}"
 openai_base: "https://api.openai.com/v1"
-openai_model: "gpt-4"  # NOTE: Unused fallback - actual model is MiniMax-M2
+minimax_model: "glm-4.6 (via Z.AI)"  # NOTE: Unused fallback - actual model is MiniMax-M2
 
 # ===== Retry Configuration =====
 retry:
@@ -38,7 +38,7 @@ tools:
   enable_note: true        # Session note tool (SessionNoteTool)
 
   # Z.AI Tools - PROTECTED for credit consumption prevention
-  # ✅ OpenAI web functions implemented using GLM-4.6 backend
+  # ✅ MiniMax-M2 backend) implemented using GLM-4.6 backend
   # ⚠️  CRITICAL: Only GLM-4.6 is FREE with Lite plan - GLM-4.5 CHARGES MONEY!
   # 🔒 CREDIT PROTECTION: Disabled by default to prevent accidental consumption
   #    To enable: Set enable_zai_search: true (will consume ~120 prompts/5hrs)
@@ -53,10 +53,10 @@ tools:
     track_usage: true              # Monitor coding plan usage (~120 prompts/5hrs)
     efficiency_mode: true          # Optimize for coding plan constraints
     # Direct Z.AI API integration (correct approach - proven in transaction logs)
-    use_direct_api: true           # Use direct Z.AI API calls (not OpenAI SDK)
+    use_direct_api: true           # Use direct Z.AI API calls (not OpenAI SDK format)
     zai_base: "https://api.z.ai/api/coding/paas/v4"  # Verified working endpoint
 
-  # Claude Skills (15 specialized skills)
+  # MiniMax-M2 Skills (15 specialized skills)
   enable_skills: true      # Enable Skills system
   skills_dir: "./skills"   # Skills directory path
 

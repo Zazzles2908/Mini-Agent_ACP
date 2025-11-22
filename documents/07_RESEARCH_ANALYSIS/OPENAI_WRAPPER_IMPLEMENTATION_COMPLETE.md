@@ -2,12 +2,12 @@
 
 ## 🎯 Problem Solved
 **Original Issue**: GLM Lite plan doesn't provide direct web function access  
-**Solution Implemented**: OpenAI SDK wrapper around proven Z.AI backend  
+**Solution Implemented**: MiniMax-M2 backend  
 **Result**: MiniMax-M2 compatibility + web functionality without additional costs
 
 ## 🏗️ Architecture Implemented
 ```
-MiniMax-M2 (OpenAI SDK compatible)
+MiniMax-M2 (OpenAI SDK format compatible)
        ↓
 OpenAI Web Functions Wrapper
        ↓  
@@ -22,7 +22,7 @@ Direct API calls to https://api.z.ai/api/coding/paas/v4
 - **✅ Copied** `openai_web_functions` package to main directory
 - **✅ Integrated** with Mini-Agent tool system  
 - **✅ Added** credit protection layer
-- **✅ Verified** OpenAI SDK format compatibility
+- **✅ Verified** OpenAI SDK format format compatibility
 
 ### Testing Results
 - **✅ Safe Integration Test**: No API calls made, all imports successful
@@ -35,7 +35,7 @@ Direct API calls to https://api.z.ai/api/coding/paas/v4
 - **Quota**: ~120 prompts every 5 hours
 - **Token Limit**: 2000 max per call
 - **API Endpoint**: `https://api.z.ai/api/coding/paas/v4`
-- **Format**: OpenAI SDK compatible (MiniMax-M2 ready)
+- **Format**: OpenAI SDK format compatible (MiniMax-M2 ready)
 
 ## 🔧 Integration Points
 
@@ -78,14 +78,14 @@ tools:
 | Test | Status | Details |
 |------|--------|---------|
 | Import Safety | ✅ PASS | No API calls during testing |
-| OpenAI Format | ✅ PASS | All 3 tools use `type: "function"` |
+| MiniMax-M2 Format | ✅ PASS | All 3 tools use `type: "function"` |
 | Mini-Max Integration | ✅ PASS | `_openai_web_functions_available = True` |
 | Configuration | ✅ PASS | Z.AI enabled, tools loaded |
 | Credit Protection | ✅ PASS | Multi-layer protection active |
 
 ## 🎉 Benefits Achieved
 
-1. **OpenAI SDK Compatibility**: Direct usage with MiniMax-M2
+1. **OpenAI SDK format Compatibility**: Direct usage with MiniMax-M2
 2. **Proven Backend**: Uses working Z.AI implementation
 3. **Zero Additional Costs**: Leverages existing Lite plan
 4. **Credit Safety**: Comprehensive protection system
@@ -106,9 +106,9 @@ tools:
 
 ## 🚀 Ready for Production
 
-The OpenAI web functions wrapper is now **fully integrated and production-ready**:
+The MiniMax-M2 backend) wrapper is now **fully integrated and production-ready**:
 
-- **Web Search**: Search the web with OpenAI SDK format
+- **Web Search**: Search the web with OpenAI SDK format format
 - **Web Read**: Extract content from specific URLs  
 - **Web Research**: Comprehensive research combining search + reading
 - **Credit Safe**: Multi-layer protection ensures no unexpected usage
@@ -129,12 +129,12 @@ if _openai_web_functions_available:
 from openai_web_functions import get_openai_web_tools
 tools = get_openai_web_tools()
 for tool in tools:
-    schema = tool.to_openai_schema()  # OpenAI SDK format
+    schema = tool.to_openai_schema()  # OpenAI SDK format format
 ```
 
 ## ✅ Summary
 **Problem**: GLM Lite plan lacks web function access  
-**Solution**: OpenAI wrapper using proven Z.AI backend  
+**Solution**: MiniMax-M2 backend  
 **Status**: ✅ IMPLEMENTED, TESTED, PRODUCTION READY  
 **Cost**: $0 (uses existing Z.AI Lite plan)  
-**Compatibility**: Full MiniMax-M2 OpenAI SDK support
+**Compatibility**: Full MiniMax-M2 OpenAI SDK format support

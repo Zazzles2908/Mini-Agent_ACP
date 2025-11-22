@@ -46,7 +46,7 @@ You now have **7 COMPLETE visualization types** to understand the Mini-Agent sys
 - `system_layers.png` - Horizontal stacked layers
 - `dependency_matrix.png` - Heat map of dependencies
 - `directory_treemap.png` - Proportional directory sizes
-- `llm_comparison.png` - Radar chart of LLM providers
+- `llm_comparison.png` - Radar chart of AI models
 - `generate_all_charts.py` - Source script to regenerate
 
 **Best For**: Data analysis, presentations, statistical insights  
@@ -102,7 +102,7 @@ You now have **7 COMPLETE visualization types** to understand the Mini-Agent sys
 - Stats overview (50+ modules, 14 skills, 85+ tests, 100+ docs)
 - Skill categories with interactive tags
 - Project structure tree
-- LLM provider comparison
+- AI model comparison
 - Visualization tools reference
 - Fully responsive design
 
@@ -297,7 +297,7 @@ After exploring these visualizations, you should understand:
 ✓ **Structure**: How Mini-Agent is organized (directories, modules)  
 ✓ **Architecture**: How components interact (layers, dependencies)  
 ✓ **Capabilities**: What skills are available (14 specialized skills)  
-✓ **Integrations**: How external tools connect (OpenAI, MiniMax, Z.AI)  
+✓ **Integrations**: How external tools connect (MiniMax-M2, GLM-4.6)  
 ✓ **Data Flow**: How information moves (user → skills → output)  
 ✓ **Metrics**: Scale of the project (50+ modules, 85+ tests)  
 ✓ **Relationships**: How everything fits together (knowledge graph)

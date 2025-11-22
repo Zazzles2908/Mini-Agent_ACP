@@ -21,7 +21,7 @@ Good news! Your Mini-Agent is already properly configured and working. Here's wh
    - Implementation: `mini_agent/acp/__init__.py`
    - Entry Point: `mini_agent/acp/server.py`
    - Command: `mini-agent-acp` (available after install)
-   - Purpose: Enables Zed Editor / Claude Desktop integration
+   - Purpose: Enables Zed Editor / MiniMax-M2 Desktop integration
 
 3. **Configuration**
    - Location: `mini_agent/config/`
@@ -119,11 +119,11 @@ where.exe mini-agent-acp
 
 **Answer:**
 
-You're experiencing this in **Claude Desktop**, not in Mini-Agent itself. Here's why:
+You're experiencing this in **MiniMax-M2 Desktop**, not in Mini-Agent itself. Here's why:
 
 ```
 ┌────────────────────────────────────────────────┐
-│  Claude Desktop (where you are now)            │
+│  MiniMax-M2 Desktop (where you are now)            │
 │  ├─ Uses MCP filesystem server                 │
 │  └─ Restricted to: C:\tmp                      │
 │      (configured in mcp.json)                  │
@@ -146,9 +146,9 @@ mini-agent
 ```
 ✅ No restrictions, full access
 
-**Option B - Configure Claude Desktop for Mini-Agent ACP**
+**Option B - Configure MiniMax-M2 Desktop for Mini-Agent ACP**
 
-Add to Claude Desktop's config:
+Add to MiniMax-M2 Desktop's config:
 ```json
 {
   "agentServers": {
@@ -160,7 +160,7 @@ Add to Claude Desktop's config:
 }
 ```
 
-This makes Mini-Agent available as an agent server in Claude Desktop, separate from the MCP filesystem restrictions.
+This makes Mini-Agent available as an agent server in MiniMax-M2 Desktop, separate from the MCP filesystem restrictions.
 
 **Option C - Expand MCP Filesystem Access**
 
@@ -430,7 +430,7 @@ Edit `mini_agent/config/mcp.json` and completely remove the `minimax_search` sec
    - Uses GLM models' web search capabilities
    - No external MCP server needed
 
-2. **ACP = Custom Zed/Claude Desktop Integration**
+2. **ACP = Custom Zed/MiniMax-M2 Desktop Integration**
    - Taken from another repo (custom, not third-party)
    - Separate from MCP servers
    - Different entry point, same agent core
@@ -438,7 +438,7 @@ Edit `mini_agent/config/mcp.json` and completely remove the `minimax_search` sec
 3. **File Access Depends on Context**
    - Direct CLI: Full access ✅
    - ACP Server: Full access ✅
-   - Claude Desktop MCP: Restricted ⚠️
+   - MiniMax-M2 Desktop MCP: Restricted ⚠️
 
 4. **Unicode Display Already Fixed**
    - Commit 2dbcc82

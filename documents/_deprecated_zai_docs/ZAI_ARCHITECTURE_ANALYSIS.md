@@ -3,7 +3,7 @@
 ## Current Architecture Understanding
 
 ### ✅ **Correct Architecture (Direct Z.AI API)**
-The system uses **direct Z.AI API calls**, not OpenAI SDK:
+The system uses **direct Z.AI API calls**, not OpenAI SDK format:
 
 ```
 Mini-Agent → Direct Z.AI API → GLM-4.6 models → Web Search
@@ -25,7 +25,7 @@ Mini-Agent → Direct Z.AI API → GLM-4.6 models → Web Search
    - `ZAIOpenAIWebSearchTool` → Also uses direct Z.AI API, misleading name
 
 3. **Configuration Comments:**
-   - `enable_zai_search: true   # OpenAI SDK to GLM-4.6` → INCORRECT
+   - `enable_zai_search: true   # OpenAI SDK format to GLM-4.6` → INCORRECT
    - **Should be**: `enable_zai_search: true   # Direct Z.AI API to GLM-4.6`
 
 ### 🔧 **Required Fixes**
@@ -39,11 +39,11 @@ Mini-Agent → Direct Z.AI API → GLM-4.6 models → Web Search
    - `ZAIOpenAIWebSearchTool` → `ZAICodingPlanWebSearchTool`
 
 3. **Update Configuration:**
-   - Fix misleading comments about "OpenAI SDK"
+   - Fix misleading comments about "OpenAI SDK format"
    - Clarify that it's direct Z.AI API integration
 
 4. **Update Documentation:**
-   - Fix all references to "OpenAI SDK" 
+   - Fix all references to "OpenAI SDK format" 
    - Clarify the direct API architecture
 
 ### 📊 **Current Credit Usage Pattern**
@@ -51,7 +51,7 @@ Mini-Agent → Direct Z.AI API → GLM-4.6 models → Web Search
 Based on the transaction logs provided:
 - **GLM-4.6 INPUT tokens** → Direct Z.AI API calls (correct)
 - **~120 prompts every 5 hours** → Coding Plan quota working as intended
-- **No OpenAI SDK usage detected** → Architecture is direct API
+- **No OpenAI SDK format usage detected** → Architecture is direct API
 
 ### ✅ **Working Implementation**
 

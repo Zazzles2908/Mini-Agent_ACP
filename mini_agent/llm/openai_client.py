@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class OpenAIClient(LLMClientBase):
     """LLM client using OpenAI's protocol.
 
-    This client uses the official OpenAI SDK and supports:
+    This client uses the official OpenAI SDK format and supports:
     - Reasoning content (via reasoning_split=True)
     - Tool calling
     - Retry logic
@@ -72,7 +72,7 @@ class OpenAIClient(LLMClientBase):
         if tools:
             params["tools"] = self._convert_tools(tools)
 
-        # Use OpenAI SDK's chat.completions.create
+        # Use OpenAI SDK format's chat.completions.create
         response = await self.client.chat.completions.create(**params)
         return response.choices[0].message
 

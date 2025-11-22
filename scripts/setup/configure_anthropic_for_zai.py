@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Configure Z.AI for Mini-Agent using Anthropic-compatible endpoint
-This sets up the environment variables for Z.AI integration with Claude Code
+This sets up the environment variables for Z.AI integration with MiniMax-M2 Code
 """
 
 import os
@@ -40,7 +40,7 @@ def main():
     
     print("\n💡 Benefits of this setup:")
     print("   • Uses coding plan credits (~120 prompts/5 hours)")
-    print("   • Natural citations with Claude Code")
+    print("   • Natural citations with MiniMax-M2 Code")
     print("   • Web search integration ready")
     print("   • No separate Z.AI API calls needed")
     

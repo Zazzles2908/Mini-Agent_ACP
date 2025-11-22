@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Direct Z.AI Web Search Test for docs.z.ai/devpack/tool/claude
+Direct Z.AI Web Search Test for docs.z.ai/devpack/tool/minimax
 """
 
 import asyncio
@@ -10,10 +10,10 @@ from pathlib import Path
 # Add mini_agent to path
 sys.path.insert(0, '.')
 
-from mini_agent.llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
+from mini_agent.llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient, get_zai_api_key
 
-async def search_devpack_claude():
-    print("🔍 Searching for docs.z.ai/devpack/tool/claude")
+async def search_devpack_minimax():
+    print("🔍 Searching for docs.z.ai/devpack/tool/minimax")
     print("=" * 60)
     
     api_key = get_zai_api_key()
@@ -21,12 +21,12 @@ async def search_devpack_claude():
         print("❌ No API key found")
         return
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
     # Search for the specific URL
     try:
-        result = await client.web_search_for_claude(
-            query="site:docs.z.ai/devpack/tool/claude",
+        result = await client.web_search_for_minimax(
+            query="site:docs.z.ai/devpack/tool/minimax",
             count=10,
             search_engine="search-prime"
         )
@@ -50,12 +50,12 @@ async def search_devpack_claude():
     
     # Also try a broader search
     print(f"\n" + "=" * 60)
-    print("🔍 BROADER SEARCH: Z.AI DevPack Claude integration")
+    print("🔍 BROADER SEARCH: Z.AI DevPack MiniMax-M2 integration")
     print("=" * 60)
     
     try:
-        result2 = await client.web_search_for_claude(
-            query="Z.AI DevPack Claude integration tool configuration",
+        result2 = await client.web_search_for_minimax(
+            query="Z.AI DevPack MiniMax-M2 integration tool configuration",
             count=5,
             search_engine="search-prime"
         )
@@ -73,4 +73,4 @@ async def search_devpack_claude():
         print(f"❌ Broader search failed: {e}")
 
 if __name__ == "__main__":
-    asyncio.run(search_devpack_claude())
+    asyncio.run(search_devpack_minimax())

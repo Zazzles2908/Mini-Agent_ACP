@@ -9,7 +9,7 @@
 - ✅ **Endpoints Available**: `/web_search`, `/reader`, `/chat`, `/models`
 
 ### Current Implementation Status
-- ✅ **claude_zai_client.py**: Already has working direct API implementation
+- ✅ **minimax_zai_client.py**: Already has working direct API implementation
 - ✅ **Web Search**: Functional with proper endpoint usage
 - ✅ **Transaction Logs**: Show successful GLM-4.5/4.6 API calls
 - ❌ **Issue**: Misleading naming conventions, not broken functionality
@@ -18,7 +18,7 @@
 
 ### User's Valid Points
 1. **Credit Consumption**: User's transaction logs show GLM calls consuming credits
-2. **Naming Convention**: System said "OpenAI SDK" when it was using direct API
+2. **Naming Convention**: System said "OpenAI SDK format" when it was using direct API
 3. **Architecture Confusion**: Misleading descriptions about implementation approach
 
 ### My Errors
@@ -32,26 +32,26 @@
 ### Keep What's Working
 ```python
 # THIS IS ALREADY CORRECT - DON'T CHANGE IT
-class ClaudeZAIWebSearchClient:
+class MiniMax-M2ZAIWebSearchClient:
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.base_url = "https://api.z.ai/api/coding/paas/v4"  # ✅ Correct endpoint
-        # ✅ Direct API calls - no OpenAI SDK wrapper needed
+        # ✅ Direct API calls - no OpenAI SDK format wrapper needed
 ```
 
 ### Fix Only the Naming
-- ❌ Old: "OpenAI SDK → Z.AI" (misleading)
+- ❌ Old: "OpenAI SDK format → Z.AI" (misleading)
 - ✅ New: "Direct Z.AI API → GLM-4.6" (accurate)
 
 ## 🛠 **Implementation Plan**
 
 ### Step 1: Preserve Working Code
-- Keep existing `claude_zai_client.py` unchanged
-- Keep existing `claude_zai_tools.py` unchanged
+- Keep existing `minimax_zai_client.py` unchanged
+- Keep existing `minimax_zai_tools.py` unchanged
 - Don't break what's working
 
 ### Step 2: Fix Naming Only
-- Update tool descriptions to say "Direct API" not "OpenAI SDK"
+- Update tool descriptions to say "Direct API" not "OpenAI SDK format"
 - Update config comments to reflect actual implementation
 - Update documentation to match reality
 

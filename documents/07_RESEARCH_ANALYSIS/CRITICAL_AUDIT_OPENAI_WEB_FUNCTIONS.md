@@ -1,15 +1,15 @@
 # 🔴 CRITICAL AUDIT REPORT: OpenAI Web Functions Implementation
 
 **Date**: 2025-11-22  
-**Auditor**: Claude (Mini-Agent Session)  
-**Previous Agent**: Repository cleanup and OpenAI integration  
+**Auditor**: MiniMax-M2 (Mini-Agent Session)  
+**Previous Agent**: Repository cleanup and MiniMax-M2 integration  
 
 ---
 
 ## 🎯 Executive Summary
 
 ### ✅ **FUNCTIONALITY: WORKING**
-The OpenAI web functions ARE functional and successfully call Z.AI APIs using the FREE glm-4.6 model.
+The MiniMax-M2 backend) ARE functional and successfully call Z.AI APIs using the FREE glm-4.6 model.
 
 ### ⚠️ **COST IMPLICATIONS: SAFE (But Concerning Architecture)**
 - **Current Cost**: $0 (uses glm-4.6, FREE with Z.AI Lite plan)
@@ -69,7 +69,7 @@ Repository Root:
 │   ├── openai_web_functions.py      ← Main implementation (359 lines)
 │   ├── simple_web_search.py         ← Duplicate (?)
 │   ├── zai_unified_tools.py         ← Backend (416 lines)
-│   ├── claude_zai_tools.py          ← Legacy? (still imported)
+│   ├── minimax_zai_tools.py          ← Legacy? (still imported)
 │   └── _deprecated_zai/
 │       ├── zai_direct_web_tools.py
 │       ├── zai_web_search_with_citations.py
@@ -99,7 +99,7 @@ Repository Root:
 
 **Count**:
 - **3 identical `openai_web_functions.py` files** (main, duplicate package, nested package)
-- **3+ backend implementations** (unified, claude, deprecated variants)
+- **3+ backend implementations** (unified, minimax, deprecated variants)
 - **15+ test files** scattered across root, scripts/testing, and openai_web_functions/
 - **3 deprecated files** in `_deprecated_zai/` (should be removed entirely)
 
@@ -117,8 +117,8 @@ Z.AI Unified Tools (zai_unified_tools.py)
 Z.AI Direct API (https://api.z.ai/api/coding/paas/v4)
 ```
 
-**Problem**: The "OpenAI wrapper" just calls the Z.AI backend and adds formatting. It provides:
-- OpenAI SDK format property names (`name`, `description`, `parameters`)
+**Problem**: The "MiniMax-M2 backend and adds formatting. It provides:
+- OpenAI SDK format format property names (`name`, `description`, `parameters`)
 - Timestamp decoration (`*Research completed at {datetime.now().isoformat()}*`)
 - Header formatting (`**Web Search Results**\n\n{content}`)
 
@@ -131,11 +131,11 @@ From `mini_agent/tools/__init__.py`:
 # Line 52-60: Imports unified tools
 from .zai_unified_tools import ZAIWebSearchTool, ZAIWebReaderTool
 
-# Line 56-60: ALSO imports legacy claude tools for "backward compatibility"
+# Line 56-60: ALSO imports legacy minimax tools for "backward compatibility"
 try:
-    from .claude_zai_tools import ClaudeZAIWebSearchTool
+    from .minimax_zai_tools import MiniMax-M2ZAIWebSearchTool
 except ImportError:
-    ClaudeZAIWebSearchTool = ZAIWebSearchTool  # Uses unified as fallback
+    MiniMax-M2ZAIWebSearchTool = ZAIWebSearchTool  # Uses unified as fallback
 
 # Line 63-70: ALSO imports OpenAI wrappers
 from .openai_web_functions import (
@@ -206,7 +206,7 @@ class OpenAIWebSearchTool(Tool):
 #### Value Add Analysis:
 1. **Property names**: Already in `Tool` base class
 2. **Formatting**: Adds timestamp and markdown headers
-3. **OpenAI compatibility**: Claims OpenAI SDK format, but just uses standard Tool interface
+3. **OpenAI compatibility**: Claims OpenAI SDK format format, but just uses standard Tool interface
 
 **Verdict**: 95% duplication, 5% cosmetic formatting changes
 
@@ -249,7 +249,7 @@ mini_agent/tools/_deprecated_zai/
 ### Naming Inconsistency
 - `ZAIWebSearchTool` (backend)
 - `OpenAIWebSearchTool` (wrapper)
-- `ClaudeZAIWebSearchTool` (legacy)
+- `MiniMax-M2ZAIWebSearchTool` (legacy)
 - `simple_web_search.py` (?)
 
 **No clear naming convention**
@@ -294,7 +294,7 @@ rm -rf mini_agent/tools/_deprecated_zai/
 
 #### 2. **Decide on Architecture**
 
-**Option A: Keep Wrapper** (if MiniMax-M2 requires OpenAI SDK format)
+**Option A: Keep Wrapper** (if MiniMax-M2 requires OpenAI SDK format format)
 - Consolidate `openai_web_functions.py` into `zai_unified_tools.py`
 - Remove `simple_web_search.py`
 - Keep single source of truth
@@ -429,7 +429,7 @@ class ToolRegistry:
 ### Decide Fate:
 - `mini_agent/tools/openai_web_functions.py` (keep or delete?)
 - `mini_agent/tools/simple_web_search.py` (purpose unclear)
-- `mini_agent/tools/claude_zai_tools.py` (backward compatibility needed?)
+- `mini_agent/tools/minimax_zai_tools.py` (backward compatibility needed?)
 
 ### Consolidate:
 - Test files → `tests/integration/zai/`

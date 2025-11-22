@@ -14,7 +14,7 @@ async def test_web_reading_endpoints():
     """Test various web reading API configurations."""
     
     api_key = "1cd42fbb5c474884bddce3b534577199.dy9Fpa1x5TMES0qQ"
-    target_url = "https://docs.z.ai/devpack/tool/claude"
+    target_url = "https://docs.z.ai/devpack/tool/minimax"
     
     print("🧪 Z.AI WEB READING ENDPOINT TESTING")
     print("=" * 60)

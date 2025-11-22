@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Z.AI Web Search Tool via Anthropic-Compatible Endpoint
-Uses Z.AI through Claude's API for natural citations and proper formatting
+Uses Z.AI through MiniMax-M2's API for natural citations and proper formatting
 """
 
 import os
@@ -41,14 +41,14 @@ class ZAIAnthropicWebSearch:
 
     async def search_web(self, query: str, max_results: int = 7) -> List[SearchResult]:
         """
-        Search the web using Z.AI and return results in Claude's search_result format
+        Search the web using Z.AI and return results in MiniMax-M2's search_result format
         
         Args:
             query: Search query string
             max_results: Maximum number of results (1-10, default 7)
         
         Returns:
-            List of SearchResult objects formatted for Claude citations
+            List of SearchResult objects formatted for MiniMax-M2 citations
         """
         
         if max_results < 1 or max_results > 10:
@@ -204,10 +204,10 @@ Return only the JSON array, no additional text."""
         
         return search_results[:max_results]
 
-    def format_for_claude(self, search_results: List[SearchResult]) -> List[Dict[str, Any]]:
-        """Format search results as Claude's search_result blocks"""
+    def format_for_minimax(self, search_results: List[SearchResult]) -> List[Dict[str, Any]]:
+        """Format search results as MiniMax-M2's search_result blocks"""
         
-        claude_blocks = []
+        minimax_blocks = []
         
         for i, result in enumerate(search_results):
             block = {
@@ -217,9 +217,9 @@ Return only the JSON array, no additional text."""
                 "content": result.content,
                 "citations": result.citations or {"enabled": True}
             }
-            claude_blocks.append(block)
+            minimax_blocks.append(block)
         
-        return claude_blocks
+        return minimax_blocks
 
 # Test function
 async def test_zai_web_search():
@@ -230,7 +230,7 @@ async def test_zai_web_search():
     searcher = ZAIAnthropicWebSearch()
     
     test_queries = [
-        "Z.AI DevPack Claude integration",
+        "Z.AI DevPack MiniMax-M2 integration",
         "Mini-Agent architecture overview"
     ]
     
@@ -245,9 +245,9 @@ async def test_zai_web_search():
             print(f"      Source: {result.source}")
             print(f"      Preview: {result.content[0]['text'][:100]}...")
             
-        # Format for Claude
-        claude_blocks = searcher.format_for_claude(results)
-        print(f"   🤖 Formatted for Claude: {len(claude_blocks)} search_result blocks")
+        # Format for MiniMax-M2
+        minimax_blocks = searcher.format_for_minimax(results)
+        print(f"   🤖 Formatted for MiniMax-M2: {len(minimax_blocks)} search_result blocks")
 
 if __name__ == "__main__":
     import asyncio

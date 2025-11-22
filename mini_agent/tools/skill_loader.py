@@ -1,5 +1,5 @@
 """
-Skill Loader - Load Claude Skills
+Skill Loader - Load MiniMax-M2 Skills
 
 Supports loading skills from SKILL.md files and providing them to Agent
 """

@@ -18,7 +18,7 @@
 │  │                                                              │    │
 │  │   1. mini-agent                2. mini-agent-acp            │    │
 │  │      (CLI Direct)                  (ACP Server)             │    │
-│  │      Terminal use                  Zed/Claude Desktop       │    │
+│  │      Terminal use                  Zed/MiniMax-M2 Desktop       │    │
 │  │      ✅ RECOMMENDED                ✅ Optional               │    │
 │  │                                                              │    │
 │  └───────────────────┬─────────────────┬────────────────────────┘    │
@@ -93,7 +93,7 @@
 │  │ Status: ✅ RECOMMENDED - Full access               │           │
 │  └─────────────────────────────────────────────────────┘           │
 │                                                                     │
-│  Context 2: Mini-Agent ACP (via Zed/Claude Desktop)                │
+│  Context 2: Mini-Agent ACP (via Zed/MiniMax-M2 Desktop)                │
 │  ┌─────────────────────────────────────────────────────┐           │
 │  │ Zed Editor → mini-agent-acp server                  │           │
 │  │                                                     │           │
@@ -107,9 +107,9 @@
 │  │ Status: ✅ OPTIONAL - For editor integration       │           │
 │  └─────────────────────────────────────────────────────┘           │
 │                                                                     │
-│  Context 3: Claude Desktop (Direct - NOT Mini-Agent)                │
+│  Context 3: MiniMax-M2 Desktop (Direct - NOT Mini-Agent)                │
 │  ┌─────────────────────────────────────────────────────┐           │
-│  │ Claude Desktop → MCP filesystem server              │           │
+│  │ MiniMax-M2 Desktop → MCP filesystem server              │           │
 │  │                                                     │           │
 │  │ File Access:                                        │           │
 │  │ ⚠️  C:\tmp only (configured in mcp.json)            │           │
@@ -120,7 +120,7 @@
 │  │                                                     │           │
 │  │ Status: ⚠️  THIS IS WHERE YOU SAW RESTRICTIONS     │           │
 │  │                                                     │           │
-│  │ NOTE: This is NOT Mini-Agent! It's Claude Desktop's│           │
+│  │ NOTE: This is NOT Mini-Agent! It's MiniMax-M2 Desktop's│           │
 │  │       external MCP filesystem server (different)    │           │
 │  └─────────────────────────────────────────────────────┘           │
 │                                                                     │
@@ -128,7 +128,7 @@
 ```
 
 **The Confusion Explained:**
-You were using **Claude Desktop** (Context 3), which has its own MCP filesystem server with restrictions. This is **separate** from Mini-Agent's native file tools (Contexts 1 & 2).
+You were using **MiniMax-M2 Desktop** (Context 3), which has its own MCP filesystem server with restrictions. This is **separate** from Mini-Agent's native file tools (Contexts 1 & 2).
 
 ---
 
@@ -356,7 +356,7 @@ You were using **Claude Desktop** (Context 3), which has its own MCP filesystem 
            ▼                  ▼                  ▼
     ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
     │ Quick tasks  │   │ Integrated   │   │ Just talking │
-    │ Research     │   │ with code    │   │ to Claude    │
+    │ Research     │   │ with code    │   │ to MiniMax-M2    │
     │ File work    │   │ editor       │   │              │
     └──────┬───────┘   └──────┬───────┘   └──────┬───────┘
            │                  │                  │
@@ -364,7 +364,7 @@ You were using **Claude Desktop** (Context 3), which has its own MCP filesystem 
     ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
     │ USE:         │   │ USE:         │   │ USE:         │
     │              │   │              │   │              │
-    │ mini-agent   │   │ mini-agent-  │   │ Claude       │
+    │ mini-agent   │   │ mini-agent-  │   │ MiniMax-M2       │
     │ (CLI)        │   │ acp          │   │ Desktop      │
     │              │   │ (Zed)        │   │              │
     │ ✅ FULL      │   │ ✅ FULL      │   │ ⚠️ LIMITED   │

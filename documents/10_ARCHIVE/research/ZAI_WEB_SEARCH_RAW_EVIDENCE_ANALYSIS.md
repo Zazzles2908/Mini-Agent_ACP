@@ -1,7 +1,7 @@
 # Z.AI Web Search vs Web Reading - Raw Evidence Analysis
 
 **Analysis Date**: 2025-11-20T07:51:00
-**Target URL**: https://docs.z.ai/devpack/tool/claude
+**Target URL**: https://docs.z.ai/devpack/tool/minimax
 **API Key**: 1cd42fbb5c474884bddce3b534577199.dy9Fpa1x5TMES0qQ
 
 ## Raw Evidence Captured
@@ -13,19 +13,19 @@ The Z.AI web search returned **2,415 characters** of content containing:
 ```
 **Z.AI Web Search Results**
 
-**Query:** Z.AI DevPack Claude integration tools documentation
+**Query:** Z.AI DevPack MiniMax-M2 integration tools documentation
 **Model:** GLM-4.5 (Optimized for tool invocation, web browsing, software engineering)
 **Analysis Depth:** comprehensive
 **Timestamp:** 2025-11-20T07:50:56.424024
 
 ---
 
-**Result 1: Claude Code - Z.AI DEVELOPER DOCUMENT**
-Source: https://docs.z.ai/devpack/tool/claude
+**Result 1: MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT**
+Source: https://docs.z.ai/devpack/tool/minimax
 Media: 
 Date: 
 
-Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, ...
+MiniMax-M2 Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, ...
 
 ---
 
@@ -34,7 +34,7 @@ Source: https://docs.z.ai/devpack/overview
 Media: 
 Date: 
 
-The plan can be applied to coding tools such as Claude Code, Cline, and OpenCode, covering a wide range of development scenarios:. 
+The plan can be applied to coding tools such as MiniMax-M2 Code, Cline, and OpenCode, covering a wide range of development scenarios:. 
 ```
 
 **Key Observations:**

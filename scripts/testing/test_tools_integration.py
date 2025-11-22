@@ -43,32 +43,32 @@ async def test_tools_integration():
         
         # Check for Z.AI tools
         zai_tools = []
-        claude_zai_tools = []
+        minimax_zai_tools = []
         
         for tool in tools:
             tool_name = tool.name
             print(f"  - {tool_name}")
             
-            if 'zai' in tool_name.lower() and 'claude' not in tool_name.lower():
+            if 'zai' in tool_name.lower() and 'minimax' not in tool_name.lower():
                 zai_tools.append(tool_name)
-            elif 'claude' in tool_name.lower():
-                claude_zai_tools.append(tool_name)
+            elif 'minimax' in tool_name.lower():
+                minimax_zai_tools.append(tool_name)
         
         print(f"\n📊 Z.AI Tools Summary:")
         print(f"  Standard Z.AI tools: {len(zai_tools)}")
         for tool in zai_tools:
             print(f"    ✅ {tool}")
             
-        print(f"\n📊 Claude Z.AI Tools Summary:")
-        print(f"  Claude-compatible tools: {len(claude_zai_tools)}")
-        for tool in claude_zai_tools:
+        print(f"\n📊 MiniMax-M2 Z.AI Tools Summary:")
+        print(f"  MiniMax-M2-compatible tools: {len(minimax_zai_tools)}")
+        for tool in minimax_zai_tools:
             print(f"    ✅ {tool}")
         
-        if 'claude_zai_web_search' in [t.name for t in tools]:
-            print(f"\n🎯 SUCCESS: Claude Z.AI web search tool is loaded!")
+        if 'minimax_zai_web_search' in [t.name for t in tools]:
+            print(f"\n🎯 SUCCESS: MiniMax-M2 Z.AI web search tool is loaded!")
             print(f"🚀 Ready for integration testing!")
         else:
-            print(f"\n❌ ISSUE: Claude Z.AI web search tool not found in loaded tools")
+            print(f"\n❌ ISSUE: MiniMax-M2 Z.AI web search tool not found in loaded tools")
             
     except Exception as e:
         print(f"❌ Error loading tools: {e}")

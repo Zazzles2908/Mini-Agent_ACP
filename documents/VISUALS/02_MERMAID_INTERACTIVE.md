@@ -16,10 +16,9 @@ graph TB
         SkillLoader[Skill Loader]
     end
     
-    subgraph "LLM Providers"
-        OpenAI[OpenAI GPT-4]
-        MiniMax[MiniMax GLM-4.6]
-        ZAI[Z.AI Coding Plan]
+    subgraph "AI Models"
+        MiniMaxM2[MiniMax-M2<br/>Primary Reasoning]
+        ZAI_GLM[GLM-4.6<br/>(Z.AI Optional)]
     end
     
     subgraph "Specialized Skills"
@@ -42,9 +41,8 @@ graph TB
     VSCode --> Config
     Config --> Orchestrator
     Orchestrator --> SkillLoader
-    Orchestrator --> OpenAI
-    Orchestrator --> MiniMax
-    Orchestrator --> ZAI
+    Orchestrator --> MiniMaxM2
+    Orchestrator --> ZAI_GLM
     SkillLoader --> DocSkills
     SkillLoader --> VisualSkills
     SkillLoader --> DevSkills
@@ -60,9 +58,8 @@ graph TB
     style Config fill:#fff4e1
     style Orchestrator fill:#fff4e1
     style SkillLoader fill:#fff4e1
-    style OpenAI fill:#e8f5e9
-    style MiniMax fill:#e8f5e9
-    style ZAI fill:#e8f5e9
+    style MiniMaxM2 fill:#e8f5e9
+    style ZAI_GLM fill:#e8f5e9
 ```
 
 ## Skill Execution Flow
@@ -194,7 +191,7 @@ graph TD
     end
     
     subgraph "Layer 2: Integrations"
-        LLM[LLM Clients<br/>OpenAI, MiniMax, Z.AI]
+        LLM[LLM Clients<br/>MiniMax-M2, GLM-4.6]
         Tools[External Tools<br/>Web, File, Git]
     end
     
@@ -283,7 +280,7 @@ graph TB
 |-------|---------|
 | 🔵 Blue | User interaction points |
 | 🟣 Purple | Core system components |
-| 🟢 Green | LLM providers / execution |
+| 🟢 Green | AI models / execution |
 | 🟡 Yellow | Skills and specialized modules |
 | 🔴 Orange | Decision points / validation |
 

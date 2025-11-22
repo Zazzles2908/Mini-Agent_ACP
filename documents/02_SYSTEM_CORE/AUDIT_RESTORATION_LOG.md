@@ -26,5 +26,5 @@
 2. Audit Z.AI integration (currently disabled)
 3. Verify MCP servers and tools
 4. Restore VS Code extension capability
-5. Validate all 16 Claude Skills
+5. Validate all 16 MiniMax-M2 Skills
 6. Production readiness assessment

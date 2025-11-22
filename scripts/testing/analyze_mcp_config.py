@@ -103,7 +103,7 @@ def generate_recommendations(config_path):
     print("\n2. **For File Access Issues:**")
     print("   • Mini-Agent has native file tools (ReadTool, WriteTool, EditTool)")
     print("   • These work with workspace directory by design")
-    print("   • Filesystem MCP server may restrict access in Claude Desktop")
+    print("   • Filesystem MCP server may restrict access in MiniMax-M2 Desktop")
     
     print("\n3. **MCP Server Strategy:**")
     print("   • Keep: git, memory (if needed)")

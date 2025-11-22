@@ -19,7 +19,7 @@ async def show_web_search_content():
     
     print("🔍 Z.AI WEB SEARCH CONTENT DEMONSTRATION")
     print("=" * 60)
-    print("Target: Z.AI DevPack Claude documentation")
+    print("Target: Z.AI DevPack MiniMax-M2 documentation")
     print("=" * 60)
     
     # Initialize tool
@@ -28,7 +28,7 @@ async def show_web_search_content():
     try:
         # Perform web search
         result = await search_tool.execute(
-            query="Z.AI DevPack Claude integration tools documentation",
+            query="Z.AI DevPack MiniMax-M2 integration tools documentation",
             depth="comprehensive",
             search_engine="search-prime",
             model="glm-4.5"
@@ -63,7 +63,7 @@ async def show_web_search_content():
                 f.write(f"""# Z.AI Web Search Content Demonstration
 
 **Timestamp**: {datetime.now().isoformat()}
-**Query**: Z.AI DevPack Claude integration tools documentation
+**Query**: Z.AI DevPack MiniMax-M2 integration tools documentation
 
 ## What Web Search Returns
 
@@ -91,7 +91,7 @@ To see the FULL content of a page, you need to use web reading, not web search.
             with open(json_file, 'w', encoding='utf-8') as f:
                 json.dump({
                     "timestamp": datetime.now().isoformat(),
-                    "query": "Z.AI DevPack Claude integration tools documentation",
+                    "query": "Z.AI DevPack MiniMax-M2 integration tools documentation",
                     "content_length": len(result.content),
                     "content": result.content,
                     "analysis": {

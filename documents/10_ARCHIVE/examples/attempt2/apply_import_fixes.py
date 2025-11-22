@@ -102,7 +102,7 @@ from typing import Any
 from pydantic import BaseModel
 
 class LLMProvider(str, Enum):
-    """LLM provider types."""
+    """AI model types."""
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
 

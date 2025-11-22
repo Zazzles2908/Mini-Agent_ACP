@@ -107,7 +107,7 @@ key_dirs = {
     "mini_agent": "Core system",
     "documents": "Documentation",
     "scripts": "Scripts & utilities",
-    "skills": "Claude Skills",
+    "skills": "MiniMax-M2 Skills",
     "vscode-extension": "VS Code extension"
 }
 
@@ -151,7 +151,7 @@ print("      3. Test VS Code extension compatibility")
 
 print("   🔧 MEDIUM PRIORITY:")
 print("      4. Validate Agent initialization process")
-print("      5. Test all 17 Claude Skills functionality")
+print("      5. Test all 17 MiniMax-M2 Skills functionality")
 
 print("   📋 LOW PRIORITY:")
 print("      6. Clean up any remaining workspace artifacts")

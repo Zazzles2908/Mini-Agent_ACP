@@ -86,8 +86,8 @@ Status: SUCCESS
    - Uses chat completions endpoint
    - Simpler for programmatic use
 
-3. **`mini_agent/tools/claude_zai_tools.py`** (legacy)
-   - Claude-specific formatting
+3. **`mini_agent/tools/minimax_zai_tools.py`** (legacy)
+   - MiniMax-M2-specific formatting
    - Minimal usage
    - Can evaluate for removal later
 
@@ -111,12 +111,12 @@ Status: SUCCESS
 ### The Wrapper Was Based on Misconception
 
 **What previous agent thought**:
-- MiniMax-M2 needs special "OpenAI SDK format"
+- MiniMax-M2 needs special "OpenAI SDK format format"
 - Backend wasn't OpenAI-compatible
 - Wrapper was needed to bridge the gap
 
 **The reality**:
-1. MiniMax-M2 uses OpenAI protocol (`provider: "openai"` in config.yaml)
+1. MiniMax-M2 uses OpenAI protocol (`provider: "openai"  # OpenAI SDK format"` in config.yaml)
 2. ALL Tools have `to_openai_schema()` built into base class (base.py:46-55)
 3. OpenAIClient already converts using `tool.to_openai_schema()` (openai_client.py:108)
 4. Backend was ALREADY OpenAI-compatible

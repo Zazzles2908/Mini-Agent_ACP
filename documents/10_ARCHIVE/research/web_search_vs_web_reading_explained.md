@@ -5,7 +5,7 @@
 ### Search Results (What you saw)
 The web search returned **snippets** like:
 ```
-"Claude Code · Step 1: Installing the Claude Code · Step 2: Config GLM Coding Plan · Step 3: Start with Claude Code"
+"MiniMax-M2 Code · Step 1: Installing the MiniMax-M2 Code · Step 2: Config GLM Coding Plan · Step 3: Start with MiniMax-M2 Code"
 ```
 
 ### Web Reading Results (What I tested)
@@ -27,9 +27,9 @@ The web reading tried to get full content but encountered errors:
 **Example Output**:
 ```json
 {
-  "title": "Claude Code - Z.AI DEVELOPER DOCUMENT",
-  "content": "Claude Code · Step 1: Installing the Claude Code · Step 2: Config GLM Coding Plan...",
-  "link": "https://docs.z.ai/devpack/tool/claude"
+  "title": "MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT",
+  "content": "MiniMax-M2 Code · Step 1: Installing the MiniMax-M2 Code · Step 2: Config GLM Coding Plan...",
+  "link": "https://docs.z.ai/devpack/tool/minimax"
 }
 ```
 
@@ -45,7 +45,7 @@ The web reading tried to get full content but encountered errors:
 
 ### ✅ **What Works Perfectly**:
 1. **Finding Pages**: Search API finds relevant documentation
-2. **Claude Citations**: Search result blocks enable natural source citations
+2. **MiniMax-M2 Citations**: Search result blocks enable natural source citations
 3. **Research Workflow**: Can search comprehensively and get multiple sources
 
 ### ❌ **What Has Issues**:
@@ -63,12 +63,12 @@ The web reading tried to get full content but encountered errors:
 ## 🎯 **Current Implementation Status**
 
 ### ✅ **Web Search Tool**: Production Ready
-- **Function**: `claude_zai_web_search`
-- **Capability**: Find relevant pages with Claude-compatible citations
+- **Function**: `minimax_zai_web_search`
+- **Capability**: Find relevant pages with MiniMax-M2-compatible citations
 - **Quality**: Real API calls, real results, proper formatting
 
 ### ⚠️ **Web Reading Tool**: Needs API Fix
-- **Function**: `claude_zai_web_reader`
+- **Function**: `minimax_zai_web_reader`
 - **Issue**: "Unknown Model" error suggests API endpoint/model mismatch
 - **Impact**: Can't extract full page content automatically
 
@@ -80,7 +80,7 @@ The web reading tried to get full content but encountered errors:
 ```python
 # Use comprehensive depth for more snippets
 result = await tool.execute(
-    query="Z.AI DevPack Claude setup",
+    query="Z.AI DevPack MiniMax-M2 setup",
     depth="comprehensive",  # Gets 7 sources instead of 3
     search_engine="search-prime"
 )
@@ -110,7 +110,7 @@ POST https://api.z.ai/api/coding/paas/v4/web_search
 ```
 POST https://api.z.ai/api/coding/paas/v4/reader
 {
-  "url": "https://docs.z.ai/devpack/tool/claude",
+  "url": "https://docs.z.ai/devpack/tool/minimax",
   "return_format": "markdown"
 }
 # Error: Unknown Model (code 1211)
@@ -124,9 +124,9 @@ POST https://api.z.ai/api/coding/paas/v4/reader
 
 1. ✅ **Finds relevant pages** - Real search results from Z.AI
 2. ✅ **Provides snippets** - Enough info to understand page relevance  
-3. ✅ **Enables citations** - Claude can cite sources naturally
+3. ✅ **Enables citations** - MiniMax-M2 can cite sources naturally
 4. ✅ **Supports research** - Comprehensive depth options
 
 **The web reading has a separate API issue** that's unrelated to the search implementation quality.
 
-**For most use cases**, the search with comprehensive depth gives you enough information to work with, plus proper source citations for Claude.
+**For most use cases**, the search with comprehensive depth gives you enough information to work with, plus proper source citations for MiniMax-M2.

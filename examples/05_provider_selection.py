@@ -1,7 +1,7 @@
 """Example: Using LLMClient with different providers.
 
 This example demonstrates how to use the LLMClient wrapper with different
-LLM providers (Anthropic or OpenAI) through the provider parameter.
+AI model: MiniMax-M2) through the provider parameter.
 """
 
 import asyncio

@@ -93,7 +93,7 @@ The knowledge graph contains comprehensive information about the Mini-Agent syst
 - "33+ tools available"
 - "Can analyze, plan, debug code"
 - "Can create diagrams, visual testing"
-- "Connected via Claude Code extension"
+- "Connected via MiniMax-M2 Code extension"
 
 **Assessment**: MCP server capabilities summary.
 
@@ -204,7 +204,7 @@ The knowledge graph contains comprehensive information about the Mini-Agent syst
 - "DATE: 2025-11-13 08:31:40"
 - "AUTHOR: Jazeel <jajireen1@gmail.com>"
 - "KEY CHANGES: Fixed temperature_constraint.apply() → get_corrected_value(), Added build_payload to glm_provider.py, Fixed ModelProvider inheritance"
-- "FILES CHANGED: 6 modified (Dockerfile, .env.example, .mcp.json, CLAUDE.md, etc.), 1 deleted (.augmentignore), 1 added (FINAL_SYSTEM_STATUS.md)"
+- "FILES CHANGED: 6 modified (Dockerfile, .env.example, .mcp.json, MINIMAX.md, etc.), 1 deleted (.augmentignore), 1 added (FINAL_SYSTEM_STATUS.md)"
 - "BUILD ISSUE: Dockerfile COPY statements were copying non-existent directories (systemprompts/, streaming/)"
 - "FIX APPLIED: Removed COPY statements for non-existent directories from Dockerfile"
 - "CONTAINER STATUS: Successfully rebuilt and running with new image"
@@ -517,10 +517,10 @@ The knowledge graph contains comprehensive information about the Mini-Agent syst
 ### 35. Z.AI DevPack Documentation Investigation Entity
 **Type**: research_result  
 **Observations**:
-- "Attempted to access three Z.AI DevPack URLs: others, claude, claude-for-ide"
+- "Attempted to access three Z.AI DevPack URLs: others, minimax, minimax-for-ide"
 - "All URLs returned unrelated technical content instead of Z.AI documentation"
 - "Analysis suggests DevPack documentation is not publicly accessible"
-- "Most likely relevant path is claude-for-ide for VS Code integration"
+- "Most likely relevant path is minimax-for-ide for VS Code integration"
 - "Recommendation to proceed with direct API approach"
 
 **Assessment**: Research attempt results and alternative approach recommendation.
@@ -544,9 +544,9 @@ The knowledge graph contains comprehensive information about the Mini-Agent syst
 **Type**: alternative  
 **Observations**:
 - "Unclear documentation access for Z.AI DevPack tool integration"
-- "URLs investigated: others, claude, claude-for-ide"
+- "URLs investigated: others, minimax, minimax-for-ide"
 - "All documentation attempts failed - content not accessible"
-- "Would have provided Claude-specific VS Code integration"
+- "Would have provided MiniMax-M2-specific VS Code integration"
 - "Replaced by direct API approach due to accessibility issues"
 
 **Assessment**: Alternative approach analysis and abandonment rationale.

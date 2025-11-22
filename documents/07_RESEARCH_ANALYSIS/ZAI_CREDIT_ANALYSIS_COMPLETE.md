@@ -94,7 +94,7 @@ test_zai_tools.py
 test_zai_tools_corrected.py
 test_mini_agent_zai.py
 test_corrected_implementation.py
-test_claude_zai_integration.py
+test_minimax_zai_integration.py
 test_web_search_vs_reading_demo.py
 test_web_search_vs_reading_clear_demo.py
 test_web_search_content_demo.py

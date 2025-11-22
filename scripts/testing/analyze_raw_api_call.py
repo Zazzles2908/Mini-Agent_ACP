@@ -11,7 +11,7 @@ from pathlib import Path
 # Add mini_agent to path
 sys.path.insert(0, '.')
 
-from mini_agent.llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
+from mini_agent.llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient, get_zai_api_key
 
 async def analyze_raw_api_call():
     print("🔍 Z.AI API Call Analysis")
@@ -22,7 +22,7 @@ async def analyze_raw_api_call():
         print("❌ No API key found")
         return
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
     # Show the actual API call structure
     print(f"📡 API Configuration:")
@@ -33,7 +33,7 @@ async def analyze_raw_api_call():
     # Show what payload would be sent
     test_payload = {
         "search_engine": "search-prime",
-        "search_query": "site:docs.z.ai/devpack/tool/claude",
+        "search_query": "site:docs.z.ai/devpack/tool/minimax",
         "count": 10,
         "search_recency_filter": "noLimit",
     }

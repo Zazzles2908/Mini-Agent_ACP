@@ -45,7 +45,7 @@ Created **seven different visualization approaches** in `documents/VISUALS/`:
   - `system_layers.png` - Horizontal stacked layers
   - `dependency_matrix.png` - Heat map of dependencies
   - `directory_treemap.png` - Proportional directory sizes
-  - `llm_comparison.png` - Radar chart of LLM providers
+  - `llm_comparison.png` - Radar chart of AI models
 - **Regeneration**: `uv run python generate_all_charts.py`
 - **Use Case**: Data analysis, presentations, statistical insights
 - **Status**: ✅ Complete
@@ -84,7 +84,7 @@ Created **seven different visualization approaches** in `documents/VISUALS/`:
   - Stats overview (50+ modules, 14 skills, 85+ tests, 100+ docs)
   - Skill categories with interactive tags
   - Project structure tree
-  - LLM provider comparison
+  - AI model comparison
   - Visualization tools reference
   - Fully responsive
 - **Use Case**: Dynamic exploration, comprehensive overview, executive summary
@@ -150,7 +150,7 @@ Through visualizations, captured complete system state:
 - **14** specialized skills
 - **85+** test scripts
 - **100+** documentation files (now organized)
-- **3** LLM providers (OpenAI, MiniMax GLM, Z.AI)
+- **3** AI models (MiniMax-M2, GLM-4.6 (Z.AI))
 - **4** external tool categories
 - **3** user interface types (CLI, VS Code, Python API)
 

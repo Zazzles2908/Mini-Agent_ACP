@@ -1,6 +1,6 @@
 # 🔥 Brutal Code Audit: Mini-Agent Repository
 **Generated**: 2025-01-22  
-**Auditor**: Claude (Mini-Agent)  
+**Auditor**: MiniMax-M2 (Mini-Agent)  
 **Verdict**: 5.5/10 - "Teaching Code That Escaped the Lab"
 
 ---
@@ -199,8 +199,8 @@ CONFIGURATION FILES:
 
 **Git History Shows**:
 ```
-5ecd73a FIX: Change default provider from 'anthropic' to 'openai' in config.py
-6ed879f FIX: Change provider from 'anthropic' to 'openai' in config.yaml
+5ecd73a FIX: Change default provider: "openai"  # OpenAI SDK format' in config.py
+6ed879f FIX: Change provider: "openai"  # OpenAI SDK format' in config.yaml
 296599c Updated config.yaml for local use
 ```
 

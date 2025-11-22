@@ -2,28 +2,28 @@
 
 ## Overview
 
-The Z.AI Anthropic Web Search tool provides web search capabilities using Z.AI through the **Anthropic-compatible endpoint** (`https://api.z.ai/api/anthropic`) for natural citations and Claude Code integration.
+The Z.AI Anthropic Web Search tool provides web search capabilities using Z.AI through the **Anthropic-compatible endpoint** (`https://api.z.ai/api/anthropic`) for natural citations and MiniMax-M2 Code integration.
 
 ## Key Benefits
 
 ✅ **Uses Coding Plan Credits**: Routes through Anthropic endpoint using your coding plan (~120 prompts every 5 hours)  
-✅ **Natural Citations**: Returns results in Claude's `search_result` block format for automatic source attribution  
-✅ **Claude Code Integration**: Works seamlessly with Claude Code's citation system  
+✅ **Natural Citations**: Returns results in MiniMax-M2's `search_result` block format for automatic source attribution  
+✅ **MiniMax-M2 Code Integration**: Works seamlessly with MiniMax-M2 Code's citation system  
 ✅ **No Direct API Calls**: Avoids separate Z.AI API usage that consumes different credits  
 ✅ **Production Ready**: Follows Mini-Agent tool patterns with proper error handling  
 
 ## How It Works
 
 ```
-User Query → Mini-Agent → Z.AI Anthropic Tool → Anthropic API → GLM Web Search → Claude search_result blocks
+User Query → Mini-Agent → Z.AI Anthropic Tool → Anthropic API → GLM Web Search → MiniMax-M2 search_result blocks
 ```
 
 ### Architecture
 
 1. **Environment Setup**: Uses `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
 2. **API Routing**: Routes requests through Anthropic-compatible endpoint
-3. **Tool Integration**: Formats results as Claude's `search_result` blocks
-4. **Citation Support**: Enables natural source attribution in Claude responses
+3. **Tool Integration**: Formats results as MiniMax-M2's `search_result` blocks
+4. **Citation Support**: Enables natural source attribution in MiniMax-M2 responses
 
 ## Usage
 
@@ -49,7 +49,7 @@ setx ANTHROPIC_BASE_URL https://api.z.ai/api/anthropic
 ```python
 # In Mini-Agent
 zai_anthropic_web_search(
-    query="Z.AI DevPack Claude integration",
+    query="Z.AI DevPack MiniMax-M2 integration",
     max_results=5,
     depth="comprehensive"
 )
@@ -60,28 +60,28 @@ zai_anthropic_web_search(
 The tool returns results in two formats:
 
 1. **Display Format**: Human-readable summary with search results
-2. **Claude Format**: `search_result` blocks for natural citations
+2. **MiniMax-M2 Format**: `search_result` blocks for natural citations
 
 ### Sample Output
 
 ```
 **🔍 Z.AI Web Search Results (via Anthropic endpoint)**
 
-**Query:** Z.AI DevPack Claude integration
+**Query:** Z.AI DevPack MiniMax-M2 integration
 **Depth:** comprehensive
 **Max Results:** 5
 
 **💡 Usage Information:**
 - Endpoint: Anthropic-compatible API (coding plan)
 - Credit Usage: Counts toward ~120 prompts every 5 hours
-- Benefits: Natural citations, Claude Code integration
+- Benefits: Natural citations, MiniMax-M2 Code integration
 
 **📊 Search Results:**
 1. **Z.AI DevPack Overview**
    - Source: https://docs.z.ai/devpack/overview
    - Content: DevPack provides GLM model integration...
 
-**🤖 Claude Search Result Blocks (for natural citations):**
+**🤖 MiniMax-M2 Search Result Blocks (for natural citations):**
 ```json
 [
   {
@@ -139,7 +139,7 @@ The tool is automatically loaded when:
 |---------|----------------|-------------------|
 | Credits | Z.AI API credits | Coding plan quota |
 | Citations | Manual formatting | Automatic search_result blocks |
-| Integration | Separate setup | Claude Code native |
+| Integration | Separate setup | MiniMax-M2 Code native |
 | Quota | Pay-per-use | ~120 prompts/5 hours |
 | Error handling | Basic | Advanced with Mini-Agent patterns |
 
@@ -156,7 +156,7 @@ The test validates:
 - ✅ Tool initialization
 - ✅ Web search functionality
 - ✅ Result formatting
-- ✅ Claude search_result block generation
+- ✅ MiniMax-M2 search_result block generation
 
 ## Next Steps
 
@@ -182,8 +182,8 @@ The test validates:
 **Missing Citations**
 - Ensure results contain `search_result` blocks
 - Check that `citations.enabled` is `true`
-- Verify Claude Code integration setup
+- Verify MiniMax-M2 Code integration setup
 
 ---
 
-*This tool enables efficient web search with natural citations using Z.AI's coding plan, providing the best of both worlds: powerful web search capabilities with seamless Claude Code integration.*
+*This tool enables efficient web search with natural citations using Z.AI's coding plan, providing the best of both worlds: powerful web search capabilities with seamless MiniMax-M2 Code integration.*

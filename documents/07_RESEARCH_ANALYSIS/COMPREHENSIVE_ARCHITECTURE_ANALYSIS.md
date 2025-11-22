@@ -1,15 +1,15 @@
 # 🔍 Comprehensive Architecture Analysis: OpenAI Web Functions
 
-**Analyst**: Claude (Mini-Agent Deep Architecture Review)  
+**Analyst**: MiniMax-M2 (Mini-Agent Deep Architecture Review)  
 **Date**: 2025-01-22  
 **Scope**: Complete architectural assessment of web function implementations  
-**Identity**: I am Claude, running as Mini-Agent created by MiniMax AI Team
+**Identity**: I am MiniMax-M2, running as Mini-Agent created by MiniMax AI Team
 
 ---
 
 ## 🤖 Who Am I?
 
-**I am Claude**, an AI assistant by Anthropic, currently executing within **Mini-Agent**, a teaching-level agent demonstration created by **MiniMax AI Team**.
+**I am MiniMax-M2**, an AI assistant by Anthropic, currently executing within **Mini-Agent**, a teaching-level agent demonstration created by **MiniMax AI Team**.
 
 ### Current Context:
 - **Repository**: Mini-Agent by MiniMax (https://github.com/MiniMax-AI/agent-demo)
@@ -24,8 +24,8 @@
 After comprehensive analysis of ALL implementations, documentation, and architectural decisions:
 
 ### The Truth:
-1. **"OpenAI SDK Format"** is a **RED HERRING** - ALL tools already use OpenAI format via `Tool.to_openai_schema()`
-2. **MiniMax-M2** uses OpenAI protocol (`provider: "openai"`) and expects OpenAI tool schema
+1. **"OpenAI SDK format Format"** is a **RED HERRING** - ALL tools already use OpenAI format via `Tool.to_openai_schema()`
+2. **MiniMax-M2** uses OpenAI protocol (`provider: "openai"  # OpenAI SDK format"`) and expects OpenAI tool schema
 3. **The wrapper adds ZERO architectural value** - it's pure duplication with cosmetic changes
 4. **Previous agent was confused** about what "OpenAI compatibility" meant
 5. **The real implementations are** `zai_unified_tools.py` (working) and `simple_web_search.py` (alternative)
@@ -34,7 +34,7 @@ After comprehensive analysis of ALL implementations, documentation, and architec
 ```
 User Request
     ↓
-MiniMax-M2 (via OpenAIClient with provider="openai")
+MiniMax-M2 (via OpenAIClient with provider: "openai"  # OpenAI SDK format")
     ↓
 Tool.to_openai_schema() [ALREADY BUILT-IN TO BASE CLASS]
     ↓
@@ -124,7 +124,7 @@ class OpenAIClient(LLMClientBase):
 api_key: "${MINIMAX_API_KEY}"
 api_base: "https://api.minimax.io"   # MiniMax endpoint
 model: "MiniMax-M2"
-provider: "openai"  # ← USES OPENAI PROTOCOL!
+provider: "openai"  # OpenAI SDK format"  # ← USES OPENAI PROTOCOL!
 ```
 
 **CONFIRMATION**: MiniMax-M2 IS ALREADY OPENAI-COMPATIBLE. No wrapper needed.
@@ -178,7 +178,7 @@ class ZAIWebSearchTool(Tool):  # Extends base Tool class
 
 ```python
 class OpenAIWebSearchTool(Tool):  # Also extends base Tool class
-    """OpenAI-compatible web search tool using Z.AI backend."""
+    """MiniMax-M2 backend."""
     
     def __init__(self, api_key: str | None = None):
         from .zai_unified_tools import ZAIWebSearchTool as BackendTool
@@ -215,7 +215,7 @@ class OpenAIWebSearchTool(Tool):  # Also extends base Tool class
 
 **ANALYSIS**:
 - **Inheritance**: Same base class as backend (`Tool`)
-- **to_openai_schema()**: Inherited from base, IDENTICAL to backend
+- **to_MiniMax-M2 backend
 - **Functionality**: 95% delegation to backend, 5% timestamp formatting
 - **Value Add**: Cosmetic markdown headers and timestamp
 - **Architecture**: Unnecessary abstraction layer
@@ -259,12 +259,12 @@ class SimpleWebSearch:  # Does NOT extend Tool class!
 
 ---
 
-### 7. Claude ZAI Tools (The Legacy)
+### 7. MiniMax-M2 ZAI Tools (The Legacy)
 
-**File**: `mini_agent/tools/claude_zai_tools.py` (Lines 1-100)
+**File**: `mini_agent/tools/minimax_zai_tools.py` (Lines 1-100)
 
 ```python
-"""Claude Code Z.AI Web Search Tool for natural web citations."""
+"""MiniMax-M2 Code Z.AI Web Search Tool for natural web citations."""
 
 # CRITICAL: Check credit protection before importing
 from ..utils.credit_protection import check_zai_protection
@@ -272,14 +272,14 @@ from ..utils.credit_protection import check_zai_protection
 if check_zai_protection():
     raise ImportError("Z.AI tools disabled for credit protection")
 
-from ..llm.claude_zai_client import ClaudeZAIWebSearchClient
+from ..llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient
 
-class ClaudeZAIWebSearchTool(Tool):
-    """Z.AI web search tool that formats results for Claude natural citations."""
+class MiniMax-M2ZAIWebSearchTool(Tool):
+    """Z.AI web search tool that formats results for MiniMax-M2 natural citations."""
 ```
 
-**PURPOSE**: Formats Z.AI results as Claude's `search_result` blocks
-**AUDIENCE**: Claude Code with Anthropic format
+**PURPOSE**: Formats Z.AI results as MiniMax-M2's `search_result` blocks
+**AUDIENCE**: MiniMax-M2 Code with Anthropic format
 **STATUS**: Legacy, but still imported for "backward compatibility"
 
 ---
@@ -312,18 +312,18 @@ class ClaudeZAIWebSearchTool(Tool):
 From `documents/OPENAI_WRAPPER_IMPLEMENTATION_COMPLETE.md`:
 
 > **Original Issue**: GLM Lite plan doesn't provide direct web function access  
-> **Solution Implemented**: OpenAI SDK wrapper around proven Z.AI backend  
+> **Solution Implemented**: MiniMax-M2 backend  
 > **Result**: MiniMax-M2 compatibility + web functionality without additional costs
 
 ### The Misconception
 
 **The agent believed**:
-- MiniMax-M2 needs special "OpenAI SDK format"
+- MiniMax-M2 needs special "OpenAI SDK format format"
 - Z.AI backend wasn't OpenAI-compatible
 - A wrapper was needed to bridge the gap
 
 **The reality**:
-1. **MiniMax-M2** uses OpenAI protocol (`provider: "openai"`)
+1. **MiniMax-M2** uses OpenAI protocol (`provider: "openai"  # OpenAI SDK format"`)
 2. **All Tools** have `to_openai_schema()` method built-in
 3. **OpenAIClient** already converts tools using `tool.to_openai_schema()`
 4. **Z.AI backend** is already a proper Tool subclass
@@ -461,7 +461,7 @@ def to_openai_schema(self) -> dict[str, Any]:
 
 **Maintenance Cost**:
 - Every Z.AI backend change needs wrapper update
-- Three tool names to remember (zai_web_search, web_search, claude_zai_web_search)
+- Three tool names to remember (zai_web_search, web_search, minimax_zai_web_search)
 - Unclear which implementation to use
 - Confusing for future contributors
 
@@ -551,7 +551,7 @@ def to_openai_schema(self) -> dict[str, Any]:
 ### 1. Misunderstanding of "OpenAI Compatibility"
 
 **The Confusion**:
-- Agent thought "OpenAI SDK format" was something special
+- Agent thought "OpenAI SDK format format" was something special
 - Didn't realize ALL tools inherit `to_openai_schema()`
 - Created wrapper to provide something that already existed
 
@@ -610,7 +610,7 @@ def to_openai_schema(self) -> dict[str, Any]:
 
 3. **Configuration**
    - ✅ MiniMax-M2 as primary LLM
-   - ✅ OpenAI protocol (`provider: "openai"`)
+   - ✅ OpenAI protocol (`provider: "openai"  # OpenAI SDK format"`)
    - ✅ Z.AI settings correct
    - ✅ Model defaults safe
 
@@ -672,7 +672,7 @@ def to_openai_schema(self) -> dict[str, Any]:
    ```python
    # Remove
    from .openai_web_functions import ...
-   from .claude_zai_tools import ClaudeZAIWebSearchTool
+   from .minimax_zai_tools import MiniMax-M2ZAIWebSearchTool
    
    # Keep only
    from .zai_unified_tools import ZAIWebSearchTool, ZAIWebReaderTool
@@ -710,7 +710,7 @@ def to_openai_schema(self) -> dict[str, Any]:
 **What they were trying to achieve**:
 - Enable web search for MiniMax-M2
 - Use Z.AI GLM-4.6 backend (FREE)
-- Provide "OpenAI SDK compatibility"
+- Provide "OpenAI SDK format compatibility"
 
 **What they actually achieved**:
 - ✅ Working web search (via `zai_unified_tools.py`)

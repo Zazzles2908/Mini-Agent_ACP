@@ -26,7 +26,7 @@
 - `zai_direct_web_tools.py` - Web search + reader (9 tools)
 - `zai_corrected_tools.py` - Various corrections
 - `zai_web_tools.py` - Additional web functionality
-- `claude_zai_extended_tools.py` - Extended capabilities
+- `minimax_zai_extended_tools.py` - Extended capabilities
 
 ### **Expected vs Actual Tool Count**
 

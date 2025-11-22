@@ -42,7 +42,7 @@
       "total_skills": 15,
       "skills_dir_exists": true,
       "skills": [
-        ".claude-plugin",
+        ".minimax-plugin",
         "algorithmic-art",
         "artifacts-builder",
         "brand-guidelines",

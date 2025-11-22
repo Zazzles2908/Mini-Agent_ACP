@@ -4,10 +4,10 @@ Get validated JSON results from agent workflows
 
 ---
 
-Structured outputs constrain Claude's responses to follow a specific schema, ensuring valid, parseable output for downstream processing. Use **JSON outputs** (`output_format`) for structured data responses, or **strict tool use** (`strict: true`) for guaranteed schema validation on tool names and inputs.
+Structured outputs constrain MiniMax-M2's responses to follow a specific schema, ensuring valid, parseable output for downstream processing. Use **JSON outputs** (`output_format`) for structured data responses, or **strict tool use** (`strict: true`) for guaranteed schema validation on tool names and inputs.
 
 <Note>
-Structured outputs are currently available as a public beta feature in the Claude API for Claude Sonnet 4.5 and Claude Opus 4.1.
+Structured outputs are currently available as a public beta feature in the MiniMax-M2 API for MiniMax-M2 MiniMax-M2 4.5 and MiniMax-M2 Opus 4.1.
 
 To use the feature, set the [beta header](/docs/en/api/beta-headers) `structured-outputs-2025-11-13`.
 </Note>
@@ -18,7 +18,7 @@ Share feedback using this [form](https://forms.gle/BFnYc6iCkWoRzFgk7).
 
 ## Why use structured outputs
 
-Without structured outputs, Claude can generate malformed JSON responses or invalid tool inputs that break your applications. Even with careful prompting, you may encounter:
+Without structured outputs, MiniMax-M2 can generate malformed JSON responses or invalid tool inputs that break your applications. Even with careful prompting, you may encounter:
 - Parsing errors from invalid JSON syntax
 - Missing required fields
 - Inconsistent data types
@@ -44,7 +44,7 @@ curl https://api.anthropic.com/v1/messages \
   -H "anthropic-version: 2023-06-01" \
   -H "anthropic-beta: structured-outputs-2025-11-13" \
   -d '{
-    "model": "claude-sonnet-4-5",
+    "model": "minimax-MiniMax-M2-4-5",
     "max_tokens": 1024,
     "messages": [
       {
@@ -75,7 +75,7 @@ import anthropic
 client = anthropic.Anthropic()
 
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     max_tokens=1024,
     betas=["structured-outputs-2025-11-13"],
     messages=[
@@ -110,7 +110,7 @@ const client = new Anthropic({
 });
 
 const response = await client.beta.messages.create({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   max_tokens: 1024,
   betas: ["structured-outputs-2025-11-13"],
   messages: [
@@ -162,7 +162,7 @@ curl https://api.anthropic.com/v1/messages \
   -H "anthropic-version: 2023-06-01" \
   -H "anthropic-beta: structured-outputs-2025-11-13" \
   -d '{
-    "model": "claude-sonnet-4-5",
+    "model": "minimax-MiniMax-M2-4-5",
     "max_tokens": 1024,
     "messages": [
       {"role": "user", "content": "What is the weather in San Francisco?"}
@@ -196,7 +196,7 @@ import anthropic
 client = anthropic.Anthropic()
 
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     max_tokens=1024,
     betas=["structured-outputs-2025-11-13"],
     messages=[
@@ -237,7 +237,7 @@ const client = new Anthropic({
 });
 
 const response = await client.beta.messages.create({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   max_tokens: 1024,
   betas: ["structured-outputs-2025-11-13"],
   messages: [
@@ -297,21 +297,21 @@ Choose the right mode for your use case:
 
 | Use JSON outputs when | Use strict tool use when |
 |-----------------------|-------------------------|
-| You need Claude's response in a specific format | You need validated parameters and tool names for tool calls |
+| You need MiniMax-M2's response in a specific format | You need validated parameters and tool names for tool calls |
 | Extracting data from images or text | Building agentic workflows |
 | Generating structured reports | Ensuring type-safe function calls |
 | Formatting API responses | Complex tools with many and/or nested properties |
 
 ### Why strict tool use matters for agents
 
-Building reliable agentic systems requires guaranteed schema conformance. Invalid tool parameters break your functions and workflows. Claude might return incompatible types (`"2"` instead of `2`) or missing fields, causing runtime errors.
+Building reliable agentic systems requires guaranteed schema conformance. Invalid tool parameters break your functions and workflows. MiniMax-M2 might return incompatible types (`"2"` instead of `2`) or missing fields, causing runtime errors.
 
 Strict tool use guarantees type-safe parameters:
 - Functions receive correctly-typed arguments every time
 - No need to validate and retry tool calls
 - Production-ready agents that work consistently at scale
 
-For example, suppose a booking system needs `passengers: int`. Without strict mode, Claude might provide `passengers: "two"` or `passengers: "2"`. With `strict: true`, you're guaranteed `passengers: 2`.
+For example, suppose a booking system needs `passengers: int`. Without strict mode, MiniMax-M2 might provide `passengers: "two"` or `passengers: "2"`. With `strict: true`, you're guaranteed `passengers: 2`.
 
 ## How structured outputs work
 
@@ -322,7 +322,7 @@ Implement JSON structured outputs with these steps:
 
 <Steps>
   <Step title="Define your JSON schema">
-    Create a JSON schema that describes the structure you want Claude to follow. The schema uses standard JSON Schema format with some limitations (see [JSON Schema limitations](#json-schema-limitations)).
+    Create a JSON schema that describes the structure you want MiniMax-M2 to follow. The schema uses standard JSON Schema format with some limitations (see [JSON Schema limitations](#json-schema-limitations)).
   </Step>
   <Step title="Add the output_format parameter">
     Include the `output_format` parameter in your API request with `type: "json_schema"` and your schema definition.
@@ -331,7 +331,7 @@ Implement JSON structured outputs with these steps:
     Add the `anthropic-beta: structured-outputs-2025-11-13` header to your request.
   </Step>
   <Step title="Parse the response">
-    Claude's response will be valid JSON matching your schema, returned in `response.content[0].text`.
+    MiniMax-M2's response will be valid JSON matching your schema, returned in `response.content[0].text`.
   </Step>
 </Steps>
 
@@ -351,7 +351,7 @@ Implement strict tool use with these steps:
     Add the `anthropic-beta: structured-outputs-2025-11-13` header to your request.
   </Step>
   <Step title="Handle tool calls">
-    When Claude uses the tool, the `input` field in the tool_use block will strictly follow your `input_schema`, and the `name` will always be valid.
+    When MiniMax-M2 uses the tool, the `input` field in the tool_use block will strictly follow your `input_schema`, and the `name` will always be valid.
   </Step>
 </Steps>
 
@@ -371,7 +371,7 @@ For Python and TypeScript developers, you can use familiar schema definition too
 
 SDK helpers (Pydantic, Zod, `parse()`) only work with JSON outputs (`output_format`).
 
-These helpers transform and validate Claude's output to you. Strict tool use validates Claude's input to your tools, which use the existing `input_schema` field in tool definitions.
+These helpers transform and validate MiniMax-M2's output to you. Strict tool use validates MiniMax-M2's input to your tools, which use the existing `input_schema` field in tool definitions.
 
 For strict tool use, define your `input_schema` directly in the tool definition with `strict: true`.
 </Note>
@@ -392,7 +392,7 @@ client = Anthropic()
 
 # With .create() - requires transform_schema()
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     max_tokens=1024,
     betas=["structured-outputs-2025-11-13"],
     messages=[
@@ -411,7 +411,7 @@ print(response.content[0].text)
 
 # With .parse() - can pass Pydantic model directly
 response = client.beta.messages.parse(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     max_tokens=1024,
     betas=["structured-outputs-2025-11-13"],
     messages=[
@@ -441,7 +441,7 @@ const ContactInfoSchema = z.object({
 const client = new Anthropic();
 
 const response = await client.beta.messages.parse({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   max_tokens: 1024,
   betas: ["structured-outputs-2025-11-13"],
   messages: [
@@ -483,7 +483,7 @@ class ContactInfo(BaseModel):
 client = anthropic.Anthropic()
 
 response = client.beta.messages.parse(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     max_tokens=1024,
     messages=[{"role": "user", "content": "..."}],
@@ -514,7 +514,7 @@ schema = transform_schema(schema)
 schema["properties"]["custom_field"] = {"type": "string"}
 
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     max_tokens=1024,
     output_format=schema,
@@ -534,7 +534,7 @@ Both Python and TypeScript SDKs automatically transform schemas with unsupported
 4. **Filter string formats** to supported list only
 5. **Validate responses** against your original schema (with all constraints)
 
-This means Claude receives a simplified schema, but your code still enforces all constraints through validation.
+This means MiniMax-M2 receives a simplified schema, but your code still enforces all constraints through validation.
 
 **Example:** A Pydantic field with `minimum: 100` becomes a plain integer in the sent schema, but the description is updated to "Must be at least 100", and the SDK validates the response against the original constraint.
 
@@ -558,7 +558,7 @@ class Invoice(BaseModel):
     customer_name: str
 
 response = client.beta.messages.parse(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     output_format=Invoice,
     messages=[{"role": "user", "content": f"Extract invoice data from: {invoice_text}"}]
@@ -577,7 +577,7 @@ const InvoiceSchema = z.object({
 });
 
 const response = await client.beta.messages.parse({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   betas: ["structured-outputs-2025-11-13"],
   output_format: InvoiceSchema,
   messages: [{"role": "user", "content": `Extract invoice data from: ${invoiceText}`}]
@@ -605,7 +605,7 @@ class Classification(BaseModel):
     sentiment: str
 
 response = client.beta.messages.parse(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     output_format=Classification,
     messages=[{"role": "user", "content": f"Classify this feedback: {feedback_text}"}]
@@ -623,7 +623,7 @@ const ClassificationSchema = z.object({
 });
 
 const response = await client.beta.messages.parse({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   betas: ["structured-outputs-2025-11-13"],
   output_format: ClassificationSchema,
   messages: [{"role": "user", "content": `Classify this feedback: ${feedbackText}`}]
@@ -651,7 +651,7 @@ class APIResponse(BaseModel):
     metadata: dict
 
 response = client.beta.messages.parse(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     output_format=APIResponse,
     messages=[{"role": "user", "content": "Process this request: ..."}]
@@ -669,7 +669,7 @@ const APIResponseSchema = z.object({
 });
 
 const response = await client.beta.messages.parse({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   betas: ["structured-outputs-2025-11-13"],
   output_format: APIResponseSchema,
   messages: [{"role": "user", "content": "Process this request: ..."}]
@@ -688,7 +688,7 @@ Ensure tool parameters exactly match your schema:
 
 ```python Python
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     messages=[{"role": "user", "content": "Search for flights to Tokyo"}],
     tools=[{
@@ -710,7 +710,7 @@ response = client.beta.messages.create(
 
 ```typescript TypeScript
 const response = await client.beta.messages.create({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   betas: ["structured-outputs-2025-11-13"],
   messages: [{"role": "user", "content": "Search for flights to Tokyo"}],
   tools: [{
@@ -742,7 +742,7 @@ Build reliable multi-step agents with guaranteed tool parameters:
 
 ```python Python
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5",
+    model="minimax-MiniMax-M2-4-5",
     betas=["structured-outputs-2025-11-13"],
     messages=[{"role": "user", "content": "Help me plan a trip to Paris for 2 people"}],
     tools=[
@@ -781,7 +781,7 @@ response = client.beta.messages.create(
 
 ```typescript TypeScript
 const response = await client.beta.messages.create({
-  model: "claude-sonnet-4-5",
+  model: "minimax-MiniMax-M2-4-5",
   betas: ["structured-outputs-2025-11-13"],
   messages: [{"role": "user", "content": "Help me plan a trip to Paris for 2 people"}],
   tools: [
@@ -837,11 +837,11 @@ Structured outputs use constrained sampling with compiled grammar artifacts. Thi
 
 ### Prompt modification and token costs
 
-When using structured outputs, Claude automatically receives an additional system prompt explaining the expected output format. This means:
+When using structured outputs, MiniMax-M2 automatically receives an additional system prompt explaining the expected output format. This means:
 
 - Your input token count will be slightly higher
 - The injected prompt costs you tokens like any other system prompt
-- Changing the `output_format` parameter will invalidate any [prompt cache](/docs/en/build-with-claude/prompt-caching) for that conversation thread
+- Changing the `output_format` parameter will invalidate any [prompt cache](/docs/en/build-with-minimax/prompt-caching) for that conversation thread
 
 ### JSON Schema limitations
 
@@ -903,7 +903,7 @@ While structured outputs guarantee schema compliance in most cases, there are sc
 
 **Refusals** (`stop_reason: "refusal"`)
 
-Claude maintains its safety and helpfulness properties even when using structured outputs. If Claude refuses a request for safety reasons:
+MiniMax-M2 maintains its safety and helpfulness properties even when using structured outputs. If MiniMax-M2 refuses a request for safety reasons:
 
 - The response will have `stop_reason: "refusal"`
 - You'll receive a 200 status code
@@ -930,20 +930,20 @@ If your schema uses unsupported features or is too complex, you'll receive a 400
 - Cause: Schema exceeds complexity limits
 - Solution: Break into smaller schemas, simplify structure, or reduce the number of tools marked as `strict: true`
 
-For persistent issues with valid schemas, [contact support](https://support.claude.com/en/articles/9015913-how-to-get-support) with your schema definition.
+For persistent issues with valid schemas, [contact support](https://support.minimax.com/en/articles/9015913-how-to-get-support) with your schema definition.
 
 ## Feature compatibility
 
 **Works with:**
-- **[Batch processing](/docs/en/build-with-claude/batch-processing)**: Process structured outputs at scale with 50% discount
-- **[Token counting](/docs/en/build-with-claude/token-counting)**: Count tokens without compilation
-- **[Streaming](/docs/en/build-with-claude/streaming)**: Stream structured outputs like normal responses
+- **[Batch processing](/docs/en/build-with-minimax/batch-processing)**: Process structured outputs at scale with 50% discount
+- **[Token counting](/docs/en/build-with-minimax/token-counting)**: Count tokens without compilation
+- **[Streaming](/docs/en/build-with-minimax/streaming)**: Stream structured outputs like normal responses
 - **Combined usage**: Use JSON outputs (`output_format`) and strict tool use (`strict: true`) together in the same request
 
 **Incompatible with:**
-- **[Citations](/docs/en/build-with-claude/citations)**: Citations require interleaving citation blocks with text, which conflicts with strict JSON schema constraints. Returns 400 error if citations enabled with `output_format`.
-- **[Message Prefilling](/docs/en/build-with-claude/prompt-engineering/prefill-claudes-response)**: Incompatible with JSON outputs
+- **[Citations](/docs/en/build-with-minimax/citations)**: Citations require interleaving citation blocks with text, which conflicts with strict JSON schema constraints. Returns 400 error if citations enabled with `output_format`.
+- **[Message Prefilling](/docs/en/build-with-minimax/prompt-engineering/prefill-minimaxs-response)**: Incompatible with JSON outputs
 
 <Tip>
-**Grammar scope**: Grammars apply only to Claude's direct output, not to tool use calls, tool results, or thinking tags (when using [Extended Thinking](/docs/en/build-with-claude/extended-thinking)). Grammar state resets between sections, allowing Claude to think freely while still producing structured output in the final response.
+**Grammar scope**: Grammars apply only to MiniMax-M2's direct output, not to tool use calls, tool results, or thinking tags (when using [Extended Thinking](/docs/en/build-with-minimax/extended-thinking)). Grammar state resets between sections, allowing MiniMax-M2 to think freely while still producing structured output in the final response.
 </Tip>

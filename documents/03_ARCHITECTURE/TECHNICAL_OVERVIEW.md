@@ -82,7 +82,7 @@ Agent(llm_client, system_prompt, tools, max_steps, workspace_dir)
 
 #### ✅ **What Actually Works**
 - **Configuration Loading**: `Config.load()` ✅ WORKING
-- **LLM Integration**: Anthropic API client ✅ WORKING  
+- **AI Model Integration**: Anthropic API client ✅ WORKING  
 - **File Tools**: read_file, write_file, edit_file ✅ WORKING
 - **Bash Tool**: System command execution ✅ WORKING
 - **Skills System**: 15 skills loaded, get_skill available ✅ WORKING
@@ -119,7 +119,7 @@ mini_agent/
 ├── config.py            # Configuration management
 ├── llm/                 # LLM client implementations
 ├── tools/               # Tool implementations
-├── skills/              # Claude Skills (12 skills)
+├── skills/              # MiniMax-M2 Skills (12 skills)
 └── config/              # Configuration files
 ```
 

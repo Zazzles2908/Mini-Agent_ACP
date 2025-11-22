@@ -238,9 +238,9 @@ async def initialize_base_tools(config: Config):
         tools.append(bash_kill_tool)
         print(f"{Colors.GREEN}✅ Loaded Bash Kill tool{Colors.RESET}")
 
-    # 3. Claude Skills (loaded from package directory)
+    # 3. MiniMax-M2 Skills (loaded from package directory)
     if config.tools.enable_skills:
-        print(f"{Colors.BRIGHT_CYAN}Loading Claude Skills...{Colors.RESET}")
+        print(f"{Colors.BRIGHT_CYAN}Loading MiniMax-M2 Skills...{Colors.RESET}")
         try:
             # Resolve skills directory with priority search
             skills_dir = config.tools.skills_dir

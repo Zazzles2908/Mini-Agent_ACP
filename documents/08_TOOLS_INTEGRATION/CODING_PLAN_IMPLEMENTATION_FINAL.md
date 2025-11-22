@@ -33,7 +33,7 @@ You were absolutely right! The issue was **usage quota limits**, not configurati
 
 ### **Coding Plan Limits**
 - **Total Quota**: ~120 prompts every 5 hours
-- **Multiplier**: 3x Claude Pro plan usage
+- **Multiplier**: 3x MiniMax-M2 Pro plan usage
 - **Coverage**: GLM chat + web search + web reader
 - **Efficiency**: Monitor token usage for optimal utilization
 

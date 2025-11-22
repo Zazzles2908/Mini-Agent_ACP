@@ -39,7 +39,7 @@ The comprehensive analysis reveals a **transformative architectural shift** from
 ```bash
 ✅ Agent execution loop with tool calling
 ✅ Multi-provider LLM support (MiniMax-M2 primary)
-✅ Claude Skills integration (20+ capabilities)
+✅ MiniMax-M2 Skills integration (20+ capabilities)
 ✅ MCP integration framework
 ✅ Configuration system with retry mechanism
 ✅ Interactive CLI with session management
@@ -124,7 +124,7 @@ The comprehensive analysis reveals a **transformative architectural shift** from
 │  • MiniMax-M2 LLM (Primary)                          │
 │  • 21 tools (File, Bash, Z.AI, MCP, Skills)          │
 │  • Knowledge graph persistence                       │
-│  • Claude Skills (20+ capabilities)                  │
+│  • MiniMax-M2 Skills (20+ capabilities)                  │
 │  • Multi-provider LLM support                        │
 └─────────────────────────────────────────────────────┘
 ```
@@ -187,7 +187,7 @@ The comprehensive analysis reveals a **transformative architectural shift** from
 ✅ Simple agent loop with basic tool calling
 ✅ Interactive CLI for teaching agent concepts
 ✅ MCP integration for extensibility
-✅ Configuration system for different LLM providers
+✅ Configuration system for different AI models
 ❌ Limited integration with external tools/editors
 ❌ No protocol compliance for external clients
 ```

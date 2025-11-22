@@ -8,7 +8,7 @@ C:\Users\Jazeel-Home\Mini-Agent\
 ├── 📦 CORE APPLICATION
 │   ├── mini_agent/                    [Core package - 50+ modules]
 │   │   ├── config/                    [Configuration management]
-│   │   ├── llm/                       [LLM integrations: OpenAI, MiniMax, Z.AI]
+│   │   ├── llm/                       [AI model integrations: MiniMax-M2, GLM-4.6]
 │   │   ├── skills/                    [14+ specialized skills]
 │   │   │   ├── algorithmic-art/       [Generative art with p5.js]
 │   │   │   ├── artifacts-builder/     [React + shadcn/ui components]
@@ -86,7 +86,7 @@ C:\Users\Jazeel-Home\Mini-Agent\
 - **Test Scripts**: 85+ comprehensive tests
 - **Documentation Files**: 100+ organized documents
 - **Python Modules**: 50+ in core package
-- **Integration Points**: OpenAI, MiniMax GLM, Z.AI, VS Code
+- **Integration Points**: MiniMax-M2, GLM-4.6 (Z.AI), VS Code
 - **Visualization Tools**: 7 different modalities
 
 ## System Flow Overview

@@ -11,7 +11,7 @@
 | **Session Notes** | `enable_note: true` | Should load | ❓ **NEEDS VERIFICATION** | SessionNoteTool |
 | **Z.AI Search** | `enable_zai_search: true` | Should load | ❓ **NEEDS VERIFICATION** | Web search via direct API |
 | **Z.AI LLM** | `enable_zai_llm: false` | Disabled | ❓ **NEEDS VERIFICATION** | Credit protection active |
-| **Skills** | `enable_skills: true` | Should load | ❓ **NEEDS VERIFICATION** | 15+ Claude skills |
+| **Skills** | `enable_skills: true` | Should load | ❓ **NEEDS VERIFICATION** | 15+ MiniMax-M2 skills |
 | **MCP Tools** | `enable_mcp: true` | Should load | ✅ **FIXED** | Config path now matches |
 
 ### **MCP Configuration Mismatch**
@@ -24,7 +24,7 @@
 ```
 ✅ SUCCESSFULLY LOADED:
 - 3 Bash Tools: bash, bash_output, bash_kill
-- 17 Claude Skills discovered
+- 17 MiniMax-M2 Skills discovered
 - 1 Skill Tool: get_skill
 - 21 MCP Tools: Memory (9) + Git (12)
 - TOTAL: 25 base tools loaded
@@ -41,7 +41,7 @@
 | System | Expected | Actual | Status |
 |--------|----------|--------|---------|
 | **Bash Tools** | 3 tools | ✅ 3 tools | **PERFECT** |
-| **Claude Skills** | 15+ skills | ✅ 17 skills | **EXCEEDED** |
+| **MiniMax-M2 Skills** | 15+ skills | ✅ 17 skills | **EXCEEDED** |
 | **MCP Tools** | 11 tools | ✅ 21 tools | **FIXED & EXCEEDED** |
 | **File Tools** | 3 tools | ❓ Pending | Workspace-dependent |
 | **Session Notes** | 1 tool | ❓ Pending | Workspace-dependent |

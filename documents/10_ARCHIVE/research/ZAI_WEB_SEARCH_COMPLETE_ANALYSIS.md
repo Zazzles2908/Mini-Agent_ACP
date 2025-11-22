@@ -15,15 +15,15 @@
 
 **Example of what you see**:
 ```
-**Result 1: Claude Code - Z.AI DEVELOPER DOCUMENT**
-Source: https://docs.z.ai/devpack/tool/claude
-Claude Code is an agentic coding tool that lives in your terminal, 
+**Result 1: MiniMax-M2 Code - Z.AI DEVELOPER DOCUMENT**
+Source: https://docs.z.ai/devpack/tool/minimax
+MiniMax-M2 Code is an agentic coding tool that lives in your terminal, 
 understands your codebase, and helps you code faster by executing 
 routine tasks, ...
 
 **Result 2: Overview - Z.AI DEVELOPER DOCUMENT**
 Source: https://docs.z.ai/devpack/overview
-The plan can be applied to coding tools such as Claude Code, Cline, 
+The plan can be applied to coding tools such as MiniMax-M2 Code, Cline, 
 and OpenCode, covering a wide range of development scenarios:.
 ```
 
@@ -77,7 +77,7 @@ and OpenCode, covering a wide range of development scenarios:.
 1. **Phase 1: Use Web Search for Discovery** ✅ WORKING NOW
    - Search finds relevant Z.AI DevPack documentation
    - Provides URLs for further investigation
-   - Structured results for Claude integration
+   - Structured results for MiniMax-M2 integration
 
 2. **Phase 2: Resolve Web Reading API Issue** ❌ NEEDS FIXING
    - Fix "Unknown Model" error (code 1211)
@@ -87,7 +87,7 @@ and OpenCode, covering a wide range of development scenarios:.
 3. **Phase 3: Combined Workflow** 🔄 FUTURE
    - Search first to find pages
    - Reading second to get full content
-   - Integrated Claude experience
+   - Integrated MiniMax-M2 experience
 
 ### Immediate Recommendations
 

@@ -76,14 +76,14 @@ def chart_2_codebase_metrics():
 
 def chart_3_system_layers():
     """Horizontal stacked bar showing system layers"""
-    layers = ['User Interface', 'Skills Framework', 'LLM Integration', 
+    layers = ['User Interface', 'Skills Framework', 'AI Model Integration', 
               'Tool Layer', 'Core Infrastructure']
     
     # Components per layer
     components = {
         'User Interface': ['CLI', 'VS Code Extension', 'Python API'],
         'Skills Framework': ['Skill Loader', 'Document Skills', 'Visual Skills', 'Dev Skills'],
-        'LLM Integration': ['OpenAI', 'MiniMax GLM', 'Z.AI Client'],
+        'AI Model Integration': ['OpenAI', 'MiniMax GLM', 'Z.AI Client'],
         'Tool Layer': ['Web Search', 'Web Reader', 'File Ops', 'Git Ops'],
         'Core Infrastructure': ['Config Manager', 'Credit Protection', 'Utils']
     }
@@ -192,14 +192,15 @@ def chart_5_directory_treemap():
     print("✓ Generated directory_treemap.png")
 
 def chart_6_llm_comparison():
-    """Radar chart comparing LLM providers"""
-    categories = ['Speed', 'Cost\nEfficiency', 'Quality', 'Web\nSearch', 'Quota']
+    """Radar chart comparing AI models (MiniMax-M2 and GLM-4.6)"""
+    categories = ['Speed', 'Cost\nEfficiency', 'Quality', 'Web\nTools', 'Quota']
     
-    # Scores for each provider (1-5)
+    # Scores for each model (1-5)
+    # MiniMax-M2: Primary reasoning model (300 prompts/5hrs)
+    # GLM-4.6: Z.AI web tools backend (120 prompts/5hrs)
     providers = {
-        'OpenAI GPT-4': [4, 2, 5, 3, 5],
-        'MiniMax GLM': [5, 5, 4, 4, 4],
-        'Z.AI Coding': [4, 4, 4, 5, 3]
+        'MiniMax-M2 (Primary)': [5, 5, 5, 1, 5],  # No web tools, excellent for reasoning
+        'GLM-4.6 (Z.AI Web)': [4, 4, 4, 5, 3]    # Web search/reading capabilities
     }
     
     angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
@@ -207,7 +208,7 @@ def chart_6_llm_comparison():
     
     fig, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(polar=True))
     
-    colors = [COLORS['primary'], COLORS['accent'], COLORS['warning']]
+    colors = [COLORS['primary'], COLORS['accent']]
     
     for (name, values), color in zip(providers.items(), colors):
         values_closed = values + values[:1]
@@ -217,7 +218,7 @@ def chart_6_llm_comparison():
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(categories, fontsize=11)
     ax.set_ylim(0, 5)
-    ax.set_title('LLM Provider Comparison', fontsize=14, fontweight='bold', pad=20)
+    ax.set_title('AI Model Comparison', fontsize=14, fontweight='bold', pad=20)
     ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
     
     plt.tight_layout()

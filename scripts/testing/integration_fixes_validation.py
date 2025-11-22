@@ -9,16 +9,16 @@ import asyncio
 from pathlib import Path
 
 def test_openai_sdk_integration():
-    """Test OpenAI SDK integration"""
-    print("📦 Testing OpenAI SDK Integration...")
+    """Test OpenAI SDK format integration"""
+    print("📦 Testing OpenAI SDK format Integration...")
     
     try:
         from openai import AsyncOpenAI
-        print("   ✅ OpenAI SDK: Successfully imported")
+        print("   ✅ OpenAI SDK format: Successfully imported")
         print("   ✅ Used by: mini_agent/llm/openai_client.py")
         return True
     except ImportError as e:
-        print(f"   ❌ OpenAI SDK: Import failed - {e}")
+        print(f"   ❌ OpenAI SDK format: Import failed - {e}")
         return False
 
 def test_zai_glm_integration():
@@ -48,7 +48,7 @@ def test_zai_glm_integration():
         return False
 
 def test_llm_provider_hierarchy():
-    """Test updated LLM provider hierarchy"""
+    """Test updated AI model hierarchy"""
     print("\n🤖 Testing LLM Provider Hierarchy...")
     
     try:
@@ -220,12 +220,12 @@ def main():
     """Main validation function"""
     print("🎯 Mini-Agent Integration Fixes Validation")
     print("=" * 60)
-    print("Testing: OpenAI SDK, Z.AI, GLM-4.6, aiohttp imports")
+    print("Testing: OpenAI SDK format, Z.AI, GLM-4.6, aiohttp imports")
     print()
     
     # Run all tests
     tests = [
-        ("OpenAI SDK Integration", test_openai_sdk_integration),
+        ("OpenAI SDK format Integration", test_openai_sdk_integration),
         ("Z.AI/GLM Integration", test_zai_glm_integration),
         ("LLM Provider Hierarchy", test_llm_provider_hierarchy),
         ("Z.AI Web Search", test_zai_web_search),
@@ -262,7 +262,7 @@ def main():
     if passed == total:
         print("🎉 ALL INTEGRATION FIXES SUCCESSFUL!")
         print("\n✅ System Status:")
-        print("   • OpenAI SDK: Already integrated and working")
+        print("   • OpenAI SDK format: Already integrated and working")
         print("   • Z.AI API: Configured for web search")
         print("   • GLM-4.6: Now primary LLM for reasoning/actions")
         print("   • aiohttp: Working (VS Code warning is false positive)")

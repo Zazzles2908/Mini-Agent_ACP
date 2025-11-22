@@ -9,7 +9,7 @@ import json
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from mini_agent.llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
+from mini_agent.llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient, get_zai_api_key
 
 
 async def debug_zai_endpoint():
@@ -23,7 +23,7 @@ async def debug_zai_endpoint():
     
     print(f"✅ API Key found: {api_key[:10]}...")
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     print(f"✅ Client initialized with endpoint: {client.base_url}")
     
     # Test with minimal parameters
@@ -82,7 +82,7 @@ async def test_basic_glm_chat():
         print("❌ Z.AI API key not found")
         return False
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
     try:
         import aiohttp

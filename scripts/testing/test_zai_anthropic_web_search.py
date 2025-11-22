@@ -52,7 +52,7 @@ async def test_anthropic_web_search():
     # Test search queries
     test_queries = [
         {
-            "query": "Z.AI DevPack Claude integration",
+            "query": "Z.AI DevPack MiniMax-M2 integration",
             "description": "Testing Z.AI DevPack documentation search"
         },
         {
@@ -83,7 +83,7 @@ async def test_anthropic_web_search():
                 # Check for key elements in the output
                 content = result.content
                 if "search_result" in content:
-                    print(f"   🤖 Contains Claude search_result blocks: ✅")
+                    print(f"   🤖 Contains MiniMax-M2 search_result blocks: ✅")
                 if "Z.AI" in content:
                     print(f"   🔍 Contains Z.AI references: ✅")
                 if "coding plan" in content.lower():
@@ -107,8 +107,8 @@ async def test_anthropic_web_search():
     print(f"\n🎉 All tests completed successfully!")
     print(f"✅ Z.AI Anthropic Web Search Tool is working properly")
     print(f"✅ Uses coding plan credits instead of direct API calls")
-    print(f"✅ Returns results in Claude's search_result format")
-    print(f"✅ Provides natural citations for Claude Code integration")
+    print(f"✅ Returns results in MiniMax-M2's search_result format")
+    print(f"✅ Provides natural citations for MiniMax-M2 Code integration")
     
     return True
 

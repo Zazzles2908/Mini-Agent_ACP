@@ -60,18 +60,18 @@ headers = {
 response = await session.post(f"{self.base_url}/v1/messages", ...)
 ```
 
-### ✅ Requirement 3: Returns Claude's search_result Block Format
+### ✅ Requirement 3: Returns MiniMax-M2's search_result Block Format
 **Score: 100% - EXCELLENT**
 
 **Evidence:**
-- ✅ Exact format compliance with Claude documentation
+- ✅ Exact format compliance with MiniMax-M2 documentation
 - ✅ Correct structure: `{"type": "search_result", "source": "...", "title": "...", "content": [...], "citations": {"enabled": true}}`
 - ✅ Proper `content` array with text blocks
 - ✅ Citations enabled by default
 
 **Format Verification:**
 ```python
-def _format_for_claude(self, search_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _format_for_minimax(self, search_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     block = {
         "type": "search_result",
         "source": result.get('source', ''),
@@ -158,26 +158,26 @@ except Exception as e:
 ```
 🧪 Testing Z.AI Anthropic Web Search Tool
 ✅ Tool available: zai_anthropic_web_search
-✅ Contains Claude search_result blocks: ✅
+✅ Contains MiniMax-M2 search_result blocks: ✅
 ✅ Contains Z.AI references: ✅  
 ✅ Contains coding plan references: ✅
 🎉 All tests completed successfully!
 ```
 
-### ✅ Requirement 8: Natural Citation Capabilities for Claude Code
+### ✅ Requirement 8: Natural Citation Capabilities for MiniMax-M2 Code
 **Score: 100% - EXCELLENT**
 
 **Evidence:**
-- ✅ Returns exactly formatted `search_result` blocks as specified in Claude docs
+- ✅ Returns exactly formatted `search_result` blocks as specified in MiniMax-M2 docs
 - ✅ Citations enabled by default with `{"enabled": true}`
-- ✅ Proper content structure for Claude's citation engine
-- ✅ Enables automatic source attribution in Claude responses
-- ✅ Compatible with Claude Code's citation system
+- ✅ Proper content structure for MiniMax-M2's citation engine
+- ✅ Enables automatic source attribution in MiniMax-M2 responses
+- ✅ Compatible with MiniMax-M2 Code's citation system
 
-**Claude Integration Verification:**
-- Format matches Claude's `search_result` block specification exactly
+**MiniMax-M2 Integration Verification:**
+- Format matches MiniMax-M2's `search_result` block specification exactly
 - Enables natural citations without additional formatting
-- Seamless integration with Claude Code workflows
+- Seamless integration with MiniMax-M2 Code workflows
 - Proper source attribution and citation tracking
 
 ## Architecture Compliance Analysis
@@ -199,7 +199,7 @@ The implementation perfectly follows the established Mini-Agent tool pattern:
 
 **Strategic Benefits:**
 1. **Credit Efficiency**: Uses coding plan quota instead of separate Z.AI API billing
-2. **Natural Integration**: Leverages existing Claude infrastructure
+2. **Natural Integration**: Leverages existing MiniMax-M2 infrastructure
 3. **Citation Quality**: Provides web search-level citations for custom content
 4. **Architecture Consistency**: Routes through proven Anthropic-compatible endpoint
 
@@ -236,7 +236,7 @@ The implementation perfectly follows the established Mini-Agent tool pattern:
 
 ### Core Functionality: 100% Complete
 - ✅ Web search implementation via Anthropic endpoint
-- ✅ Claude search_result block formatting
+- ✅ MiniMax-M2 search_result block formatting
 - ✅ Natural citation capabilities
 - ✅ Error handling and validation
 - ✅ Environment configuration
@@ -264,7 +264,7 @@ The implementation perfectly follows the established Mini-Agent tool pattern:
 ### Strengths Identified:
 1. **Perfect Architecture Compliance**: Follows all Mini-Agent patterns exactly
 2. **Strategic Integration**: Smart use of coding plan credits through Anthropic endpoint
-3. **Natural Citations**: Proper Claude search_result formatting enables automatic citations
+3. **Natural Citations**: Proper MiniMax-M2 search_result formatting enables automatic citations
 4. **Comprehensive Testing**: Thorough validation with real API testing
 5. **Production Quality**: Professional error handling, logging, and documentation
 
@@ -277,7 +277,7 @@ The implementation perfectly follows the established Mini-Agent tool pattern:
 
 The implementation successfully meets all requirements and provides a high-quality, production-ready solution that:
 - Uses the correct Anthropic-compatible endpoint
-- Returns properly formatted Claude search_result blocks  
+- Returns properly formatted MiniMax-M2 search_result blocks  
 - Integrates seamlessly with Mini-Agent architecture
 - Provides natural citation capabilities
 - Uses coding plan credits efficiently
@@ -289,12 +289,12 @@ The implementation successfully meets all requirements and provides a high-quali
 
 - [x] Follows Mini-Agent tool architecture patterns
 - [x] Uses Anthropic-compatible endpoint (not direct Z.AI API)
-- [x] Returns results in Claude's search_result block format
+- [x] Returns results in MiniMax-M2's search_result block format
 - [x] Integrates seamlessly with existing Mini-Agent tool loading
 - [x] Provides proper error handling and validation
 - [x] Uses coding plan credits efficiently  
 - [x] Includes comprehensive testing and documentation
-- [x] Natural citation capabilities for Claude Code
+- [x] Natural citation capabilities for MiniMax-M2 Code
 - [x] All tests pass successfully
 - [x] Documentation is complete and accurate
 - [x] Production-ready quality standards met

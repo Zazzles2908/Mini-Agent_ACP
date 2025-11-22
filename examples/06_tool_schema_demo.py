@@ -255,7 +255,7 @@ async def demo_tool_schema_methods():
     openai_schema = weather_tool.to_openai_schema()
     print(f"  {openai_schema}")
 
-    print("\nSchema methods allow flexible tool usage with different LLM providers.")
+    print("\nSchema methods allow flexible tool usage with different AI models.")
 
 
 async def main():

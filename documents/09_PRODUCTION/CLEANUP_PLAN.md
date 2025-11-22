@@ -345,7 +345,7 @@ cat > documents/PROJECT_CONTEXT.md << 'EOF'
 - **Agent Loop**: `mini_agent/agent.py` - Execution loop with tool calling
 - **LLM Clients**: `mini_agent/llm/` - Multi-provider support (MiniMax-M2, Anthropic, OpenAI, GLM)
 - **Tools**: `mini_agent/tools/` - File operations, bash execution, MCP integration
-- **Skills**: `mini_agent/skills/` - 20+ specialized capabilities (Claude skills)
+- **Skills**: `mini_agent/skills/` - 20+ specialized capabilities (MiniMax-M2 skills)
 - **Configuration**: `mini_agent/config/` - YAML-based configuration system
 
 ### Community Extensions (~10%)
@@ -396,7 +396,7 @@ documents/                # All project documentation
 ## Key Technologies
 - **Language**: Python 3.10+
 - **Package Manager**: uv (modern pip replacement)
-- **LLM APIs**: Anthropic, OpenAI, MiniMax, Z.AI
+- **LLM APIs**: Anthropic, MiniMax-M2, GLM-4.6
 - **Testing**: pytest with async support
 - **Configuration**: YAML + environment variables
 EOF
@@ -406,7 +406,7 @@ cat > documents/AGENT_HANDOFF.md << 'EOF'
 # Agent Handoff Notes
 
 ## Last Updated
-2025-01-22 by Claude (Repository Cleanup Session)
+2025-01-22 by MiniMax-M2 (Repository Cleanup Session)
 
 ## Current Status
 
@@ -447,7 +447,7 @@ cat > documents/AGENT_HANDOFF.md << 'EOF'
 
 ### Design Decisions
 - **Gitignore violations**: Root cause was files committed before .gitignore rules added
-- **Multiple LLM providers**: Intentional - allows user choice based on use case
+- **Multiple AI models**: Intentional - allows user choice based on use case
 - **Skills as submodule**: Shared resource, keep as submodule
 - **VSIX files**: Archived failed VS Code build attempts, preserved for reference
 

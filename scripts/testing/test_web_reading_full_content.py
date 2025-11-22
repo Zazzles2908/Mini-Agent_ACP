@@ -10,7 +10,7 @@ from pathlib import Path
 # Add mini_agent to path
 sys.path.insert(0, '.')
 
-from mini_agent.llm.claude_zai_client import ClaudeZAIWebSearchClient, get_zai_api_key
+from mini_agent.llm.minimax_zai_client import MiniMax-M2ZAIWebSearchClient, get_zai_api_key
 
 async def test_web_reading():
     print("📖 Testing Z.AI Web Reading - Get Full Page Content")
@@ -21,12 +21,12 @@ async def test_web_reading():
         print("❌ No API key found")
         return
     
-    client = ClaudeZAIWebSearchClient(api_key)
+    client = MiniMax-M2ZAIWebSearchClient(api_key)
     
-    # Test reading the actual Claude documentation page
+    # Test reading the actual MiniMax-M2 documentation page
     urls_to_test = [
-        "https://docs.z.ai/devpack/tool/claude",
-        "https://docs.z.ai/devpack/tool/claude-for-ide"
+        "https://docs.z.ai/devpack/tool/minimax",
+        "https://docs.z.ai/devpack/tool/minimax-for-ide"
     ]
     
     for url in urls_to_test:
@@ -59,7 +59,7 @@ async def test_web_reading():
                 
                 # Try fallback search if reading fails
                 print(f"\n🔄 Trying search fallback...")
-                search_result = await client.web_search_for_claude(
+                search_result = await client.web_search_for_minimax(
                     query=f"content of {url}",
                     count=3,
                     search_engine="search-prime"
@@ -81,8 +81,8 @@ async def test_web_reading():
     
     try:
         # First search for the documentation
-        search_result = await client.web_search_for_claude(
-            query="Z.AI DevPack Claude Code integration setup steps",
+        search_result = await client.web_search_for_minimax(
+            query="Z.AI DevPack MiniMax-M2 Code integration setup steps",
             count=5,
             search_engine="search-prime"
         )

@@ -3,21 +3,21 @@
 ## Issue 1: File Navigation Restrictions (`C:\tmp` only)
 
 ### Problem
-When running Mini-Agent through Claude Desktop's ACP integration, file access is restricted to `C:\tmp` only. The agent reports:
+When running Mini-Agent through MiniMax-M2 Desktop's ACP integration, file access is restricted to `C:\tmp` only. The agent reports:
 ```
 Allowed directories:
 C:\tmp
 ```
 
 ### Root Cause
-This restriction comes from the ACP (Agent Client Protocol) server configuration. When Claude Desktop invokes mini-agent as an ACP server, it needs to be explicitly configured with allowed directories.
+This restriction comes from the ACP (Agent Client Protocol) server configuration. When MiniMax-M2 Desktop invokes mini-agent as an ACP server, it needs to be explicitly configured with allowed directories.
 
 ### Solution
 
-#### Option 1: Add agentServers Configuration to Claude Desktop (Recommended)
+#### Option 1: Add agentServers Configuration to MiniMax-M2 Desktop (Recommended)
 
-Add the following to your `claude_desktop_config.json` located at:
-`C:\Users\Jazeel-Home\AppData\Roaming\Claude\claude_desktop_config.json`
+Add the following to your `minimax_desktop_config.json` located at:
+`C:\Users\Jazeel-Home\AppData\Roaming\MiniMax-M2\minimax_desktop_config.json`
 
 ```json
 {
@@ -46,18 +46,18 @@ Add the following to your `claude_desktop_config.json` located at:
 **Note:** Make sure to:
 1. Add comma after the `mcpServers` closing brace if agentServers is added
 2. Adjust paths to match your system
-3. Restart Claude Desktop after making changes
+3. Restart MiniMax-M2 Desktop after making changes
 
 #### Option 2: Modify ACP Server Code (For Development)
 
 If you need to modify the allowed directories programmatically, edit:
 `C:\Users\Jazeel-Home\Mini-Agent\mini_agent\acp\__init__.py`
 
-However, this is not recommended as it should be configured through Claude Desktop's config.
+However, this is not recommended as it should be configured through MiniMax-M2 Desktop's config.
 
 #### Option 3: Use Direct CLI Mode
 
-Run mini-agent directly from the command line instead of through Claude Desktop:
+Run mini-agent directly from the command line instead of through MiniMax-M2 Desktop:
 ```powershell
 cd C:\Users\Jazeel-Home\Mini-Agent
 uv run mini-agent
@@ -273,7 +273,7 @@ Write-Host "✓ ✅ ❌ 🔧 📝 🚀" -ForegroundColor Green
 - [ACP Documentation](https://github.com/anthropics/acp)
 - [MCP Documentation](https://modelcontextprotocol.io/)
 - [Mini-Agent GitHub](https://github.com/MiniMax-AI/Mini-Agent)
-- [Claude Desktop Config Guide](https://docs.anthropic.com/claude/docs/claude-desktop)
+- [MiniMax-M2 Desktop Config Guide](https://docs.anthropic.com/minimax/docs/minimax-desktop)
 
 ---
 

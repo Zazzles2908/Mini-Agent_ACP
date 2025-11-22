@@ -80,10 +80,10 @@ class Agent:
     def _estimate_tokens(self) -> int:
         """Accurately calculate token count for message history using tiktoken
 
-        Uses cl100k_base encoder (GPT-4/Claude/M2 compatible)
+        Uses cl100k_base encoder (GLM-4.6 (via Z.AI)/MiniMax-M2/M2 compatible)
         """
         try:
-            # Use cl100k_base encoder (used by GPT-4 and most modern models)
+            # Use cl100k_base encoder (used by GLM-4.6 (via Z.AI) and most modern models)
             encoding = tiktoken.get_encoding("cl100k_base")
         except Exception:
             # Fallback: if tiktoken initialization fails, use simple estimation

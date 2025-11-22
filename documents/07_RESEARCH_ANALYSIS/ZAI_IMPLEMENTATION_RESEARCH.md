@@ -15,14 +15,14 @@ User reported Z.AI credit consumption (~$0.13) during initial exploration and wa
 - `zai_corrected_tools.py` - "Corrected" version
 - `zai_direct_api_tools.py` - Direct API approach
 - `zai_direct_web_tools.py` - Another direct web version
-- `zai_openai_tools.py` - OpenAI SDK approach
+- `zai_openai_tools.py` - OpenAI SDK format approach
 - `zai_web_search_with_citations.py` - Citation-focused implementation
 
 **Problem**: Multiple implementations suggest confusion about correct architecture.
 
 ### 2. Base URL Analysis
 
-**Z.AI Coding Plan API** (from `claude_zai_client.py` - line 50):
+**Z.AI Coding Plan API** (from `minimax_zai_client.py` - line 50):
 ```python
 self.base_url = "https://api.z.ai/api/coding/paas/v4"
 ```
@@ -30,7 +30,7 @@ self.base_url = "https://api.z.ai/api/coding/paas/v4"
 **Endpoints Used**:
 - Web Search: `/web_search`
 - Web Reader: `/reader`
-- Chat Completions: `/chat/completions` (implied but not shown in claude_zai_client.py)
+- Chat Completions: `/chat/completions` (implied but not shown in minimax_zai_client.py)
 
 **OpenAI International Standard** (from config.yaml - line 16):
 ```python
@@ -46,7 +46,7 @@ api_base: "https://api.minimax.io"
 
 **What Documentation Claims**:
 - **Quota**: ~120 prompts every 5 hours
-- **Models**: GLM-4.5, GLM-4.6, GLM-4.5-air
+- **Models**: GLM-4.5, GLM-4.6 (free), GLM-4.5 (paid)-air
 - **Cost Structure** (contradictory information found):
   - Some docs: "$0.01/search, $0.01/page" for web features
   - Other docs: "Included in Lite Plan subscription"
@@ -121,7 +121,7 @@ headers = {
 
 **Key Principles**:
 1. **Always use GLM-4.6** for Lite plan (not GLM-4.5)
-2. **Direct API approach** (not OpenAI SDK compatibility)
+2. **Direct API approach** (not OpenAI SDK format compatibility)
 3. **Proper credit protection** before any Z.AI calls
 4. **Reasonable token limits** (not 357k tokens in one call)
 5. **Single implementation** (not 7 conflicting versions)
@@ -178,7 +178,7 @@ def check_zai_enabled():
 - Used GLM-4.5 model (charges money)
 - Made calls with 357k tokens (excessive)
 - Didn't properly verify credit protection
-- Mixed up OpenAI SDK vs direct API approaches
+- Mixed up OpenAI SDK format vs direct API approaches
 
 **What Should Have Been Done**:
 - Single implementation using direct Z.AI API

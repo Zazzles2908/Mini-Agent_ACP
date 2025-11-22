@@ -7,7 +7,7 @@
 ✅ ENDPOINT: https://api.z.ai/api/coding/paas/v4
 
 This is the ONLY Z.AI tool implementation needed. All others are deprecated.
-Based on working implementation from claude_zai_client.py and transaction log evidence.
+Based on working implementation from minimax_zai_client.py and transaction log evidence.
 """
 
 import os
@@ -158,7 +158,7 @@ class ZAIWebSearchTool(Tool):
                         result = await response.json()
                         search_results = result.get("search_result", [])
                         
-                        # Format results for Claude
+                        # Format results for MiniMax-M2
                         formatted_results = []
                         for i, item in enumerate(search_results, 1):
                             title = item.get("title", "Untitled")

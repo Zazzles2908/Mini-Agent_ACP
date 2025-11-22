@@ -70,9 +70,9 @@ Create/update `.env` file in the root directory:
 # Z.AI API Configuration (Required)
 ZAI_API_KEY=your_zai_api_key_here
 
-# Optional: Additional LLM providers
+# Optional: Additional AI models
 OPENAI_API_KEY=your_openai_key  # For fallback LLM
-ANTHROPIC_API_KEY=your_key      # For Claude integration
+ANTHROPIC_API_KEY=your_key      # For MiniMax-M2 integration
 
 # System Configuration
 MINI_AGENT_ENVIRONMENT=development  # or production
@@ -90,7 +90,7 @@ zai:
   timeout: 60
   max_retries: 3
 
-# LLM Providers Configuration
+# AI Models Configuration
 llm:
   default: "zai"
   providers:

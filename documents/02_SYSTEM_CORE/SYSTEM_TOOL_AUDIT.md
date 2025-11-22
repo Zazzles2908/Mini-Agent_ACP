@@ -2,7 +2,7 @@
 
 ## 📋 Executive Summary
 
-**System Type**: Extended Mini-Agent with multi-provider LLM integration and comprehensive tool ecosystem  
+**System Type**: Extended Mini-Agent with multi-provider AI model integration and comprehensive tool ecosystem  
 **Primary LLM**: MiniMax-M2 (via OpenAI-compatible API)  
 **Secondary LLM**: Z.AI GLM-4.5/4.6 (web search + additional reasoning)  
 **Platform**: Windows (PowerShell), Unix/Linux compatible  
@@ -30,7 +30,7 @@
 ### **Provider Strategy**
 - **Primary Reasoning**: MiniMax-M2 (high-quality reasoning)
 - **Web Intelligence**: Z.AI GLM-4.5/4.6 (search + analysis)
-- **Fallback**: OpenAI GPT-4, Anthropic Claude
+- **Fallback**: MiniMax-M2, MiniMax-M2
 - **Efficiency**: GLM-4.5 for routine tasks, GLM-4.6 for complex analysis
 
 ---
@@ -55,8 +55,8 @@
 | `zai_tools.py` | Basic Z.AI | GLM-4.5/4.6/4.5-air | ~120 prompts/5hrs |
 | `zai_web_search_with_citations.py` | Web Search | GLM-4.5 optimized | Integrated |
 | `zai_anthropic_tools.py` | Extended Tools | GLM-4.6 analysis | Advanced features |
-| `claude_zai_tools.py` | Claude Bridge | GLM-4.6 + Claude integration | Hybrid mode |
-| `claude_zai_extended_tools.py` | Advanced Bridge | Full feature set | Complete |
+| `minimax_zai_tools.py` | MiniMax-M2 Bridge | GLM-4.6 + MiniMax-M2 integration | Hybrid mode |
+| `minimax_zai_extended_tools.py` | Advanced Bridge | Full feature set | Complete |
 
 ### **3. Skills System** 🎯 16 Skills Available
 **Location**: `mini_agent/skills/`
@@ -119,11 +119,11 @@
 | Client | Provider | Protocol | Purpose |
 |--------|----------|----------|---------|
 | `zai_client.py` | Z.AI | Direct API | Web search & GLM models |
-| `claude_zai_client.py` | Z.AI + Claude | Hybrid | Combined reasoning |
-| `extended_claude_zai_client.py` | Z.AI + Claude | Extended | Advanced features |
+| `minimax_zai_client.py` | Z.AI + MiniMax-M2 | Hybrid | Combined reasoning |
+| `extended_minimax_zai_client.py` | Z.AI + MiniMax-M2 | Extended | Advanced features |
 | `coding_plan_zai_client.py` | Z.AI | Coding plan | Efficient usage |
-| `anthropic_client.py` | Anthropic | OpenAI format | Claude models |
-| `openai_client.py` | OpenAI | OpenAI API | GPT models |
+| `anthropic_client.py` | Anthropic | MiniMax-M2 format | MiniMax-M2 models |
+| `openai_client.py` | MiniMax-M2 | OpenAI API | GPT models |
 | `glm_client.py` | Z.AI | GLM specific | GLM models |
 | `llm_wrapper.py` | Multi-provider | Universal | Provider coordination |
 

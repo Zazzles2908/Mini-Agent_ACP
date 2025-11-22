@@ -19,9 +19,9 @@
 
 **From MiniMax (Core - 90%)**:
 - ✅ Agent execution loop with tool calling
-- ✅ Multi-provider LLM support (MiniMax-M2, Anthropic, OpenAI)
+- ✅ Multi-provider: "openai"  # OpenAI SDK format)
 - ✅ Tool framework (File, Bash, MCP integration)
-- ✅ Claude Skills integration (20+ professional capabilities)
+- ✅ MiniMax-M2 Skills integration (20+ professional capabilities)
 - ✅ Configuration system and retry mechanism
 - ✅ Interactive CLI interface
 
@@ -49,7 +49,7 @@ uv venv && uv pip install -e .
 echo "MINIMAX_API_KEY=your_minimax_key" > .env
 echo "ZAI_API_KEY=your_zai_key" >> .env  # Optional: for web search
 
-# 4. Initialize Claude Skills (recommended)
+# 4. Initialize MiniMax-M2 Skills (recommended)
 git submodule update --init --recursive
 
 # 5. Start using
@@ -62,7 +62,7 @@ mini-agent
 api_key: "${MINIMAX_API_KEY}"  # Required: MiniMax API key
 api_base: "https://api.minimax.io"  # Global platform
 model: "MiniMax-M2"  # Primary model
-provider: "openai"  # Protocol format (OpenAI-compatible for MiniMax)
+provider: "openai"  # OpenAI SDK format"  # Protocol format (OpenAI-compatible for MiniMax)
 
 # Optional: Z.AI for web search
 tools:
@@ -127,15 +127,15 @@ mini_agent/
 - **File Operations**: Read, Write, Edit files
 - **Bash Execution**: Command execution with output capture
 - **MCP Integration**: Memory (knowledge graph), Git, Web Search
-- **Skills**: 20+ professional capabilities from Claude Skills
+- **Skills**: 20+ professional capabilities from MiniMax-M2 Skills
 
 ### **Multi-Provider LLM Support**
 ```python
 # Supports multiple providers with same interface
 providers = [
     "MiniMax-M2",     # Default - Created by MiniMax
-    "claude-opus-4",  # Anthropic Claude
-    "gpt-4",          # OpenAI GPT
+    "minimax-opus-4",  # MiniMax-M2
+    "glm-4.6 (via Z.AI)",          # OpenAI GPT
     "glm-4.5"         # Z.AI GLM (Community addition)
 ]
 ```
@@ -298,7 +298,7 @@ class MyTool(Tool):
 ### **LLM Providers**
 - **PRIMARY**: MiniMax-M2 (default, created by MiniMax)
 - **ADDITIONAL**: Z.AI GLM-4.5/4.6 (web search extension)
-- **FALLBACK**: Anthropic Claude, OpenAI GPT (optional)
+- **FALLBACK**: MiniMax-M2, OpenAI GPT (optional)
 
 ### **System Purpose**
 - **Original**: Teaching-level agent demonstration (MiniMax)
@@ -332,7 +332,7 @@ class MyTool(Tool):
 Community contributors - Z.AI integration, ACP server, organizational tools, and enhanced documentation.
 
 ### **Built On**
-- **Claude Skills**: Professional capabilities from Anthropic
+- **MiniMax-M2 Skills**: Professional capabilities from Anthropic
 - **MCP Protocol**: Model Context Protocol standards
 - **Agent Client Protocol**: Editor integration protocol
 

@@ -1,11 +1,11 @@
 # Z.AI Architecture Correction Summary
 
 ## Problem Identified
-The Z.AI web search implementation had **misleading naming conventions** that suggested it was using "OpenAI SDK compatibility" when it was actually making direct API calls to Z.AI's Coding Plan endpoint.
+The Z.AI web search implementation had **misleading naming conventions** that suggested it was using "OpenAI SDK format compatibility" when it was actually making direct API calls to Z.AI's Coding Plan endpoint.
 
 ## Root Cause Analysis
 - **Transaction logs** showed successful calls to: `https://api.z.ai/api/coding/paas/v4/web_search`
-- **Configuration files** incorrectly claimed "OpenAI SDK → Z.AI" approach
+- **Configuration files** incorrectly claimed "OpenAI SDK format → Z.AI" approach
 - **Tool implementations** had inconsistent naming that didn't match actual implementation
 - **User confusion** about the architecture due to misleading names
 
@@ -17,8 +17,8 @@ The Z.AI web search implementation had **misleading naming conventions** that su
 - `ZAIDirectWebReaderTool` - Direct API implementation (proven working)
 
 **Fixed existing tools:**
-- `claude_zai_tools.py` - Updated documentation to reflect direct API usage
-- `zai_openai_tools.py` - Clarified as "alternative approach" using OpenAI SDK compatibility
+- `minimax_zai_tools.py` - Updated documentation to reflect direct API usage
+- `zai_openai_tools.py` - Clarified as "alternative approach" using OpenAI SDK format compatibility
 - `__init__.py` - Updated imports to use corrected tools with accurate naming
 
 ### 2. Configuration Updates
@@ -33,7 +33,7 @@ enable_zai_llm: false     # Direct Z.AI LLM: DISABLED - Credit protection
 ### 3. Accurate Documentation
 **Fixed tool descriptions to reflect actual architecture:**
 - **Direct API**: `https://api.z.ai/api/coding/paas/v4/web_search` (transaction verified)
-- **Alternative**: OpenAI SDK compatibility via `https://api.z.ai/api/coding/paas/v4/openai`
+- **Alternative**: OpenAI SDK format compatibility via `https://api.z.ai/api/coding/paas/v4/openai`
 - **Credit tracking**: Both respect Lite plan (~120 prompts every 5 hours)
 
 ## Architecture Summary
@@ -51,9 +51,9 @@ Payload: {
 Response: Z.AI GLM-4.6 generated search results
 ```
 
-### Alternative Implementation (OpenAI SDK)
+### Alternative Implementation (OpenAI SDK format)
 ```
-Request: OpenAI SDK → https://api.z.ai/api/coding/paas/v4/openai
+Request: OpenAI SDK format → https://api.z.ai/api/coding/paas/v4/openai
 Model: glm-4.6 (via OpenAI-compatible endpoint)
 Response: OpenAI-formatted search results
 ```
@@ -69,7 +69,7 @@ Your transaction logs confirmed:
 This shows successful calls to the direct Z.AI API endpoint using GLM-4.5/4.6 models.
 
 ### ✅ Naming Convention Fixed
-- ❌ Old: "OpenAI SDK → Z.AI" (misleading)
+- ❌ Old: "OpenAI SDK format → Z.AI" (misleading)
 - ✅ New: "Direct Z.AI API → GLM-4.6" (accurate)
 
 ### ✅ Credit Protection Maintained

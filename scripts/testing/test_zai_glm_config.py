@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Test Z.AI + GLM-4.6 Configuration
-Validates: Z.AI web search + GLM-4.6 reasoning + OpenAI SDK integration
+Validates: Z.AI web search + GLM-4.6 reasoning + OpenAI SDK format integration
 """
 
 import asyncio
@@ -72,12 +72,12 @@ async def test_zai_glm_configuration():
         return False
 
 def test_openai_sdk_integration():
-    """Test OpenAI SDK integration."""
-    print("\n🔧 Testing OpenAI SDK Integration...")
+    """Test OpenAI SDK format integration."""
+    print("\n🔧 Testing OpenAI SDK format Integration...")
     
     try:
         import openai
-        print(f"✅ OpenAI SDK available: {openai.__version__}")
+        print(f"✅ OpenAI SDK format available: {openai.__version__}")
         
         # Test if OpenAI client can be created
         openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -89,10 +89,10 @@ def test_openai_sdk_integration():
             return True  # SDK is available, just needs key
             
     except ImportError as e:
-        print(f"❌ OpenAI SDK import error: {e}")
+        print(f"❌ OpenAI SDK format import error: {e}")
         return False
     except Exception as e:
-        print(f"❌ OpenAI SDK error: {e}")
+        print(f"❌ OpenAI SDK format error: {e}")
         return False
 
 def test_llm_wrapper_configuration():
@@ -159,12 +159,12 @@ def test_web_search_vs_reasoning():
 async def main():
     """Run Z.AI + GLM-4.6 configuration test."""
     print("=" * 70)
-    print("🚀 Z.AI + GLM-4.6 + OpenAI SDK Configuration Test")
+    print("🚀 Z.AI + GLM-4.6 + OpenAI SDK format Configuration Test")
     print("=" * 70)
     print("Requirements:")
     print("✅ Z.AI for web search only")
     print("✅ GLM-4.6 for LLM reasoning and actions")
-    print("✅ OpenAI SDK integration for fallback")
+    print("✅ OpenAI SDK format integration for fallback")
     print("=" * 70)
     
     results = {
@@ -190,7 +190,7 @@ async def main():
     if passed == total:
         print("\n🎉 Configuration Validated!")
         print("✅ Z.AI configured for web search + GLM-4.6 reasoning")
-        print("✅ OpenAI SDK integrated for fallback capabilities")
+        print("✅ OpenAI SDK format integrated for fallback capabilities")
         print("✅ Proper separation: Web search vs reasoning tasks")
     else:
         print("\n⚠️  Configuration needs adjustment")
