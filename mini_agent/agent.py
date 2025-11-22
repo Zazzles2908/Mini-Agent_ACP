@@ -1,7 +1,9 @@
 """Core Agent implementation."""
 
 import json
+import re
 from pathlib import Path
+from typing import Dict, List, Any, Optional
 
 import tiktoken
 
@@ -37,6 +39,21 @@ class Colors:
     BRIGHT_MAGENTA = "\033[95m"
     BRIGHT_CYAN = "\033[96m"
     BRIGHT_WHITE = "\033[97m"
+
+
+# Icon replacements for compatibility
+ICON_WARNING = "WARNING"
+ICON_SUCCESS = "SUCCESS"
+ICON_ERROR = "ERROR"
+ICON_INFO = "INFO"
+ICON_STEP = "STEP"
+ICON_THINKING = "THINKING"
+ICON_ASSISTANT = "ASSISTANT"
+ICON_TOOL = "TOOL"
+ICON_RESULT = "RESULT"
+ICON_VALIDATION = "VALIDATION"
+ICON_QUALITY = "QUALITY"
+ICON_FEEDBACK = "FEEDBACK"
 
 
 class Agent:
@@ -149,15 +166,15 @@ class Agent:
         if estimated_tokens <= self.token_limit:
             return
 
-        print(f"\n{Colors.BRIGHT_YELLOW}📊 Token estimate: {estimated_tokens}/{self.token_limit}{Colors.RESET}")
-        print(f"{Colors.BRIGHT_YELLOW}🔄 Triggering message history summarization...{Colors.RESET}")
+        print(f"\n{Colors.BRIGHT_YELLOW}[SCORE] Token estimate: {estimated_tokens}/{self.token_limit}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_YELLOW}[SUMMARIZE] Triggering message history summarization...{Colors.RESET}")
 
         # Find all user message indices (skip system prompt)
         user_indices = [i for i, msg in enumerate(self.messages) if msg.role == "user" and i > 0]
 
         # Need at least 1 user message to perform summary
         if len(user_indices) < 1:
-            print(f"{Colors.BRIGHT_YELLOW}⚠️  Insufficient messages, cannot summarize{Colors.RESET}")
+            print(f"{Colors.BRIGHT_YELLOW}[ISSUE]  Insufficient messages, cannot summarize{Colors.RESET}")
             return
 
         # Build new message list
@@ -194,7 +211,7 @@ class Agent:
         self.messages = new_messages
 
         new_tokens = self._estimate_tokens()
-        print(f"{Colors.BRIGHT_GREEN}✓ Summary completed, tokens reduced from {estimated_tokens} to {new_tokens}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_GREEN}[SUCCESS] Summary completed, tokens reduced from {estimated_tokens} to {new_tokens}{Colors.RESET}")
         print(f"{Colors.DIM}  Structure: system + {len(user_indices)} user messages + {summary_count} summaries{Colors.RESET}")
 
     async def _create_summary(self, messages: list[Message], round_num: int) -> str:
@@ -218,10 +235,10 @@ class Agent:
                 summary_content += f"Assistant: {content_text}\n"
                 if msg.tool_calls:
                     tool_names = [tc.function.name for tc in msg.tool_calls]
-                    summary_content += f"  → Called tools: {', '.join(tool_names)}\n"
+                    summary_content += f"  {ICON_TOOL} Called tools: {', '.join(tool_names)}\n"
             elif msg.role == "tool":
                 result_preview = msg.content if isinstance(msg.content, str) else str(msg.content)
-                summary_content += f"  ← Tool returned: {result_preview}...\n"
+                summary_content += f"  {ICON_RESULT} Tool returned: {result_preview}...\n"
 
         # Call LLM to generate concise summary
         try:
@@ -248,19 +265,164 @@ Requirements:
             )
 
             summary_text = response.content
-            print(f"{Colors.BRIGHT_GREEN}✓ Summary for round {round_num} generated successfully{Colors.RESET}")
+            print(f"{Colors.BRIGHT_GREEN}[SUCCESS] Summary for round {round_num} generated successfully{Colors.RESET}")
             return summary_text
 
         except Exception as e:
-            print(f"{Colors.BRIGHT_RED}✗ Summary generation failed for round {round_num}: {e}{Colors.RESET}")
+            print(f"{Colors.BRIGHT_RED}{ICON_ERROR} Summary generation failed for round {round_num}: {e}{Colors.RESET}")
             # Use simple text summary on failure
             return summary_content
+
+    async def _validate_task_completion(self, response) -> Optional[Dict[str, Any]]:
+        """Validate task completion using QA validation system
+        
+        Args:
+            response: The LLM response to validate
+            
+        Returns:
+            Dict with validation results or None if validation system unavailable
+        """
+        # Check if QA validation tools are available
+        try:
+            from .tools import ValidationTool
+            
+            # Only run validation if tools are available and response is substantive
+            if not response.content or len(response.content.strip()) < 20:
+                return None
+                
+            # Create validation request from agent context
+            validation_request = {
+                "task_description": self._extract_task_from_context(),
+                "claimed_deliverables": self._extract_claimed_deliverables(response.content),
+                "requirements_checklist": self._extract_requirements_from_context(),
+                "actual_files": self._get_actual_files_in_workspace(),
+                "confidence_level": "medium",
+                "validation_level": "moderate"
+            }
+            
+            # Execute validation
+            validation_tool = ValidationTool()
+            result = await validation_tool.execute(
+                task_description=validation_request["task_description"],
+                claimed_deliverables=validation_request["claimed_deliverables"],
+                requirements_checklist=validation_request["requirements_checklist"],
+                actual_files=validation_request["actual_files"],
+                confidence_level=validation_request["confidence_level"],
+                validation_level=validation_request["validation_level"]
+            )
+            
+            if result.success:
+                return result.content
+            else:
+                print(f"{Colors.DIM}[ISSUE]  Validation failed: {result.error}{Colors.RESET}")
+                return None
+                
+        except ImportError:
+            # Validation tools not available
+            return None
+        except Exception as e:
+            print(f"{Colors.DIM}[ISSUE]  Validation error: {e}{Colors.RESET}")
+            return None
+
+    def _extract_task_from_context(self) -> str:
+        """Extract current task description from message context"""
+        try:
+            # Find the most recent user message for task context
+            for msg in reversed(self.messages):
+                if msg.role == "user":
+                    content = msg.content
+                    # If it's an execution summary, find the actual user request
+                    if content.startswith("[Assistant Execution Summary]"):
+                        continue
+                    # Truncate if too long
+                    return content[:500] + "..." if len(content) > 500 else content
+            return "Task completion validation"
+        except Exception:
+            return "Task completion validation"
+
+    def _extract_claimed_deliverables(self, response_content: str) -> List[str]:
+        """Extract claimed deliverables from agent response"""
+        try:
+            deliverables = []
+            
+            # Look for common completion indicators
+            completion_patterns = [
+                r"created ([\w\/\-\.]+)",
+                r"generated ([\w\/\-\.]+)",
+                r"implemented ([\w\/\-\.]+)",
+                r"built ([\w\/\-\.]+)",
+                r"wrote ([\w\/\-\.]+)",
+                r"produced ([\w\/\-\.]+)",
+                r"completed ([\w\/\-\.]+)",
+                r"delivered ([\w\/\-\.]+)",
+            ]
+            
+            for pattern in completion_patterns:
+                matches = re.findall(pattern, response_content, re.IGNORECASE)
+                deliverables.extend(matches)
+            
+            # Remove duplicates and empty strings
+            deliverables = [d.strip() for d in deliverables if d.strip()]
+            return list(set(deliverables))[:10]  # Limit to 10 items
+            
+        except Exception:
+            return []
+
+    def _extract_requirements_from_context(self) -> List[str]:
+        """Extract requirements from the current task context"""
+        try:
+            requirements = []
+            
+            # Look for requirements in recent user messages
+            for msg in reversed(self.messages[-3:]):  # Check last 3 messages
+                if msg.role == "user" and not msg.content.startswith("[Assistant Execution Summary]"):
+                    content = msg.content
+                    
+                    # Look for requirement indicators
+                    req_patterns = [
+                        r"requirements?[:\s]*([^\n]+(?:\n[^\n]*)*?)(?=\n\n|\n$|$)",
+                        r"must ([\w\s]+)",
+                        r"should ([\w\s]+)",
+                        r"need to ([\w\s]+)",
+                        r"required ([\w\s]+)",
+                    ]
+                    
+                    for pattern in req_patterns:
+                        matches = re.findall(pattern, content, re.IGNORECASE)
+                        requirements.extend([match.strip() for match in matches if match.strip()])
+            
+            return requirements[:5]  # Limit to 5 requirements
+            
+        except Exception:
+            return []
+
+    def _get_actual_files_in_workspace(self) -> List[str]:
+        """Get list of actual files in the workspace"""
+        try:
+            files = []
+            workspace_path = Path(self.workspace_dir)
+            
+            if workspace_path.exists():
+                for file_path in workspace_path.rglob("*"):
+                    if file_path.is_file() and not file_path.name.startswith('.'):
+                        # Get relative path from workspace
+                        try:
+                            relative_path = file_path.relative_to(workspace_path)
+                            files.append(str(relative_path))
+                        except ValueError:
+                            # File is outside workspace
+                            continue
+            
+            return sorted(files)[:20]  # Limit to 20 files
+            
+        except Exception:
+            return []
 
     async def run(self) -> str:
         """Execute agent loop until task is complete or max steps reached."""
         # Start new run, initialize log file
         self.logger.start_new_run()
-        print(f"{Colors.DIM}📝 Log file: {self.logger.get_log_file_path()}{Colors.RESET}")
+        print(f"{Colors.DIM}[LOG] Log file: {self.logger.get_log_file_path()}{Colors.RESET}")
 
         step = 0
 
@@ -270,13 +432,13 @@ Requirements:
 
             # Step header with proper width calculation
             BOX_WIDTH = 58
-            step_text = f"{Colors.BOLD}{Colors.BRIGHT_CYAN}💭 Step {step + 1}/{self.max_steps}{Colors.RESET}"
+            step_text = f"{Colors.BOLD}{Colors.BRIGHT_CYAN}[EXECUTION] Step {step + 1}/{self.max_steps}{Colors.RESET}"
             step_display_width = calculate_display_width(step_text)
             padding = max(0, BOX_WIDTH - 1 - step_display_width)  # -1 for leading space
 
-            print(f"\n{Colors.DIM}╭{'─' * BOX_WIDTH}╮{Colors.RESET}")
-            print(f"{Colors.DIM}│{Colors.RESET} {step_text}{' ' * padding}{Colors.DIM}│{Colors.RESET}")
-            print(f"{Colors.DIM}╰{'─' * BOX_WIDTH}╯{Colors.RESET}")
+            print(f"\n{Colors.DIM}{ICON_INFO}{ICON_INFO * BOX_WIDTH}{ICON_INFO}{Colors.RESET}")
+            print(f"{Colors.DIM}{ICON_STEP}{Colors.RESET} {step_text}{' ' * padding}{Colors.DIM}{ICON_STEP}{Colors.RESET}")
+            print(f"{Colors.DIM}{ICON_INFO}{ICON_INFO * BOX_WIDTH}{ICON_INFO}{Colors.RESET}")
 
             # Get tool list for LLM call
             tool_list = list(self.tools.values())
@@ -292,10 +454,10 @@ Requirements:
 
                 if isinstance(e, RetryExhaustedError):
                     error_msg = f"LLM call failed after {e.attempts} retries\nLast error: {str(e.last_exception)}"
-                    print(f"\n{Colors.BRIGHT_RED}❌ Retry failed:{Colors.RESET} {error_msg}")
+                    print(f"\n{Colors.BRIGHT_RED}{ICON_ERROR} Retry failed:{Colors.RESET} {error_msg}")
                 else:
                     error_msg = f"LLM call failed: {str(e)}"
-                    print(f"\n{Colors.BRIGHT_RED}❌ Error:{Colors.RESET} {error_msg}")
+                    print(f"\n{Colors.BRIGHT_RED}{ICON_ERROR} Error:{Colors.RESET} {error_msg}")
                 return error_msg
 
             # Log LLM response
@@ -317,17 +479,49 @@ Requirements:
 
             # Print thinking if present
             if response.thinking:
-                print(f"\n{Colors.BOLD}{Colors.MAGENTA}🧠 Thinking:{Colors.RESET}")
+                print(f"\n{Colors.BOLD}{Colors.MAGENTA}[THINKING] Thinking:{Colors.RESET}")
                 print(f"{Colors.DIM}{response.thinking}{Colors.RESET}")
 
             # Print assistant response
             if response.content:
-                print(f"\n{Colors.BOLD}{Colors.BRIGHT_BLUE}🤖 Assistant:{Colors.RESET}")
+                print(f"\n{Colors.BOLD}{Colors.BRIGHT_BLUE}[ASSISTANT] Assistant:{Colors.RESET}")
                 print(f"{response.content}")
 
-            # Check if task is complete (no tool calls)
+            # Check if task is complete (no tool calls) - Apply QA validation before declaring completion
             if not response.tool_calls:
-                return response.content
+                # Validate task completion before declaring it done
+                validation_result = await self._validate_task_completion(response)
+                
+                if validation_result and validation_result.get('honesty_score', 0) >= 80:
+                    # High honesty score - genuine completion
+                    print(f"\n{Colors.BRIGHT_GREEN}[SUCCESS] TASK VALIDATION PASSED{Colors.RESET}")
+                    if validation_result.get('feedback'):
+                        print(f"{Colors.DIM}[FEEDBACK] {validation_result['feedback']}{Colors.RESET}")
+                    return response.content
+                elif validation_result:
+                    # Validation failed or low honesty score
+                    print(f"\n{Colors.BRIGHT_YELLOW}[QUALITY] QUALITY ASSESSMENT REQUIRED{Colors.RESET}")
+                    print(f"{Colors.DIM}[SCORE] Honesty Score: {validation_result.get('honesty_score', 0)}/100{Colors.RESET}")
+                    
+                    if validation_result.get('feedback'):
+                        print(f"\n{Colors.DIM}[TOOL] Feedback:{Colors.RESET}")
+                        for issue in validation_result['feedback'].split('\n'):
+                            if issue.strip():
+                                print(f"   {Colors.DIM}{ICON_INFO} {issue}{Colors.RESET}")
+                    
+                    if validation_result.get('deception_patterns'):
+                        print(f"\n{Colors.BRIGHT_RED}[ISSUE]  DETECTED ISSUES:{Colors.RESET}")
+                        for pattern in validation_result['deception_patterns']:
+                            print(f"   {Colors.BRIGHT_RED}{ICON_ERROR} {pattern}{Colors.RESET}")
+                    
+                    # Continue iteration to address issues
+                    assistant_msg.content += f"\n\n**Quality Assessment**: {validation_result.get('feedback', 'Please review your work and ensure all requirements are fully met.')}"
+                    self.messages[-1] = assistant_msg  # Update the message
+                    continue  # Continue to next step
+                else:
+                    # No validation system available - proceed with original behavior
+                    print(f"\n{Colors.DIM}[ISSUE]  Validation system not available - proceeding{Colors.RESET}")
+                    return response.content
 
             # Execute tool calls
             for tool_call in response.tool_calls:
@@ -336,7 +530,7 @@ Requirements:
                 arguments = tool_call.function.arguments
 
                 # Tool call header
-                print(f"\n{Colors.BRIGHT_YELLOW}🔧 Tool Call:{Colors.RESET} {Colors.BOLD}{Colors.CYAN}{function_name}{Colors.RESET}")
+                print(f"\n{Colors.BRIGHT_YELLOW}[TOOL] Tool Call:{Colors.RESET} {Colors.BOLD}{Colors.CYAN}{function_name}{Colors.RESET}")
 
                 # Arguments (formatted display)
                 print(f"{Colors.DIM}   Arguments:{Colors.RESET}")
@@ -389,9 +583,9 @@ Requirements:
                     result_text = result.content
                     if len(result_text) > 300:
                         result_text = result_text[:300] + f"{Colors.DIM}...{Colors.RESET}"
-                    print(f"{Colors.BRIGHT_GREEN}✓ Result:{Colors.RESET} {result_text}")
+                    print(f"{Colors.BRIGHT_GREEN}[SUCCESS] Result:{Colors.RESET} {result_text}")
                 else:
-                    print(f"{Colors.BRIGHT_RED}✗ Error:{Colors.RESET} {Colors.RED}{result.error}{Colors.RESET}")
+                    print(f"{Colors.BRIGHT_RED}{ICON_ERROR} Error:{Colors.RESET} {Colors.RED}{result.error}{Colors.RESET}")
 
                 # Add tool result message
                 tool_msg = Message(
@@ -406,7 +600,7 @@ Requirements:
 
         # Max steps reached
         error_msg = f"Task couldn't be completed after {self.max_steps} steps."
-        print(f"\n{Colors.BRIGHT_YELLOW}⚠️  {error_msg}{Colors.RESET}")
+        print(f"\n{Colors.BRIGHT_YELLOW}[ISSUE]  {error_msg}{Colors.RESET}")
         return error_msg
 
     def get_history(self) -> list[Message]:
