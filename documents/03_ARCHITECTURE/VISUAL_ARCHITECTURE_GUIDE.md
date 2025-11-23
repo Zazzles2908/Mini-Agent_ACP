@@ -1,6 +1,9 @@
-# Mini-Agent Visual Architecture Guide
+# Mini-Agent Visual Architecture Guide (Essential)
+**Core Visual Architecture Reference**
 
-**Quick Visual Reference for Understanding the System**
+**Created**: November 24, 2025  
+**Purpose**: Essential visual concepts for understanding Mini-Agent  
+**Archive**: Extended examples moved to archive
 
 ---
 
@@ -29,7 +32,7 @@
 │  │  (Same for both entry points)                                 │   │
 │  │                                                               │   │
 │  │  • Agent Loop (mini_agent/agent.py)                          │   │
-│  │  • LLM Client (mini_agent/llm/llm_client.py)                │   │
+│  │  • LLM Client (mini_agent/llm/llm_wrapper.py)               │   │
 │  │  • Tool Management                                           │   │
 │  │  • Message History                                           │   │
 │  │                                                               │   │
@@ -132,36 +135,12 @@ You were using **MiniMax-M2 Desktop** (Context 3), which has its own MCP filesys
 
 ---
 
-## Z.AI Web Search: Old vs New
+## Z.AI Web Search: Current Implementation
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│               OLD APPROACH (Failed) ❌                              │
-│                                                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  User Query                                                         │
-│      ↓                                                              │
-│  Mini-Agent                                                         │
-│      ↓                                                              │
-│  MCP Client (attempts connection)                                   │
-│      ↓                                                              │
-│  minimax_search MCP Server (external)                               │
-│      ↓                                                              │
-│  ❌ Connection Failed!                                              │
-│                                                                     │
-│  Why it failed:                                                     │
-│  • External dependency (uvx package)                                │
-│  • Multiple API keys needed (Jina, Serper, MiniMax)                │
-│  • Installation issues                                              │
-│  • Unreliable connections                                           │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│               NEW APPROACH (Working) ✅                             │
+│               CURRENT APPROACH (Working) ✅                         │
 │                                                                     │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
@@ -169,261 +148,76 @@ You were using **MiniMax-M2 Desktop** (Context 3), which has its own MCP filesys
 │      ↓                                                              │
 │  Mini-Agent CLI                                                     │
 │      ↓                                                              │
-│  ZAIWebSearchTool (mini_agent/tools/zai_tools.py)                  │
+│  ZAIWebTool (mini_agent/tools/zai_web_tool.py)                      │
 │      ↓                                                              │
-│  ZAIClient (mini_agent/llm/zai_client.py)                          │
+│  Z.AI MCP Servers (remote)                                          │
 │      ↓                                                              │
-│  Z.AI API (https://api.z.ai)                                        │
+│  MCP First Strategy (FREE quotas)                                   │
 │      ↓                                                              │
-│  GLM Model with Search Prime Engine                                 │
-│      ↓                                                              │
-│  ✅ Web Search Results + AI Analysis                               │
+│  ✅ Web Search + Reading Results                                    │
 │                                                                     │
-│  Why it works:                                                      │
-│  • Native integration (no external server)                          │
-│  • Single API key (ZAI_API_KEY in .env)                            │
-│  • Built into GLM models                                            │
-│  • Reliable and fast                                                │
-│                                                                     │
-│  Available Model:                                                  │
-│  • glm-4.6        → Only model available on Lite plan               │
-│                   → Web search and web reading capabilities          │
-│                   → FREE: 100 searches + 100 readers                │
+│  Features:                                                          │
+│  • FREE quotas: 100 searches + 100 readers per day                  │
+│  • MCP Protocol: Standard communication                             │
+│  • Credit Protection: Automatic usage tracking                      │
+│  • Fallback: Direct API when MCP unavailable                        │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ACP Integration: What It Really Is
+## Core Components Summary
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│         ACP = Agent Client Protocol (Custom Integration)            │
-│                                                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  What it does:                                                      │
-│  • Enables Mini-Agent to work as a server for code editors          │
-│  • Provides structured communication protocol                       │
-│  • Allows multiple simultaneous sessions                            │
-│  • Shows tool execution visually in editors                         │
-│                                                                     │
-│  What it is NOT:                                                    │
-│  • ❌ Not a limitation on Mini-Agent                                │
-│  • ❌ Not a file access restrictor                                  │
-│  • ❌ Not required for basic usage                                  │
-│  • ❌ Not a third-party dependency (custom code)                    │
-│                                                                     │
-│  ┌─────────────────────────────────────────────────────────┐       │
-│  │                                                         │       │
-│  │  Zed Editor                  mini-agent-acp Server     │       │
-│  │  ┌─────────────┐              ┌──────────────────┐    │       │
-│  │  │             │              │                  │    │       │
-│  │  │ User types  │  Initialize  │ Creates session  │    │       │
-│  │  │ question    ├─────────────►│ with workspace   │    │       │
-│  │  │             │              │                  │    │       │
-│  │  │             │   Prompt     │ Runs agent loop  │    │       │
-│  │  │             ├─────────────►│ Executes tools   │    │       │
-│  │  │             │              │                  │    │       │
-│  │  │             │SessionUpdate │ Returns results  │    │       │
-│  │  │ Sees        │◄─────────────┤ with thinking    │    │       │
-│  │  │ results     │              │ and tool calls   │    │       │
-│  │  │             │              │                  │    │       │
-│  │  └─────────────┘              └──────────────────┘    │       │
-│  │                                                         │       │
-│  │  Visual feedback in editor:                            │       │
-│  │  🔧 Tool: read_file(path="README.md")                  │       │
-│  │  ✅ Result: Successfully read 1,234 bytes              │       │
-│  │                                                         │       │
-│  └─────────────────────────────────────────────────────────┘       │
-│                                                                     │
-│  Files:                                                             │
-│  • mini_agent/acp/__init__.py   → ACP adapter implementation       │
-│  • mini_agent/acp/server.py     → Entry point script               │
-│                                                                     │
-│  How to use:                                                        │
-│  1. Install: pip install agent-client-protocol                     │
-│  2. Find path: where.exe mini-agent-acp                            │
-│  3. Add to Zed settings.json                                       │
-│  4. Select "mini-agent" in Zed's agent panel                       │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+### **Agent Runtime**
+- **File**: `mini_agent/agent.py` - Core execution loop
+- **Functions**: Tool calling, message management, context handling
+- **Entry Points**: CLI direct + ACP server
+
+### **LLM Integration** 
+- **Provider**: MiniMax-M2 via OpenAI protocol
+- **Client**: `mini_agent/llm/llm_wrapper.py`
+- **Configuration**: `mini_agent/config/config.yaml`
+
+### **Tool System**
+- **Native Tools**: File operations, bash execution, session notes
+- **Z.AI Tools**: Web search and reading (MCP-first)
+- **Skills**: PDF, presentations, art/design generation
+- **MCP Servers**: Memory, Git, MiniMax coding plan
+
+### **Configuration**
+- **Main Config**: `config.yaml` (LLM, tools, retry settings)
+- **MCP Config**: `.mcp.json` (server definitions)
+- **Environment**: `.env` (API keys)
+
+---
+
+## Quick Reference Commands
+
+```bash
+# Start Mini-Agent CLI
+cd /path/to/mini-agent
+mini-agent
+
+# Start Mini-Agent ACP Server  
+python -m mini_agent.acp
+
+# Check configuration
+mini-agent --help
+
+# Test tools
+# (Via interactive session)
 ```
 
 ---
 
-## Configuration Flow
+## Related Documentation
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│                    HOW CONFIGURATION WORKS                          │
-│                                                                     │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Startup Sequence:                                                  │
-│  ────────────────                                                   │
-│                                                                     │
-│  1. Load Environment Variables                                      │
-│     ┌──────────────────────────────┐                               │
-│     │ .env file (root directory)   │                               │
-│     │                              │                               │
-│     │ ZAI_API_KEY=your_key_here    │                               │
-│     └──────────────────────────────┘                               │
-│                ↓                                                    │
-│  2. Load Main Configuration                                         │
-│     ┌──────────────────────────────────────┐                       │
-│     │ mini_agent/config/config.yaml        │                       │
-│     │                                      │                       │
-│     │ api_key: minimax_key                 │                       │
-│     │ model: MiniMax-M2                    │                       │
-│     │ tools:                               │                       │
-│     │   enable_zai_search: true   ← ✅     │                       │
-│     │   enable_skills: true                │                       │
-│     │   enable_mcp: true                   │                       │
-│     └──────────────────────────────────────┘                       │
-│                ↓                                                    │
-│  3. Load MCP Configuration                                          │
-│     ┌──────────────────────────────────────┐                       │
-│     │ mini_agent/config/mcp.json           │                       │
-│     │                                      │                       │
-│     │ {                                    │                       │
-│     │   "mcpServers": {                    │                       │
-│     │     "minimax_search": {              │                       │
-│     │       "disabled": true  ← ✅         │                       │
-│     │     },                               │                       │
-│     │     "memory": {                      │                       │
-│     │       "disabled": false              │                       │
-│     │     }                                │                       │
-│     │   }                                  │                       │
-│     │ }                                    │                       │
-│     └──────────────────────────────────────┘                       │
-│                ↓                                                    │
-│  4. Load Tools Based on Configuration                               │
-│     ┌──────────────────────────────────────┐                       │
-│     │ mini_agent/cli.py                    │                       │
-│     │                                      │                       │
-│     │ if config.tools.enable_zai_search:   │                       │
-│     │     ✅ Load ZAIWebSearchTool         │                       │
-│     │     ✅ Load ZAIWebReaderTool         │                       │
-│     │                                      │                       │
-│     │ if config.tools.enable_skills:       │                       │
-│     │     ✅ Load Skills                   │                       │
-│     │                                      │                       │
-│     │ if config.tools.enable_mcp:          │                       │
-│     │     ✅ Load enabled MCP servers      │                       │
-│     │     ❌ Skip disabled servers         │                       │
-│     └──────────────────────────────────────┘                       │
-│                ↓                                                    │
-│  5. Agent Ready with All Tools                                      │
-│     ┌──────────────────────────────────────┐                       │
-│     │ Available Tools:                     │                       │
-│     │ • read_file                          │                       │
-│     │ • write_file                         │                       │
-│     │ • edit_file                          │                       │
-│     │ • bash                               │                       │
-│     │ • zai_web_search        ← ✅         │                       │
-│     │ • zai_web_reader        ← ✅         │                       │
-│     │ • get_skill                          │                       │
-│     │ • [MCP tools from servers]           │                       │
-│     └──────────────────────────────────────┘                       │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- **System Architecture**: `MASTER_SYSTEM_ARCHITECTURE_COMPLETE.md`
+- **Web Functionality**: `../14_WEB/MINI_AGENT_WEB_FUNCTIONALITY_OVERVIEW.md`
+- **VS Code Integration**: `VSCODE_INTEGRATION_GUIDE.md`
+- **Configuration**: `../04_SETUP_CONFIG/CONFIGURATION.md`
 
 ---
 
-## Decision Tree: What Should I Use?
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│                 WHICH MODE SHOULD I USE?                            │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-                   ┌──────────────────────┐
-                   │ What do you want     │
-                   │ to do?               │
-                   └──────────┬───────────┘
-                              │
-           ┌──────────────────┼──────────────────┐
-           │                  │                  │
-           ▼                  ▼                  ▼
-    ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-    │ Quick tasks  │   │ Integrated   │   │ Just talking │
-    │ Research     │   │ with code    │   │ to MiniMax-M2    │
-    │ File work    │   │ editor       │   │              │
-    └──────┬───────┘   └──────┬───────┘   └──────┬───────┘
-           │                  │                  │
-           ▼                  ▼                  ▼
-    ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-    │ USE:         │   │ USE:         │   │ USE:         │
-    │              │   │              │   │              │
-    │ mini-agent   │   │ mini-agent-  │   │ MiniMax-M2       │
-    │ (CLI)        │   │ acp          │   │ Desktop      │
-    │              │   │ (Zed)        │   │              │
-    │ ✅ FULL      │   │ ✅ FULL      │   │ ⚠️ LIMITED   │
-    │ ACCESS       │   │ ACCESS       │   │ ACCESS       │
-    │              │   │              │   │              │
-    │ • No limits  │   │ • Editor     │   │ • /tmp only  │
-    │ • All tools  │   │   context    │   │ • No Mini-   │
-    │ • Fast       │   │ • Visual     │   │   Agent      │
-    │              │   │   feedback   │   │   tools      │
-    └──────────────┘   └──────────────┘   └──────────────┘
-```
-
-**Recommendation:** Use `mini-agent` CLI for best experience!
-
----
-
-## Summary Visual
-
-```
-╔═══════════════════════════════════════════════════════════════════╗
-║                                                                   ║
-║                    YOUR SYSTEM STATUS                             ║
-║                                                                   ║
-╠═══════════════════════════════════════════════════════════════════╣
-║                                                                   ║
-║  Component              Status          Location                 ║
-║  ─────────────────────  ─────────────   ──────────────────────   ║
-║                                                                   ║
-║  Z.AI Web Search        ✅ Working      mini_agent/llm/          ║
-║                                         zai_client.py            ║
-║                                                                   ║
-║  Z.AI Tools             ✅ Working      mini_agent/tools/        ║
-║                                         zai_tools.py             ║
-║                                                                   ║
-║  ACP Server             ✅ Available    mini_agent/acp/          ║
-║                                                                   ║
-║  Native File Tools      ✅ Working      mini_agent/tools/        ║
-║                         (No limits)     file_tools.py            ║
-║                                                                   ║
-║  Configuration          ✅ Correct      mini_agent/config/       ║
-║                                         config.yaml              ║
-║                                                                   ║
-║  MCP minimax_search     ✅ Disabled     mini_agent/config/       ║
-║                         (As intended)   mcp.json                 ║
-║                                                                   ║
-║  Unicode Display        ✅ Fixed        mini_agent/utils/        ║
-║                                         terminal_utils.py        ║
-║                                                                   ║
-║  Documentation          ✅ Complete     documents/               ║
-║                         (60KB total)                             ║
-║                                                                   ║
-╠═══════════════════════════════════════════════════════════════════╣
-║                                                                   ║
-║  READY TO USE! Run: mini-agent                                    ║
-║                                                                   ║
-╚═══════════════════════════════════════════════════════════════════╝
-```
-
----
-
-**Read the documentation in `documents/` for complete details!**
-
-Start with: `documents/QUICK_START_GUIDE.md`
+**This essential guide covers the core visual concepts. Extended examples and detailed explanations are available in the archive.**
