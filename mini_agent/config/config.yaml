@@ -8,8 +8,8 @@ api_key: "${MINIMAX_API_KEY}"
 api_base: "https://api.minimax.io"   # Base URL (will auto-append /v1 for OpenAI provider)
 model: "MiniMax-M2"
 # AI model: "anthropic" or "openai" 
-# Switched to Anthropic protocol for MiniMax-M2
-provider: "anthropic"  # Anthropic SDK format for MiniMax-M2"
+# MiniMax-M2 uses OpenAI-compatible API (NOT Anthropic)
+provider: "openai"  # OpenAI SDK format for MiniMax-M2"
 
 # Optional: OpenAI SDK format integration (fallback)
 openai_api_key: "${OPENAI_API_KEY}"
@@ -23,6 +23,7 @@ retry:
   initial_delay: 1.0      # Initial delay time (seconds)
   max_delay: 60.0         # Maximum delay time (seconds)
   exponential_base: 2.0   # Exponential backoff base
+  retryable_exceptions:   # Custom retryable exceptions (optional)
 
 # ===== Agent Configuration =====
 max_steps: 200  # Maximum execution steps

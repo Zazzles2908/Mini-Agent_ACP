@@ -151,6 +151,7 @@ class Config(BaseModel):
             initial_delay=retry_data.get("initial_delay", 1.0),
             max_delay=retry_data.get("max_delay", 60.0),
             exponential_base=retry_data.get("exponential_base", 2.0),
+            retryable_exceptions=(Exception,),  # Default to catching all exceptions
         )
 
         llm_config = LLMConfig(
