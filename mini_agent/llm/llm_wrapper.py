@@ -1,16 +1,17 @@
-"""LLM client wrapper that supports multiple providers.
+"""
+LLM client wrapper that supports multiple providers.
 
 This module provides a unified interface for different AI models
 (Anthropic and OpenAI) through a single LLMClient class.
 """
 
 import logging
+from typing import Any
 
 from ..retry import RetryConfig
 from ..schema import LLMProvider, LLMResponse, Message
 from .anthropic_client import AnthropicClient
 from .base import LLMClientBase
-from .glm_client import GLMClient
 from .openai_client import OpenAIClient
 
 logger = logging.getLogger(__name__)
@@ -54,7 +55,7 @@ class LLMClient:
             
         self.provider = provider_str
         self.api_key = api_key
-        self.model = model
+        self._model = model  # Store model temporarily
         self.retry_config = retry_config or RetryConfig()
 
         # for backward compatibility - remove any existing /anthropic or /v1
@@ -66,8 +67,6 @@ class LLMClient:
             full_api_base = f"{api_base.rstrip('/')}/anthropic"
         elif provider_str == "openai":
             full_api_base = f"{api_base.rstrip('/')}/v1"
-        elif provider_str == "zai":
-            full_api_base = f"{api_base.rstrip('/')}"  # Z.AI doesn't need suffix
         else:
             raise ValueError(f"Unsupported provider: {provider_str}")
 
@@ -79,21 +78,14 @@ class LLMClient:
             self._client = AnthropicClient(
                 api_key=api_key,
                 api_base=full_api_base,  # This should be {base}/anthropic
-                model=model,
+                model=self._model,
                 retry_config=retry_config,
             )
         elif provider_str == "openai":
             self._client = OpenAIClient(
                 api_key=api_key,
                 api_base=full_api_base,  # This should be {base}/v1
-                model=model,
-                retry_config=retry_config,
-            )
-        elif provider_str == "zai":
-            self._client = GLMClient(
-                api_key=api_key,
-                api_base=full_api_base,  # No suffix for Z.AI
-                model=model,
+                model=self._model,
                 retry_config=retry_config,
             )
         else:
@@ -111,18 +103,48 @@ class LLMClient:
         """Set retry callback."""
         self._client.retry_callback = value
 
+    @property
+    def model(self):
+        """Get model name."""
+        return self._model
+
+    @model.setter
+    def model(self, value: str):
+        """Set model name."""
+        self._model = value
+        if hasattr(self, '_client'):
+            self._client.model = value
+
     async def generate(
         self,
         messages: list[Message],
-        tools: list | None = None,
+        tools: list[Any] | None = None,
     ) -> LLMResponse:
         """Generate response from LLM.
 
         Args:
             messages: List of conversation messages
-            tools: Optional list of Tool objects or dicts
+            tools: Optional list of available tools
 
         Returns:
-            LLMResponse containing the generated content
+            LLMResponse containing the generated content, thinking, and tool calls
         """
         return await self._client.generate(messages, tools)
+
+    async def generate_stream(self, messages: list[Message], tools: list[Any] | None = None):
+        """Generate streaming response from LLM.
+
+        Args:
+            messages: List of conversation messages
+            tools: Optional list of available tools
+
+        Yields:
+            LLMResponse containing the generated content, thinking, and tool calls
+        """
+        if hasattr(self._client, 'generate_stream'):
+            async for chunk in self._client.generate_stream(messages, tools):
+                yield chunk
+        else:
+            # Fallback to regular generate for clients that don't support streaming
+            response = await self.generate(messages, tools)
+            yield response

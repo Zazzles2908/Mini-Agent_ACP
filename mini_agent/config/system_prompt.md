@@ -114,10 +114,22 @@ Mini-Agent features built-in knowledge management:
 
 ### 4. **MCP Tools** (Optional)
 **IMPORTANT**: Mini-Agent uses MCP tools for specific use cases including Z.AI web search integration.
-- **Z.AI Web Search**: Uses MCP protocol for FREE quotas (100 searches + 100 readers)
+
+**Z.AI MCP Integration** (Professional-Grade Management System):
+- **Z.AI Web Search MCP**: Uses MCP protocol for FREE quotas (100 searches + 100 readers) 
+- **Z.AI Web Reader MCP**: Extracts content from URLs using FREE quotas
+- **Token Truncation Detection**: Automatically detects and handles API response truncation with optimization suggestions
+- **Quota Monitoring**: Real-time tracking with intelligent alerts (80%, 95% thresholds)
+- **Health Monitoring**: Comprehensive endpoint connectivity and performance monitoring
+- **Configuration Management**: Automated validation and optimization tools
+- **MCP Manager Skill**: `mini_agent/skills/zai-mcp-manager/` - Complete management suite
+
+**Other MCP Tools**:
 - **File Operations**: Now uses native tools instead of MCP filesystem access
 - **Custom MCP Tools**: May be configured for specialized use cases
 - **Primary Functionality**: Built-in tools and native capabilities remain the main approach
+
+**Z.AI MCP Configuration**: Located in `mini_agent/config/.mcp.json` with proper retry logic and error handling.
 
 ### 5. **Specialized Skills**
 You have access to specialized skills that provide expert guidance and capabilities for specific tasks.
@@ -139,7 +151,7 @@ Skills are loaded dynamically using **Progressive Disclosure**:
 
 ---
 
-You have access to 15+ specialized skills that provide expert guidance and capabilities for specific tasks.
+You have access to 16+ specialized skills that provide expert guidance and capabilities for specific tasks.
 
 **Available Skills:**
 
@@ -169,7 +181,9 @@ You have access to 15+ specialized skills that provide expert guidance and capab
 
 - **vscode_integration**: Enables Mini-Agent to integrate directly with VS Code Chat API for seamless AI assistance
 
-- **webapp-testing**: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
+- **webapp-testing**: Toolkit for interacting with testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
+
+- **zai-mcp-manager**: Comprehensive skill for managing Z.AI MCP servers with quota tracking, health monitoring, configuration validation, and token truncation detection. Provides real-time monitoring tools, configuration optimization, and intelligent error handling for the Z.AI Lite Plan (100 searches + 100 readers).
 
 **How to Use Skills:**
 

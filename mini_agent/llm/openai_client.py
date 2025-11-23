@@ -57,7 +57,7 @@ class OpenAIClient(LLMClientBase):
             tools: Optional list of tools
 
         Returns:
-            OpenAI ChatCompletion message
+            OpenAI ChatCompletion message or error response
 
         Raises:
             Exception: API call failed
@@ -72,9 +72,13 @@ class OpenAIClient(LLMClientBase):
         if tools:
             params["tools"] = self._convert_tools(tools)
 
-        # Use OpenAI SDK format's chat.completions.create
-        response = await self.client.chat.completions.create(**params)
-        return response.choices[0].message
+        try:
+            # Use OpenAI SDK format's chat.completions.create
+            response = await self.client.chat.completions.create(**params)
+            return response.choices[0].message
+        except Exception as e:
+            # Return error information that can be handled gracefully
+            return {"error": str(e), "type": "error"}
 
     def _convert_tools(self, tools: list[Any]) -> list[dict[str, Any]]:
         """Convert tools to OpenAI format.
@@ -203,46 +207,65 @@ class OpenAIClient(LLMClientBase):
         """Parse OpenAI response into LLMResponse.
 
         Args:
-            response: OpenAI ChatCompletionMessage response
+            response: OpenAI ChatCompletionMessage response or error dict
 
         Returns:
             LLMResponse object
         """
-        # Extract text content
-        text_content = response.content or ""
+        # Handle error responses gracefully
+        if isinstance(response, dict) and response.get("type") == "error":
+            return LLMResponse(
+                content=f"Error: {response.get('error', 'Unknown error')}",
+                thinking=None,
+                tool_calls=None,
+                finish_reason="error",
+            )
+        
+        # Handle regular responses
+        try:
+            # Extract text content
+            text_content = getattr(response, 'content', "") or ""
 
-        # Extract thinking content from reasoning_details
-        thinking_content = ""
-        if hasattr(response, "reasoning_details") and response.reasoning_details:
-            # reasoning_details is a list of reasoning blocks
-            for detail in response.reasoning_details:
-                if hasattr(detail, "text"):
-                    thinking_content += detail.text
+            # Extract thinking content from reasoning_details
+            thinking_content = ""
+            if hasattr(response, "reasoning_details") and response.reasoning_details:
+                # reasoning_details is a list of reasoning blocks
+                for detail in response.reasoning_details:
+                    if hasattr(detail, "text"):
+                        thinking_content += detail.text
 
-        # Extract tool calls
-        tool_calls = []
-        if response.tool_calls:
-            for tool_call in response.tool_calls:
-                # Parse arguments from JSON string
-                arguments = json.loads(tool_call.function.arguments)
+            # Extract tool calls
+            tool_calls = []
+            if hasattr(response, 'tool_calls') and response.tool_calls:
+                for tool_call in response.tool_calls:
+                    # Parse arguments from JSON string
+                    arguments = json.loads(tool_call.function.arguments)
 
-                tool_calls.append(
-                    ToolCall(
-                        id=tool_call.id,
-                        type="function",
-                        function=FunctionCall(
-                            name=tool_call.function.name,
-                            arguments=arguments,
-                        ),
+                    tool_calls.append(
+                        ToolCall(
+                            id=tool_call.id,
+                            type="function",
+                            function=FunctionCall(
+                                name=tool_call.function.name,
+                                arguments=arguments,
+                            ),
+                        )
                     )
-                )
 
-        return LLMResponse(
-            content=text_content,
-            thinking=thinking_content if thinking_content else None,
-            tool_calls=tool_calls if tool_calls else None,
-            finish_reason="stop",  # OpenAI doesn't provide finish_reason in the message
-        )
+            return LLMResponse(
+                content=text_content,
+                thinking=thinking_content if thinking_content else None,
+                tool_calls=tool_calls if tool_calls else None,
+                finish_reason="stop",  # OpenAI doesn't provide finish_reason in the message
+            )
+        except Exception as e:
+            # Fallback for any parsing errors
+            return LLMResponse(
+                content=f"Error parsing response: {str(e)}",
+                thinking=None,
+                tool_calls=None,
+                finish_reason="parse_error",
+            )
 
     async def generate(
         self,

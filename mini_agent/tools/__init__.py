@@ -99,9 +99,9 @@ except Exception as e:
 if _zai_tools_available:
     try:
         # Import the unified Z.AI tools (single source of truth)
-        from .zai_unified_tools import ZAIWebSearchTool, ZAIWebReaderTool, get_zai_tools
+        from .zai_web_tool import ZAIWebTool, create_zai_web_tool
         print("✅ Z.AI unified tools loaded - Web search/reading available")
-        print("   📍 Using Z.AI GLM-4.6 backend (FREE with Lite plan)")
+        print("   📍 Using Z.AI GLM-4.6 backend with MCP-First Hybrid")
             
     except ImportError as e:
         # If primary tools fail to import, log but don't crash
@@ -123,9 +123,8 @@ __all__ = [
 # Add Z.AI tools to __all__ only if explicitly enabled and successfully imported
 if _zai_tools_available:
     __all__.extend([
-        "ZAIWebSearchTool",
-        "ZAIWebReaderTool",
-        "get_zai_tools",
+        "ZAIWebTool", 
+        "create_zai_web_tool",
     ])
 
 # Lazy load QA validation tools to avoid circular imports

@@ -1,0 +1,4 @@
+{
+  "name": "zai-mcp-manager",
+  "description": "Comprehensive skill for managing Z.AI MCP servers with quota tracking, health monitoring, and best practice guidance. Provides configuration validation, usage analytics, and intelligent fallback management for the Z.AI Lite Plan (100 searches + 100 readers)."
+}

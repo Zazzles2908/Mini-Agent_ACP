@@ -18,7 +18,7 @@ from enum import Enum
 # Mini-Agent imports
 from mini_agent.config import Config
 from mini_agent.llm import LLMClient
-from mini_agent.schema import LLMProvider
+from ..schema import LLMProvider
 from mini_agent.agent import Agent
 
 logger = logging.getLogger(__name__)
@@ -304,7 +304,7 @@ class MiniAgentACPServer:
             
             try:
                 # Process with agent
-                from mini_agent.schema import Message
+                from ..schema import Message
                 response = await session.agent.run([Message(role="user", content=prompt_text)])
                 
                 # Log the response

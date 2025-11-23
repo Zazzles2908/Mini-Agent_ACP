@@ -7,7 +7,7 @@ from typing import Dict, List, Any, Optional
 
 import tiktoken
 
-from .llm import LLMClient
+from .llm.llm_wrapper import LLMClient
 from .logger import AgentLogger
 from .schema import Message
 from .tools.base import Tool, ToolResult
@@ -92,7 +92,11 @@ class Agent:
         self.logger = AgentLogger()
         
         # Initialize context overflow prevention
-        self.context_manager = get_context_manager()
+        try:
+            self.context_manager = get_context_manager()
+        except Exception as e:
+            print(f"Warning: Failed to initialize context overflow prevention: {e}")
+            self.context_manager = None
 
     def add_user_message(self, content: str):
         """Add a user message to history."""
@@ -485,7 +489,15 @@ Requirements:
                 else:
                     error_msg = f"LLM call failed: {str(e)}"
                     print(f"\n{Colors.BRIGHT_RED}{ICON_ERROR} Error:{Colors.RESET} {error_msg}")
-                return error_msg
+                
+                # Create a proper error response instead of returning a string
+                from .schema import LLMResponse
+                response = LLMResponse(
+                    content=f"Error: {error_msg}",
+                    thinking=None,
+                    tool_calls=None,
+                    finish_reason="error",
+                )
 
             # Log LLM response
             self.logger.log_response(
@@ -524,16 +536,18 @@ Requirements:
                     # Check if validation_result is a dict (expected format)
                     if isinstance(validation_result, dict):
                         honesty_score = validation_result.get('honesty_score', 0)
+                        feedback = validation_result.get('feedback', '')
                     else:
                         # Handle case where validation_result is a string
                         print(f"{Colors.DIM}[DEBUG] Validation returned string, treating as passed{Colors.RESET}")
                         honesty_score = 100  # Default to high score for string results
+                        feedback = validation_result if isinstance(validation_result, str) else ''
                     
                     if honesty_score >= 80:
                         # High honesty score - genuine completion
                         print(f"\n{Colors.BRIGHT_GREEN}[SUCCESS] TASK VALIDATION PASSED{Colors.RESET}")
-                    if isinstance(validation_result, dict) and validation_result.get('feedback'):
-                        print(f"{Colors.DIM}[FEEDBACK] {validation_result['feedback']}{Colors.RESET}")
+                    if feedback:
+                        print(f"{Colors.DIM}[FEEDBACK] {feedback}{Colors.RESET}")
                     return response.content
                 elif validation_result:
                     # Validation failed or low honesty score
