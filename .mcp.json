@@ -1,0 +1,56 @@
+{
+    "mcpServers": {
+        "zai-web-search": {
+            "command": "remote",
+            "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
+            "headers": {
+                "Authorization": "Bearer ${ZAI_API_KEY}"
+            },
+            "timeout": 30,
+            "retry": {
+                "max_retries": 2,
+                "initial_delay": 1.0
+            }
+        },
+        "zai-web-reader": {
+            "command": "remote",
+            "url": "https://api.z.ai/api/mcp/web_reader/mcp",
+            "headers": {
+                "Authorization": "Bearer ${ZAI_API_KEY}"
+            },
+            "timeout": 45,
+            "retry": {
+                "max_retries": 2,
+                "initial_delay": 1.0
+            }
+        }
+    },
+    "tools": {
+        "enabled": [
+            "webSearchPrime",
+            "webReader"
+        ],
+        "defaults": {
+            "count": 3,
+            "format": "markdown",
+            "recency_filter": "noLimit"
+        }
+    },
+    "quotas": {
+        "zai_web_search": {
+            "daily_limit": 100,
+            "monthly_limit": 100,
+            "warnings": [80, 95]
+        },
+        "zai_web_reader": {
+            "daily_limit": 100,
+            "monthly_limit": 100,
+            "warnings": [80, 95]
+        }
+    },
+    "security": {
+        "enable_monitoring": true,
+        "block_on_quota_exceeded": true,
+        "log_all_requests": true
+    }
+}

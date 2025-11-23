@@ -209,6 +209,9 @@ class WriteTool(Tool):
             return ToolResult(success=False, content="", error=str(e))
 
 
+# Add alias for compatibility with validation system
+ReadFileTool = ReadTool
+
 class EditTool(Tool):
     """Edit file by replacing text."""
 

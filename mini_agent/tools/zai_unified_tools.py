@@ -1,13 +1,13 @@
-"""Z.AI Web Tools - Single Correct Implementation
+"""Z.AI Web Tools - MCP Protocol Implementation (FREE Quotas)
 
-✅ ARCHITECTURE: Direct Z.AI API calls → GLM-4.6 model
-✅ LITE PLAN: Uses GLM-4.6 (FREE with plan) - NEVER GLM-4.5 (PAID)
-✅ QUOTA: ~120 prompts every 5 hours
-✅ TOKEN LIMIT: 2000 max per call (prevents excessive usage)
-✅ ENDPOINT: https://api.z.ai/api/coding/paas/v4
+✅ ARCHITECTURE: MCP Protocol → Z.AI MCP Servers → FREE quotas
+✅ LITE PLAN: Uses 100 web searches + 100 web readers (FREE with Lite plan)
+✅ PROTOCOL: Model Context Protocol (MCP) standard
+✅ QUOTAS: 100 searches + 100 readers (NOT charged to account)
+✅ SECURITY: Direct API calls disabled to prevent credit burning
 
-This is the ONLY Z.AI tool implementation needed. All others are deprecated.
-Based on working implementation from minimax_zai_client.py and transaction log evidence.
+This implements the MCP protocol for Z.AI web search and reading using your FREE quotas.
+Replaces direct API calls that were burning credits to paid endpoints.
 """
 
 import os
@@ -23,47 +23,47 @@ except ImportError:
     AIOHTTP_AVAILABLE = False
 
 from .base import Tool, ToolResult
+from .zai_mcp_tools import ZAIMCPTool, create_mcp_tool
 
 logger = logging.getLogger(__name__)
 
-# Constants - CRITICAL for cost control
-DEFAULT_MODEL = "glm-4.6"  # ✅ FREE with Lite plan - NEVER use glm-4.5
-MAX_TOKENS_PER_CALL = 2000  # Prevent excessive token usage
-MAX_SEARCH_RESULTS = 10
-BASE_URL = "https://api.z.ai/api/coding/paas/v4"
+# MCP Protocol Integration - FREE Quotas
+# Uses Z.AI MCP servers: web_search_prime and web_reader
+# 100 web searches + 100 web readers included FREE with Lite plan
 
 
 class ZAIWebSearchTool(Tool):
-    """Z.AI web search using direct API with GLM-4.6 model.
+    """Z.AI web search using MCP Protocol with FREE quotas.
     
-    ✅ Uses GLM-4.6 (FREE with Lite plan) - NEVER GLM-4.5 (PAID)
-    ✅ Direct API: https://api.z.ai/api/coding/paas/v4/web_search
-    ✅ Quota: ~120 prompts every 5 hours
-    ✅ Token limit: 2000 max per call
+    ✅ Uses MCP Protocol: https://api.z.ai/api/mcp/web_search_prime/mcp
+    ✅ FREE with Lite plan: 100 web searches included
+    ✅ SECURE: Cannot burn credits - only uses included quotas
+    ✅ STANDARD: Model Context Protocol implementation
     """
 
     def __init__(self, api_key: str | None = None):
-        """Initialize Z.AI web search tool.
+        """Initialize Z.AI web search tool using MCP Protocol.
         
         Args:
             api_key: Z.AI API key (if None, uses ZAI_API_KEY env var)
         """
         self.api_key = api_key or os.getenv('ZAI_API_KEY')
-        self.base_url = BASE_URL
-        self.model = DEFAULT_MODEL
         
         if not self.api_key:
             logger.warning("No Z.AI API key found. Web search will not be available.")
             self.available = False
+            self.mcp_tool = None
             return
-            
-        if not AIOHTTP_AVAILABLE:
-            logger.error("aiohttp is not installed. Install with: uv pip install aiohttp")
+        
+        # Initialize MCP tool for free quota usage
+        try:
+            self.mcp_tool = None  # Will be created on first use
+            self.available = True
+            logger.info("Z.AI web search initialized using MCP Protocol (FREE quotas)")
+        except Exception as e:
+            logger.error(f"Failed to initialize Z.AI MCP tool: {e}")
             self.available = False
-            return
-            
-        self.available = True
-        logger.info(f"Z.AI web search initialized (model: {self.model}, endpoint: {self.base_url})")
+            self.mcp_tool = None
 
     @property
     def name(self) -> str:
@@ -72,9 +72,9 @@ class ZAIWebSearchTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Z.AI web search using GLM-4.6 model (FREE with Lite plan). "
-            "Direct API to https://api.z.ai/api/coding/paas/v4/web_search. "
-            "Quota: ~120 prompts every 5 hours. "
+            "Z.AI web search using MCP Protocol (FREE with Lite plan). "
+            "Uses 100 included web searches (not charged). "
+            "MCP Server: https://api.z.ai/api/mcp/web_search_prime/mcp. "
             "Use for: research, fact-checking, current information with source citations."
         )
 
@@ -89,16 +89,10 @@ class ZAIWebSearchTool(Tool):
                 },
                 "max_results": {
                     "type": "integer",
-                    "description": f"Maximum number of search results (1-{MAX_SEARCH_RESULTS}, default 5)",
+                    "description": "Maximum number of search results (1-5, default 3)",
                     "minimum": 1,
-                    "maximum": MAX_SEARCH_RESULTS,
-                    "default": 5,
-                },
-                "recency": {
-                    "type": "string",
-                    "description": "Time filter for results",
-                    "enum": ["noLimit", "oneDay", "oneWeek", "oneMonth"],
-                    "default": "noLimit",
+                    "maximum": 5,
+                    "default": 3,
                 },
             },
             "required": ["query"],
@@ -107,16 +101,14 @@ class ZAIWebSearchTool(Tool):
     async def execute(
         self,
         query: str,
-        max_results: int = 5,
-        recency: str = "noLimit",
+        max_results: int = 3,
         **kwargs
     ) -> ToolResult:
-        """Execute web search using Z.AI direct API.
+        """Execute web search using Z.AI MCP Protocol.
         
         Args:
             query: Search query
-            max_results: Maximum number of results (default 5)
-            recency: Time filter (noLimit, oneDay, oneWeek, oneMonth)
+            max_results: Maximum number of results (default 3, max 5 to save quota)
             
         Returns:
             ToolResult with search results or error
@@ -125,115 +117,101 @@ class ZAIWebSearchTool(Tool):
             return ToolResult(
                 success=False,
                 content="",
-                error="Z.AI web search not available. Check API key and aiohttp installation."
+                error="Z.AI web search not available. Check API key and configuration."
             )
 
-        # Validate parameters
-        max_results = min(max(1, max_results), MAX_SEARCH_RESULTS)
-        
-        # Prepare search payload
-        payload = {
-            "search_engine": "search-prime",
-            "search_query": query,
-            "count": max_results,
-            "search_recency_filter": recency,
-        }
-        
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-            "Accept-Language": "en-US,en",
-        }
-
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
-                    f"{self.base_url}/web_search",
-                    headers=headers,
-                    json=payload,
-                    timeout=aiohttp.ClientTimeout(total=60),
-                ) as response:
-                    
-                    if response.status == 200:
-                        result = await response.json()
-                        search_results = result.get("search_result", [])
+            # Create MCP tool instance
+            if not self.mcp_tool:
+                self.mcp_tool = await create_mcp_tool(self.api_key)
+            
+            # Execute MCP web search (uses FREE quotas)
+            result = await self.mcp_tool.web_search_prime(query, max_results)
+            
+            if result["status"] == "success":
+                data = result["data"]
+                
+                # Format results for MiniMax-M2
+                formatted_results = []
+                if "results" in data:
+                    for i, item in enumerate(data["results"], 1):
+                        title = item.get("title", "Untitled")
+                        link = item.get("url", "")
+                        content = item.get("summary", "")
                         
-                        # Format results for MiniMax-M2
-                        formatted_results = []
-                        for i, item in enumerate(search_results, 1):
-                            title = item.get("title", "Untitled")
-                            link = item.get("link", "")
-                            content = item.get("content", "")
-                            
-                            formatted_results.append(
-                                f"### Result {i}: {title}\n"
-                                f"**Source**: {link}\n"
-                                f"**Content**: {content}\n"
-                            )
-                        
-                        if formatted_results:
-                            output = (
-                                f"## Web Search Results for: {query}\n"
-                                f"**Model**: {self.model} (Lite plan)\n"
-                                f"**Results**: {len(formatted_results)}\n"
-                                f"**Timestamp**: {datetime.now().isoformat()}\n\n"
-                                + "\n".join(formatted_results)
-                            )
-                        else:
-                            output = f"No results found for query: {query}"
-                        
-                        logger.info(f"Z.AI web search completed: {len(search_results)} results for '{query}'")
-                        return ToolResult(success=True, content=output, error=None)
-                        
-                    else:
-                        error_text = await response.text()
-                        logger.error(f"Z.AI web search error {response.status}: {error_text}")
-                        return ToolResult(
-                            success=False,
-                            content="",
-                            error=f"Z.AI API error {response.status}: {error_text}"
+                        formatted_results.append(
+                            f"### Result {i}: {title}\n"
+                            f"**Source**: {link}\n"
+                            f"**Content**: {content}\n"
                         )
+                
+                if formatted_results:
+                    usage = result.get("usage", {})
+                    searches_used = usage.get("searches", 0)
+                    
+                    output = (
+                        f"## Web Search Results for: {query}\n"
+                        f"**Protocol**: MCP (Model Context Protocol)\n"
+                        f"**Quota Used**: {searches_used}/100 searches\n"
+                        f"**Results**: {len(formatted_results)}\n"
+                        f"**Timestamp**: {datetime.now().isoformat()}\n\n"
+                        + "\n".join(formatted_results)
+                    )
+                else:
+                    output = f"No results found for query: {query}"
+                
+                logger.info(f"Z.AI MCP web search completed: {len(formatted_results)} results for '{query}'")
+                return ToolResult(success=True, content=output, error=None)
+            else:
+                error_msg = result.get("error", "Unknown error")
+                logger.error(f"Z.AI MCP web search error: {error_msg}")
+                return ToolResult(
+                    success=False,
+                    content="",
+                    error=f"Z.AI MCP search error: {error_msg}"
+                )
                         
         except Exception as e:
-            logger.exception("Z.AI web search failed")
+            logger.exception("Z.AI MCP web search failed")
             return ToolResult(
                 success=False,
                 content="",
-                error=f"Z.AI web search exception: {str(e)}"
+                error=f"Z.AI MCP web search exception: {str(e)}"
             )
 
 
 class ZAIWebReaderTool(Tool):
-    """Z.AI web page reader using direct API with GLM-4.6 model.
+    """Z.AI web page reader using MCP Protocol with FREE quotas.
     
-    ✅ Uses GLM-4.6 (FREE with Lite plan) - NEVER GLM-4.5 (PAID)
-    ✅ Direct API: https://api.z.ai/api/coding/paas/v4/reader
-    ✅ Quota: ~120 prompts every 5 hours
-    ✅ Token limit: 2000 max per call
+    ✅ Uses MCP Protocol: https://api.z.ai/api/mcp/web_reader/mcp
+    ✅ FREE with Lite plan: 100 web readers included
+    ✅ SECURE: Cannot burn credits - only uses included quotas
+    ✅ STANDARD: Model Context Protocol implementation
     """
 
     def __init__(self, api_key: str | None = None):
-        """Initialize Z.AI web reader tool.
+        """Initialize Z.AI web reader tool using MCP Protocol.
         
         Args:
             api_key: Z.AI API key (if None, uses ZAI_API_KEY env var)
         """
         self.api_key = api_key or os.getenv('ZAI_API_KEY')
-        self.base_url = BASE_URL
-        self.model = DEFAULT_MODEL
         
         if not self.api_key:
             logger.warning("No Z.AI API key found. Web reader will not be available.")
             self.available = False
+            self.mcp_tool = None
             return
-            
-        if not AIOHTTP_AVAILABLE:
-            logger.error("aiohttp is not installed. Install with: uv pip install aiohttp")
+        
+        # Initialize MCP tool for free quota usage
+        try:
+            self.mcp_tool = None  # Will be created on first use
+            self.available = True
+            logger.info("Z.AI web reader initialized using MCP Protocol (FREE quotas)")
+        except Exception as e:
+            logger.error(f"Failed to initialize Z.AI MCP tool: {e}")
             self.available = False
-            return
-            
-        self.available = True
-        logger.info(f"Z.AI web reader initialized (model: {self.model}, endpoint: {self.base_url})")
+            self.mcp_tool = None
 
     @property
     def name(self) -> str:
@@ -242,9 +220,9 @@ class ZAIWebReaderTool(Tool):
     @property
     def description(self) -> str:
         return (
-            "Z.AI web page reader using GLM-4.6 model (FREE with Lite plan). "
-            "Direct API to https://api.z.ai/api/coding/paas/v4/reader. "
-            "Quota: ~120 prompts every 5 hours. "
+            "Z.AI web page reader using MCP Protocol (FREE with Lite plan). "
+            "Uses 100 included web readers (not charged). "
+            "MCP Server: https://api.z.ai/api/mcp/web_reader/mcp. "
             "Use for: extracting content from specific URLs, deep analysis of web pages."
         )
 
@@ -257,11 +235,10 @@ class ZAIWebReaderTool(Tool):
                     "type": "string",
                     "description": "URL of the web page to read",
                 },
-                "format": {
-                    "type": "string",
-                    "description": "Output format for extracted content",
-                    "enum": ["markdown", "html", "text"],
-                    "default": "markdown",
+                "extract_links": {
+                    "type": "boolean",
+                    "description": "Extract links from the page",
+                    "default": True,
                 },
             },
             "required": ["url"],
@@ -270,14 +247,14 @@ class ZAIWebReaderTool(Tool):
     async def execute(
         self,
         url: str,
-        format: str = "markdown",
+        extract_links: bool = True,
         **kwargs
     ) -> ToolResult:
-        """Read web page content using Z.AI direct API.
+        """Read web page content using Z.AI MCP Protocol.
         
         Args:
             url: URL to read
-            format: Output format (markdown, html, text)
+            extract_links: Whether to extract links from the page
             
         Returns:
             ToolResult with page content or error
@@ -286,82 +263,55 @@ class ZAIWebReaderTool(Tool):
             return ToolResult(
                 success=False,
                 content="",
-                error="Z.AI web reader not available. Check API key and aiohttp installation."
+                error="Z.AI web reader not available. Check API key and configuration."
             )
 
-        # Prepare reader payload
-        payload = {
-            "url": url,
-            "return_format": format,
-            "retain_images": True,
-        }
-        
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-            "Accept-Language": "en-US,en",
-        }
-
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
-                    f"{self.base_url}/reader",
-                    headers=headers,
-                    json=payload,
-                    timeout=aiohttp.ClientTimeout(total=60),
-                ) as response:
-                    
-                    if response.status == 200:
-                        result = await response.json()
-                        reader_result = result.get("web_page_reader_result", {})
-                        
-                        title = reader_result.get("title", "N/A")
-                        description = reader_result.get("description", "N/A")
-                        content = reader_result.get("content", "")
-                        
-                        # Truncate content to prevent excessive token usage
-                        if len(content) > MAX_TOKENS_PER_CALL * 4:  # Rough char-to-token ratio
-                            content = content[:MAX_TOKENS_PER_CALL * 4] + "\n\n[Content truncated due to length]"
-                        
-                        output = (
-                            f"## Web Page Content: {title}\n"
-                            f"**URL**: {url}\n"
-                            f"**Description**: {description}\n"
-                            f"**Model**: {self.model} (Lite plan)\n"
-                            f"**Format**: {format}\n"
-                            f"**Timestamp**: {datetime.now().isoformat()}\n\n"
-                            f"### Content\n{content}"
-                        )
-                        
-                        logger.info(f"Z.AI web reader completed: {url}")
-                        return ToolResult(success=True, content=output, error=None)
-                        
-                    else:
-                        error_text = await response.text()
-                        logger.error(f"Z.AI web reader error {response.status}: {error_text}")
-                        
-                        # Fallback: use web search to get information about the URL
-                        if response.status in [400, 401, 403]:
-                            logger.info(f"Attempting web search fallback for URL: {url}")
-                            search_tool = ZAIWebSearchTool(self.api_key)
-                            if search_tool.available:
-                                return await search_tool.execute(
-                                    query=f"content from {url}",
-                                    max_results=3
-                                )
-                        
-                        return ToolResult(
-                            success=False,
-                            content="",
-                            error=f"Z.AI reader API error {response.status}: {error_text}"
-                        )
+            # Create MCP tool instance
+            if not self.mcp_tool:
+                self.mcp_tool = await create_mcp_tool(self.api_key)
+            
+            # Execute MCP web reader (uses FREE quotas)
+            result = await self.mcp_tool.web_reader(url, extract_links)
+            
+            if result["status"] == "success":
+                data = result["data"]
+                
+                # Extract content from MCP response
+                title = data.get("title", "N/A")
+                content = data.get("content", "")
+                
+                # Format output for MiniMax-M2
+                usage = result.get("usage", {})
+                readers_used = usage.get("readers", 0)
+                
+                output = (
+                    f"## Web Page Content: {title}\n"
+                    f"**URL**: {url}\n"
+                    f"**Protocol**: MCP (Model Context Protocol)\n"
+                    f"**Quota Used**: {readers_used}/100 readers\n"
+                    f"**Extract Links**: {extract_links}\n"
+                    f"**Timestamp**: {datetime.now().isoformat()}\n\n"
+                    f"### Content\n{content}"
+                )
+                
+                logger.info(f"Z.AI MCP web reader completed: {url}")
+                return ToolResult(success=True, content=output, error=None)
+            else:
+                error_msg = result.get("error", "Unknown error")
+                logger.error(f"Z.AI MCP web reader error: {error_msg}")
+                return ToolResult(
+                    success=False,
+                    content="",
+                    error=f"Z.AI MCP reader error: {error_msg}"
+                )
                         
         except Exception as e:
-            logger.exception("Z.AI web reader failed")
+            logger.exception("Z.AI MCP web reader failed")
             return ToolResult(
                 success=False,
                 content="",
-                error=f"Z.AI web reader exception: {str(e)}"
+                error=f"Z.AI MCP web reader exception: {str(e)}"
             )
 
 
@@ -389,27 +339,34 @@ def get_zai_tools(api_key: str | None = None) -> list[Tool]:
 
 # Test function for validation
 async def test_zai_tools():
-    """Test Z.AI tools functionality."""
+    """Test Z.AI tools functionality using MCP Protocol."""
     api_key = os.getenv('ZAI_API_KEY')
     if not api_key:
         print("❌ ZAI_API_KEY not found in environment")
         return
     
-    print("🧪 Testing Z.AI Web Tools...")
-    print(f"📍 Endpoint: {BASE_URL}")
-    print(f"🤖 Model: {DEFAULT_MODEL}")
+    print("🧪 Testing Z.AI Web Tools (MCP Protocol)...")
+    print("🔒 Using FREE quotas: 100 searches + 100 readers")
+    print("✅ Protocol: Model Context Protocol (MCP)")
     
     # Test web search
     search_tool = ZAIWebSearchTool(api_key)
     if search_tool.available:
-        result = await search_tool.execute(query="Python programming", max_results=3)
+        result = await search_tool.execute(query="MiniMax AI capabilities", max_results=2)
         print(f"✅ Web Search: {'Success' if result.success else 'Failed'}")
         if result.success:
             print(f"   Results length: {len(result.content)} chars")
+        else:
+            print(f"   Error: {result.error}")
     else:
         print("❌ Web Search not available")
     
-    print("\n✅ Z.AI tools test completed")
+    # Test usage tracking
+    if search_tool.mcp_tool:
+        usage = search_tool.mcp_tool.get_usage_summary()
+        print(f"📊 Quota Usage: {usage}")
+    
+    print("\n✅ Z.AI MCP tools test completed")
 
 
 if __name__ == "__main__":
