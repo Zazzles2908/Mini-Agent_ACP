@@ -39,10 +39,26 @@ class LLMConfig(BaseModel):
     """LLM configuration"""
 
     api_key: str
-    api_base: str = "https://api.minimax.io"
-    model: str = "MiniMax-M2"  # Primary: MiniMax-M2 for reasoning (300 prompts/5hrs)
-    provider: str = "openai"   # Primary: OpenAI-compatible API for MiniMax
+    api_base: str = "https://api.minimax.io"  # Clean base URL (no hardcoded endpoint)
+    model: str = "MiniMax-M2"
+    provider: str = "anthropic"  # Default to anthropic (matches reference)
     retry: RetryConfig = Field(default_factory=RetryConfig)
+    
+    def get_effective_api_base(self) -> str:
+        """Get API base with provider-specific suffix."""
+        base = self.api_base.rstrip('/')
+        
+        if self.provider == "anthropic":
+            return f"{base}/anthropic"
+        elif self.provider == "openai":
+            return f"{base}/v1"
+        else:
+            raise ValueError(f"Unsupported provider: {self.provider}")
+    
+    @property
+    def api_base_effective(self) -> str:
+        """Get the effective API base URL based on provider."""
+        return self.get_effective_api_base()
 
 
 class AgentConfig(BaseModel):
@@ -158,7 +174,7 @@ class Config(BaseModel):
             api_key=data["api_key"],
             api_base=data.get("api_base", "https://api.minimax.io"),
             model=data.get("model", "MiniMax-M2"),
-            provider=data.get("provider", "openai"),  # Using OpenAI protocol for MiniMax
+            provider=data.get("provider", "anthropic"),  # Default to anthropic
             retry=retry_config,
         )
 

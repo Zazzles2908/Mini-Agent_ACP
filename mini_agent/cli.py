@@ -390,14 +390,8 @@ async def run_agent(workspace_dir: Path):
         next_delay = retry_config.calculate_delay(attempt - 1)
         print(f"{Colors.DIM}   Retrying in {next_delay:.1f}s (attempt {attempt + 1})...{Colors.RESET}")
 
-    # Convert provider string to LLMProvider enum
-    provider_map = {
-        "anthropic": LLMProvider.ANTHROPIC,
-        "openai": LLMProvider.OPENAI,
-        "zai": LLMProvider.ZAI,
-    }
-    
-    provider = provider_map.get(config.llm.provider.lower(), LLMProvider.OPENAI)
+    # Convert provider string to LLMProvider enum (matching reference implementation)
+    provider = LLMProvider.ANTHROPIC if config.llm.provider.lower() == "anthropic" else LLMProvider.OPENAI
 
     llm_client = LLMClient(
         api_key=config.llm.api_key,

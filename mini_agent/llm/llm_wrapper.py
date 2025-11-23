@@ -31,7 +31,7 @@ class LLMClient:
     def __init__(
         self,
         api_key: str,
-        provider: str,  # "openai" or "anthropic" 
+        provider: str | LLMProvider,  # Accept both string and enum
         api_base: str = "https://api.minimax.io",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,
@@ -46,53 +46,60 @@ class LLMClient:
             model: Model name to use
             retry_config: Optional retry configuration
         """
-        self.provider = provider
+        # Normalize provider to string
+        if isinstance(provider, LLMProvider):
+            provider_str = provider.value  # Convert enum to string
+        else:
+            provider_str = str(provider)  # Ensure string
+            
+        self.provider = provider_str
         self.api_key = api_key
         self.model = model
         self.retry_config = retry_config or RetryConfig()
 
-        # for backward compatibility
+        # for backward compatibility - remove any existing /anthropic or /v1
         api_base = api_base.replace("/anthropic", "")
+        api_base = api_base.replace("/v1", "")
 
         # Append provider-specific suffix to api_base
-        if provider == "anthropic":
+        if provider_str == "anthropic":
             full_api_base = f"{api_base.rstrip('/')}/anthropic"
-        elif provider == "openai":
+        elif provider_str == "openai":
             full_api_base = f"{api_base.rstrip('/')}/v1"
-        elif provider == "zai":
+        elif provider_str == "zai":
             full_api_base = f"{api_base.rstrip('/')}"  # Z.AI doesn't need suffix
         else:
-            raise ValueError(f"Unsupported provider: {provider}")
+            raise ValueError(f"Unsupported provider: {provider_str}")
 
         self.api_base = full_api_base
 
-        # Instantiate the appropriate client
+        # Instantiate the appropriate client with correct API base
         self._client: LLMClientBase
-        if provider == "anthropic":
+        if provider_str == "anthropic":
             self._client = AnthropicClient(
                 api_key=api_key,
-                api_base=full_api_base,
+                api_base=full_api_base,  # This should be {base}/anthropic
                 model=model,
                 retry_config=retry_config,
             )
-        elif provider == "openai":
+        elif provider_str == "openai":
             self._client = OpenAIClient(
                 api_key=api_key,
-                api_base=full_api_base,
+                api_base=full_api_base,  # This should be {base}/v1
                 model=model,
                 retry_config=retry_config,
             )
-        elif provider == "zai":
+        elif provider_str == "zai":
             self._client = GLMClient(
                 api_key=api_key,
-                api_base=full_api_base,
+                api_base=full_api_base,  # No suffix for Z.AI
                 model=model,
                 retry_config=retry_config,
             )
         else:
-            raise ValueError(f"Unsupported provider: {provider}")
+            raise ValueError(f"Unsupported provider: {provider_str}")
 
-        logger.info("Initialized LLM client with provider: %s, api_base: %s", provider, full_api_base)
+        logger.info("Initialized LLM client with provider: %s, api_base: %s", provider_str, full_api_base)
 
     @property
     def retry_callback(self):
