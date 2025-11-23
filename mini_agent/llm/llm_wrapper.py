@@ -31,7 +31,7 @@ class LLMClient:
     def __init__(
         self,
         api_key: str,
-        provider: str,  # OpenAI SDK format
+        provider: str,  # "openai" or "anthropic" 
         api_base: str = "https://api.minimax.io",
         model: str = "MiniMax-M2",
         retry_config: RetryConfig | None = None,
@@ -55,11 +55,11 @@ class LLMClient:
         api_base = api_base.replace("/anthropic", "")
 
         # Append provider-specific suffix to api_base
-        if provider == LLMProvider.ANTHROPIC:
+        if provider == "anthropic":
             full_api_base = f"{api_base.rstrip('/')}/anthropic"
-        elif provider == "openai":  # OpenAI SDK format
+        elif provider == "openai":
             full_api_base = f"{api_base.rstrip('/')}/v1"
-        elif provider == LLMProvider.ZAI:
+        elif provider == "zai":
             full_api_base = f"{api_base.rstrip('/')}"  # Z.AI doesn't need suffix
         else:
             raise ValueError(f"Unsupported provider: {provider}")
@@ -68,21 +68,21 @@ class LLMClient:
 
         # Instantiate the appropriate client
         self._client: LLMClientBase
-        if provider == LLMProvider.ANTHROPIC:
+        if provider == "anthropic":
             self._client = AnthropicClient(
                 api_key=api_key,
                 api_base=full_api_base,
                 model=model,
                 retry_config=retry_config,
             )
-        elif provider == "openai":  # OpenAI SDK format
+        elif provider == "openai":
             self._client = OpenAIClient(
                 api_key=api_key,
                 api_base=full_api_base,
                 model=model,
                 retry_config=retry_config,
             )
-        elif provider == LLMProvider.ZAI:
+        elif provider == "zai":
             self._client = GLMClient(
                 api_key=api_key,
                 api_base=full_api_base,

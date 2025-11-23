@@ -5,7 +5,7 @@
 # ===== LLM Configuration =====
 # MiniMax API Configuration (Primary - 300 prompts/5hrs)
 api_key: "${MINIMAX_API_KEY}"
-api_base: "https://api.minimax.io/v1"   # OpenAI-compatible API
+api_base: "https://api.minimax.io"   # Base URL (will auto-append /v1 for OpenAI provider)
 model: "MiniMax-M2"
 # AI model: "anthropic" or "openai" 
 # MiniMax uses OpenAI-compatible API for broad compatibility
