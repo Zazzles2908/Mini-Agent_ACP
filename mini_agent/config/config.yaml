@@ -8,8 +8,8 @@ api_key: "${MINIMAX_API_KEY}"
 api_base: "https://api.minimax.io"   # Base URL (will auto-append /v1 for OpenAI provider)
 model: "MiniMax-M2"
 # AI model: "anthropic" or "openai" 
-# MiniMax uses OpenAI-compatible API for broad compatibility
-provider: "openai"  # OpenAI SDK format for MiniMax-M2"
+# Switched to Anthropic protocol for MiniMax-M2
+provider: "anthropic"  # Anthropic SDK format for MiniMax-M2"
 
 # Optional: OpenAI SDK format integration (fallback)
 openai_api_key: "${OPENAI_API_KEY}"
