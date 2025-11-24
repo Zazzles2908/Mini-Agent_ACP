@@ -58,6 +58,26 @@ tools:
     efficiency_mode: true             # Use GLM-4.6 for routine tasks
     mcp_first: true                   # Always use MCP protocol first
   
+  # Memory Enhancement (Phase 1 Upgrade) - OPT-IN
+  # 🚀 Enable intelligent memory features for self-awareness
+  memory:
+    enable_enhanced: false            # Enable enhanced memory features (PHASE 1)
+    project_context: true             # Enable project context awareness
+    pattern_learning: true            # Enable execution pattern learning
+    storage_backend: "sqlite"         # "sqlite" (local) or "supabase" (cloud)
+    
+    # SQLite configuration (local storage)
+    sqlite:
+      db_path: "./workspace/enhanced_memory.db"
+      auto_cleanup: true
+      max_entries: 10000
+    
+    # Supabase configuration (cloud storage - optional)
+    supabase:
+      enabled: false                  # Set to true for cloud storage
+      table_prefix: "mini_agent_memory"
+      # Uses existing Supabase credentials from .env
+  
   # Claude Skills
   enable_skills: true      # Enable Skills
   skills_dir: "./skills"   # Skills directory path

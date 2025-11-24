@@ -281,10 +281,21 @@ def add_workspace_tools(tools: List[Tool], config: Config, workspace_dir: Path):
         )
         print(f"{Colors.GREEN}✅ Loaded file operation tools (workspace: {workspace_dir}){Colors.RESET}")
 
-    # Session note tool - needs workspace to store memory file
+    # Session note tool - enhanced with memory intelligence
     if config.tools.get("enable_note", True):
-        tools.append(SessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json")))
-        print(f"{Colors.GREEN}✅ Loaded session note tool{Colors.RESET}")
+        memory_config = config.get_memory_config()
+        
+        if memory_config["enable_enhanced"]:
+            # Use enhanced session note tool
+            from mini_agent.tools.note_tool import EnhancedSessionNoteTool, EnhancedRecallNoteTool
+            enhanced_note_tool = EnhancedSessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json"))
+            enhanced_recall_tool = EnhancedRecallNoteTool(memory_file=str(workspace_dir / ".agent_memory.json"))
+            tools.extend([enhanced_note_tool, enhanced_recall_tool])
+            print(f"{Colors.GREEN}✅ Loaded enhanced session note tools (memory intelligence enabled){Colors.RESET}")
+        else:
+            # Use original session note tool for backward compatibility
+            tools.append(SessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json")))
+            print(f"{Colors.GREEN}✅ Loaded session note tool{Colors.RESET}")
 
 
 async def run_agent(workspace_dir: Path):

@@ -94,6 +94,11 @@ class Config:
             'MINIMAX_TEMPERATURE': 'temperature',
             'MINIMAX_WORKSPACE_DIR': 'workspace_dir',
             'ZAI_API_KEY': 'zai_api_key',
+            # Memory Enhancement Environment Variables
+            'MINIMAX_MEMORY_ENHANCED': 'memory.enable_enhanced',
+            'MINIMAX_MEMORY_PROJECT_CONTEXT': 'memory.project_context',
+            'MINIMAX_MEMORY_PATTERN_LEARNING': 'memory.pattern_learning',
+            'MINIMAX_MEMORY_STORAGE_BACKEND': 'memory.storage_backend',
         }
         
         for env_key, config_key in env_mappings.items():
@@ -101,7 +106,7 @@ class Config:
                 value = os.environ[env_key]
                 
                 # Type conversion for known types
-                if env_key in ['MINIMAX_DEBUG']:
+                if env_key in ['MINIMAX_DEBUG', 'MINIMAX_MEMORY_ENHANCED', 'MINIMAX_MEMORY_PROJECT_CONTEXT', 'MINIMAX_MEMORY_PATTERN_LEARNING']:
                     value = value.lower() in ('true', '1', 'yes', 'on')
                 elif env_key in ['MINIMAX_MAX_TOKENS', 'MINIMAX_TEMPERATURE']:
                     try:
@@ -111,8 +116,19 @@ class Config:
                         continue
                 
                 # Set in config (environment overrides everything)
-                self._config[config_key] = value
-                logger.debug(f"🔄 Environment override: {config_key} = {value}")
+                if '.' in config_key:
+                    # Handle nested keys like 'memory.enable_enhanced'
+                    keys = config_key.split('.')
+                    config = self._config
+                    for key in keys[:-1]:
+                        if key not in config:
+                            config[key] = {}
+                        config = config[key]
+                    config[keys[-1]] = value
+                    logger.debug(f"🔄 Environment override: {config_key} = {value}")
+                else:
+                    self._config[config_key] = value
+                    logger.debug(f"🔄 Environment override: {config_key} = {value}")
     
     def get(self, key: str, default: Any = None) -> Any:
         """Get configuration value."""
@@ -125,6 +141,29 @@ class Config:
     def __contains__(self, key: str) -> bool:
         """Check if configuration key exists."""
         return key in self._config
+    
+    def get_memory_config(self) -> Dict[str, Any]:
+        """Get memory enhancement configuration.
+        
+        Returns:
+            Dictionary with memory enhancement settings
+        """
+        memory_section = self._config.get('memory', {})
+        return {
+            "enable_enhanced": memory_section.get("enable_enhanced", False),
+            "project_context": memory_section.get("project_context", True),
+            "pattern_learning": memory_section.get("pattern_learning", True),
+            "storage_backend": memory_section.get("storage_backend", "sqlite"),
+            "sqlite_config": memory_section.get("sqlite", {
+                "db_path": "./workspace/enhanced_memory.db",
+                "auto_cleanup": True,
+                "max_entries": 10000
+            }),
+            "supabase_config": memory_section.get("supabase", {
+                "enabled": False,
+                "table_prefix": "mini_agent_memory"
+            })
+        }
     
     @classmethod
     def get_default_config_path(cls) -> Optional[Path]:
