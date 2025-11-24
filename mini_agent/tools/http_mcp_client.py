@@ -121,13 +121,28 @@ class HTTPMCPClientSession:
             await self.session.close()
             self.session = None
     
+    async def _parse_sse_response(self, response) -> List[Dict[str, Any]]:
+        """Parse Server-Sent Events response from Z.AI MCP endpoint."""
+        messages = []
+        async for line in response.content:
+            try:
+                line_str = line.decode('utf-8').strip()
+                if line_str.startswith('data: '):
+                    # Remove 'data: ' prefix and parse JSON
+                    data = json.loads(line_str[6:])
+                    messages.append(data)
+            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                logger.debug(f"Skipping invalid SSE line: {e}")
+                continue
+        return messages
+    
     async def _make_request(
         self,
         method: str,
         endpoint: str,
         data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Make HTTP request with retry logic."""
+        """Make HTTP request with retry logic and SSE support."""
         if not self.session:
             raise RuntimeError("Session not initialized")
             
@@ -137,8 +152,30 @@ class HTTPMCPClientSession:
             try:
                 async with self.session.request(method, url, json=data) as response:
                     if response.status == 200:
-                        result = await response.json()
-                        return result
+                        # Check content type to determine parsing strategy
+                        content_type = response.headers.get('Content-Type', '')
+                        
+                        if 'text/event-stream' in content_type:
+                            # Parse Server-Sent Events
+                            logger.debug(f"Parsing SSE response from {url}")
+                            messages = await self._parse_sse_response(response)
+                            
+                            # Extract actual result from SSE stream
+                            if messages:
+                                # Return the last message which typically contains the result
+                                for msg in reversed(messages):
+                                    if 'result' in msg:
+                                        return msg['result']
+                                    elif 'content' in msg:
+                                        return msg
+                                # Fallback: return last message
+                                return messages[-1]
+                            else:
+                                return {"content": [], "isError": True, "error": "Empty SSE response"}
+                        else:
+                            # Standard JSON response
+                            result = await response.json()
+                            return result
                     else:
                         text = await response.text()
                         logger.warning(f"HTTP {response.status} for {method} {url}: {text}")
