@@ -22,7 +22,7 @@ api_base: "https://api.minimax.io"   # Global users (default)
 model: "MiniMax-M2"
 # LLM provider: "anthropic" or "openai"
 # The LLMClient will automatically append /anthropic or /v1 to api_base based on provider
-provider: "openai"  # FIXED: Changed from "anthropic" to "openai" for MiniMax compatibility
+provider: "anthropic"  # FIXED: Restored working provider for MiniMax-M2
 
 # ===== Retry Configuration =====
 retry:
