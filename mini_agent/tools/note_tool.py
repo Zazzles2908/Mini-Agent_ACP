@@ -26,6 +26,244 @@ except ImportError:
 import logging
 logger = logging.getLogger(__name__)
 
+# SQLite Storage Implementation
+class SQLiteMemoryStorage:
+    """SQLite-based storage for enhanced memory notes."""
+    
+    def __init__(self, db_path: str):
+        """Initialize SQLite storage.
+        
+        Args:
+            db_path: Path to SQLite database file
+        """
+        self.db_path = Path(db_path)
+        self._ensure_db_exists()
+    
+    def _ensure_db_exists(self):
+        """Create database and tables if they don't exist."""
+        # Ensure parent directory exists
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Create database and tables
+        conn = sqlite3.connect(str(self.db_path))
+        try:
+            cursor = conn.cursor()
+            
+            # Create notes table
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS notes (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT NOT NULL,
+                    category TEXT NOT NULL,
+                    note_type TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    classification TEXT,
+                    project_context TEXT,
+                    workspace_hash TEXT,
+                    enhanced BOOLEAN DEFAULT FALSE,
+                    metadata TEXT,
+                    learning_data TEXT
+                )
+            """)
+            
+            # Create indexes for faster queries
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_category ON notes(category)")
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_note_type ON notes(note_type)")
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON notes(timestamp)")
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_enhanced ON notes(enhanced)")
+            
+            conn.commit()
+            logger.info(f"SQLite database initialized at {self.db_path}")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize SQLite database: {e}")
+            raise
+        finally:
+            conn.close()
+    
+    def save_note(self, note: Dict[str, Any]) -> bool:
+        """Save a note to the database.
+        
+        Args:
+            note: Note dictionary with all required fields
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            conn = sqlite3.connect(str(self.db_path))
+            cursor = conn.cursor()
+            
+            # Prepare note data
+            data = (
+                note.get("timestamp"),
+                note.get("category", "general"),
+                note.get("note_type", "general"),
+                note.get("content", ""),
+                json.dumps(note.get("classification", {})),
+                json.dumps(note.get("project_context", None)),
+                note.get("workspace_hash", ""),
+                note.get("enhanced", False),
+                json.dumps(note.get("metadata", {})),
+                json.dumps(note.get("learning_data", {}))
+            )
+            
+            cursor.execute("""
+                INSERT INTO notes (timestamp, category, note_type, content, 
+                                 classification, project_context, workspace_hash,
+                                 enhanced, metadata, learning_data)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, data)
+            
+            conn.commit()
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to save note to SQLite: {e}")
+            return False
+        finally:
+            conn.close()
+    
+    def load_notes(self, limit: int = 50, category: str = None, 
+                  note_type: str = None, enhanced_only: bool = False) -> List[Dict[str, Any]]:
+        """Load notes from database with optional filtering.
+        
+        Args:
+            limit: Maximum number of notes to return
+            category: Optional category filter
+            note_type: Optional note type filter
+            enhanced_only: If True, only return enhanced notes
+            
+        Returns:
+            List of note dictionaries
+        """
+        try:
+            conn = sqlite3.connect(str(self.db_path))
+            conn.row_factory = sqlite3.Row  # Enable column access by name
+            cursor = conn.cursor()
+            
+            # Build query
+            query = "SELECT * FROM notes"
+            params = []
+            conditions = []
+            
+            if category:
+                conditions.append("category = ?")
+                params.append(category)
+            
+            if note_type:
+                conditions.append("note_type = ?")
+                params.append(note_type)
+            
+            if enhanced_only:
+                conditions.append("enhanced = 1")
+            
+            if conditions:
+                query += " WHERE " + " AND ".join(conditions)
+            
+            query += " ORDER BY timestamp DESC LIMIT ?"
+            params.append(limit)
+            
+            cursor.execute(query, params)
+            
+            # Convert to dictionaries
+            notes = []
+            for row in cursor.fetchall():
+                note = dict(row)
+                
+                # Parse JSON fields
+                for json_field in ['classification', 'project_context', 'metadata', 'learning_data']:
+                    if note.get(json_field):
+                        try:
+                            note[json_field] = json.loads(note[json_field])
+                        except (json.JSONDecodeError, TypeError):
+                            note[json_field] = {}
+                
+                notes.append(note)
+            
+            return notes
+            
+        except Exception as e:
+            logger.error(f"Failed to load notes from SQLite: {e}")
+            return []
+        finally:
+            conn.close()
+    
+    def get_note_count(self, enhanced_only: bool = False) -> int:
+        """Get total number of notes.
+        
+        Args:
+            enhanced_only: If True, only count enhanced notes
+            
+        Returns:
+            Number of notes
+        """
+        try:
+            conn = sqlite3.connect(str(self.db_path))
+            cursor = conn.cursor()
+            
+            query = "SELECT COUNT(*) FROM notes"
+            params = []
+            
+            if enhanced_only:
+                query += " WHERE enhanced = 1"
+            
+            cursor.execute(query, params)
+            count = cursor.fetchone()[0]
+            
+            return count
+            
+        except Exception as e:
+            logger.error(f"Failed to get note count from SQLite: {e}")
+            return 0
+        finally:
+            conn.close()
+    
+    def search_notes(self, search_text: str, limit: int = 50) -> List[Dict[str, Any]]:
+        """Search notes by content text.
+        
+        Args:
+            search_text: Text to search for in note content
+            limit: Maximum number of results
+            
+        Returns:
+            List of matching notes
+        """
+        try:
+            conn = sqlite3.connect(str(self.db_path))
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                SELECT * FROM notes 
+                WHERE content LIKE ? 
+                ORDER BY timestamp DESC 
+                LIMIT ?
+            """, (f"%{search_text}%", limit))
+            
+            # Convert to dictionaries
+            notes = []
+            for row in cursor.fetchall():
+                note = dict(row)
+                
+                # Parse JSON fields
+                for json_field in ['classification', 'project_context', 'metadata', 'learning_data']:
+                    if note.get(json_field):
+                        try:
+                            note[json_field] = json.loads(note[json_field])
+                        except (json.JSONDecodeError, TypeError):
+                            note[json_field] = {}
+                
+                notes.append(note)
+            
+            return notes
+            
+        except Exception as e:
+            logger.error(f"Failed to search notes in SQLite: {e}")
+            return []
+        finally:
+            conn.close()
+
 
 class EnhancedSessionNoteTool(Tool):
     """Enhanced session note tool with intelligent memory features.
@@ -48,26 +286,41 @@ class EnhancedSessionNoteTool(Tool):
     - recall_notes() -> retrieves intelligently categorized notes
     """
 
-    def __init__(self, memory_file: str = "./workspace/.agent_memory.json"):
+    def __init__(self, memory_file: str = None):
         """Initialize enhanced session note tool.
 
         Args:
-            memory_file: Path to the note storage file
+            memory_file: Path to the note storage file (optional, uses config if not provided)
         """
-        self.memory_file = Path(memory_file)
-        self.workspace_dir = Path(memory_file).parent
-        
-        # Initialize configuration
+        # Initialize configuration first
         self.config = get_config() if CONFIG_AVAILABLE else None
         self.memory_config = self.config.get_memory_config() if self.config else {}
-        
-        # Initialize enhanced features if enabled (MUST BE BEFORE project detection)
         self.enhanced_enabled = self.memory_config.get("enable_enhanced", False)
+        
+        # Determine storage configuration
+        storage_backend = self.memory_config.get("storage_backend", "sqlite")
+        
+        if storage_backend == "sqlite" and self.enhanced_enabled:
+            # Use SQLite storage
+            sqlite_config = self.memory_config.get("sqlite", {})
+            self.db_path = Path(sqlite_config.get("db_path", "./workspace/enhanced_memory.db"))
+            self.workspace_dir = self.db_path.parent
+            self.storage = SQLiteMemoryStorage(str(self.db_path))
+            self.use_sqlite = True
+            self.memory_file = None  # Not used when using SQLite
+        else:
+            # Fallback to JSON file storage
+            if memory_file is None:
+                memory_file = "./workspace/.agent_memory.json"
+            self.memory_file = Path(memory_file)
+            self.workspace_dir = self.memory_file.parent
+            self.use_sqlite = False
+            self.db_path = None  # Not used when using JSON
         
         # Initialize project context detection
         self.current_project = self._detect_project_context()
         
-        # Lazy loading: file and directory are only created when first note is recorded
+        # Lazy loading: storage only created when first note is recorded
     
     def _detect_project_context(self) -> Optional[Dict[str, Any]]:
         """Detect project context from workspace files.
@@ -277,27 +530,39 @@ class EnhancedSessionNoteTool(Tool):
             "required": ["content"],
         }
 
-    def _load_from_file(self) -> list:
-        """Load notes from file.
+    def _load_notes(self) -> list:
+        """Load notes from appropriate storage backend.
         
-        Returns empty list if file doesn't exist (lazy loading).
+        Returns empty list if no notes exist (lazy loading).
         """
-        if not self.memory_file.exists():
-            return []
-        
-        try:
-            return json.loads(self.memory_file.read_text())
-        except Exception:
-            return []
+        if self.use_sqlite:
+            # Load from SQLite
+            return self.storage.load_notes(limit=1000)  # Load all for compatibility
+        else:
+            # Load from JSON file (fallback)
+            if self.memory_file is None or not self.memory_file.exists():
+                return []
+            
+            try:
+                return json.loads(self.memory_file.read_text())
+            except Exception:
+                return []
 
-    def _save_to_file(self, notes: list):
-        """Save notes to file.
+    def _save_notes(self, notes: list):
+        """Save notes to appropriate storage backend.
         
-        Creates parent directory and file if they don't exist (lazy initialization).
+        Creates parent directory and storage if they don't exist (lazy initialization).
         """
-        # Ensure parent directory exists when actually saving
-        self.memory_file.parent.mkdir(parents=True, exist_ok=True)
-        self.memory_file.write_text(json.dumps(notes, indent=2, ensure_ascii=False))
+        if self.use_sqlite:
+            # For SQLite, save each note individually
+            # Clear existing notes and re-save all (for compatibility)
+            # In production, this would be optimized to only save new notes
+            pass  # SQLite already handles individual note saving
+        else:
+            # Save to JSON file (fallback)
+            # Ensure parent directory exists when actually saving
+            self.memory_file.parent.mkdir(parents=True, exist_ok=True)
+            self.memory_file.write_text(json.dumps(notes, indent=2, ensure_ascii=False))
 
     async def execute(self, content: str, category: str = "general", note_type: str = "general") -> ToolResult:
         """Record an enhanced session note with intelligent categorization.
@@ -311,9 +576,6 @@ class EnhancedSessionNoteTool(Tool):
             ToolResult with success status and enhanced information
         """
         try:
-            # Load existing notes
-            notes = self._load_from_file()
-
             # Enhanced classification if enabled
             classification = self._classify_note_content(content, category)
             
@@ -342,10 +604,17 @@ class EnhancedSessionNoteTool(Tool):
                     "linked_project": self.current_project is not None
                 }
 
-            notes.append(note)
-
-            # Save back to file
-            self._save_to_file(notes)
+            # Save note using appropriate storage backend
+            if self.use_sqlite:
+                # Save to SQLite database
+                success = self.storage.save_note(note)
+                if not success:
+                    raise Exception("Failed to save note to SQLite database")
+            else:
+                # Save to JSON file (fallback)
+                notes = self._load_notes()
+                notes.append(note)
+                self._save_notes(notes)
 
             # Build response message
             response_parts = [f"Recorded note: {content}"]
@@ -383,20 +652,36 @@ class EnhancedSessionNoteTool(Tool):
 class EnhancedRecallNoteTool(Tool):
     """Enhanced tool for recalling recorded session notes with intelligent filtering."""
 
-    def __init__(self, memory_file: str = "./workspace/.agent_memory.json"):
+    def __init__(self, memory_file: str = None):
         """Initialize enhanced recall note tool.
 
         Args:
-            memory_file: Path to the note storage file
+            memory_file: Path to the note storage file (optional, uses config if not provided)
         """
-        self.memory_file = Path(memory_file)
-        
-        # Initialize configuration
+        # Initialize configuration first
         self.config = get_config() if CONFIG_AVAILABLE else None
         self.memory_config = self.config.get_memory_config() if self.config else {}
-        
-        # Initialize enhanced features if enabled (MUST BE BEFORE using in description)
         self.enhanced_enabled = self.memory_config.get("enable_enhanced", False)
+        
+        # Determine storage configuration (must match EnhancedSessionNoteTool)
+        storage_backend = self.memory_config.get("storage_backend", "sqlite")
+        
+        if storage_backend == "sqlite" and self.enhanced_enabled:
+            # Use SQLite storage (must match session tool)
+            sqlite_config = self.memory_config.get("sqlite", {})
+            self.db_path = Path(sqlite_config.get("db_path", "./workspace/enhanced_memory.db"))
+            self.workspace_dir = self.db_path.parent
+            self.storage = SQLiteMemoryStorage(str(self.db_path))
+            self.use_sqlite = True
+            self.memory_file = None  # Not used when using SQLite
+        else:
+            # Fallback to JSON file storage
+            if memory_file is None:
+                memory_file = "./workspace/.agent_memory.json"
+            self.memory_file = Path(memory_file)
+            self.workspace_dir = self.memory_file.parent
+            self.use_sqlite = False
+            self.db_path = None  # Not used when using JSON
 
     @property
     def name(self) -> str:
@@ -478,19 +763,31 @@ class EnhancedRecallNoteTool(Tool):
             ToolResult with enhanced notes content
         """
         try:
-            if not self.memory_file.exists():
-                return ToolResult(
-                    success=True,
-                    content="No notes recorded yet.",
-                )
+            # Load notes from appropriate storage backend
+            if self.use_sqlite:
+                # Load from SQLite
+                if search_text:
+                    # Use SQLite search
+                    notes = self.storage.search_notes(search_text, limit=limit)
+                else:
+                    # Use SQLite load with filtering
+                    notes = self.storage.load_notes(limit=limit, category=category, 
+                                                   note_type=note_type, enhanced_only=False)
+            else:
+                # Load from JSON file (fallback)
+                if not self.memory_file.exists():
+                    return ToolResult(
+                        success=True,
+                        content="No notes recorded yet.",
+                    )
 
-            notes = json.loads(self.memory_file.read_text())
+                notes = json.loads(self.memory_file.read_text())
 
-            if not notes:
-                return ToolResult(
-                    success=True,
-                    content="No notes recorded yet.",
-                )
+                if not notes:
+                    return ToolResult(
+                        success=True,
+                        content="No notes recorded yet.",
+                    )
 
             # Enhanced filtering if enabled
             if self.enhanced_enabled:
@@ -500,8 +797,8 @@ class EnhancedRecallNoteTool(Tool):
                     notes = [n for n in notes if n.get("workspace_hash") == current_workspace_hash or 
                             n.get("project_context") is not None]
                 
-                # Text search
-                if search_text:
+                # Text search (additional filter if not using SQLite search)
+                if search_text and not self.use_sqlite:
                     search_lower = search_text.lower()
                     notes = [n for n in notes if search_lower in n.get("content", "").lower()]
                 
@@ -604,7 +901,7 @@ class EnhancedRecallNoteTool(Tool):
             import hashlib
             
             workspace_fingerprint = []
-            workspace_dir = self.memory_file.parent
+            workspace_dir = self.workspace_dir
             
             if workspace_dir.exists():
                 for file_path in workspace_dir.rglob("*"):

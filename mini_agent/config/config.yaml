@@ -66,29 +66,11 @@ memory:
   pattern_learning: true            # Enable execution pattern learning
   storage_backend: "sqlite"         # "sqlite" (local) or "supabase" (cloud)
   
-  # SQLite configuration (local storage)
-  sqlite:
-    db_path: "./workspace/enhanced_memory.db"
-    auto_cleanup: true
-    max_entries: 10000
-  
-  # SQLite configuration (local storage)
-  sqlite:
-    db_path: "./workspace/enhanced_memory.db"
-    auto_cleanup: true
-    max_entries: 10000
-  
-  # Supabase configuration (cloud storage - optional)
-  supabase:
-    enabled: false                  # Set to true for cloud storage
-    table_prefix: "mini_agent_memory"
-    # Uses existing Supabase credentials from .env
-  
-  # Claude Skills
-  enable_skills: true      # Enable Skills
+  # Skills Framework
+  enable_skills: true      # Enable Skills system
   skills_dir: "./skills"   # Skills directory path
   
   # MCP Tools
   enable_mcp: true         # Enable MCP tools
-  mcp_config_path: ".mcp.json"  # MCP configuration file (same config directory)
+  mcp_config_path: ".mcp.json"  # MCP configuration file (root directory)
                            # Note: API Keys for MCP tools are configured in mcp.json
