@@ -1,14 +1,18 @@
-"""MCP tool loader with real MCP client integration."""
+"""MCP tool loader with real MCP client integration for both local and remote servers."""
 
 import json
+import logging
 from contextlib import AsyncExitStack
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from .base import Tool, ToolResult
+from .http_mcp_client import HTTPMCPClient
+
+logger = logging.getLogger(__name__)
 
 
 class MCPTool(Tool):
@@ -157,8 +161,8 @@ async def load_mcp_tools_async(config_path: str = "mcp.json") -> list[Tool]:
 
     This function:
     1. Reads the MCP config file
-    2. Starts MCP server processes
-    3. Connects to each server
+    2. Identifies server type (local vs remote)
+    3. Connects to each server using appropriate client
     4. Fetches tool definitions
     5. Wraps them as Tool objects
 
@@ -194,20 +198,44 @@ async def load_mcp_tools_async(config_path: str = "mcp.json") -> list[Tool]:
                 print(f"Skipping disabled server: {server_name}")
                 continue
 
-            command = server_config.get("command")
-            args = server_config.get("args", [])
-            env = server_config.get("env", {})
+            try:
+                # Determine if this is a remote server
+                if server_config.get("command") == "remote" and server_config.get("url"):
+                    # Remote server configuration
+                    print(f"Connecting to remote MCP server: {server_name}")
+                    http_client = HTTPMCPClient({
+                        "name": server_name,
+                        "url": server_config.get("url"),
+                        "headers": server_config.get("headers", {}),
+                        "timeout": server_config.get("timeout", 30),
+                        "retry": server_config.get("retry", {"max_retries": 3, "initial_delay": 1.0})
+                    })
+                    
+                    tools = await http_client.connect()
+                    all_tools.extend(tools)
+                    
+                else:
+                    # Local server configuration (stdio-based)
+                    command = server_config.get("command")
+                    args = server_config.get("args", [])
+                    env = server_config.get("env", {})
 
-            if not command:
-                print(f"No command specified for server: {server_name}")
+                    if not command:
+                        print(f"No command specified for server: {server_name}")
+                        continue
+
+                    print(f"Starting local MCP server: {server_name}")
+                    connection = MCPServerConnection(server_name, command, args, env)
+                    success = await connection.connect()
+
+                    if success:
+                        _mcp_connections.append(connection)
+                        all_tools.extend(connection.tools)
+
+            except Exception as e:
+                logger.error(f"Failed to connect to MCP server '{server_name}': {e}")
+                print(f"✗ Failed to connect to MCP server '{server_name}': {e}")
                 continue
-
-            connection = MCPServerConnection(server_name, command, args, env)
-            success = await connection.connect()
-
-            if success:
-                _mcp_connections.append(connection)
-                all_tools.extend(connection.tools)
 
         print(f"\nTotal MCP tools loaded: {len(all_tools)}")
 

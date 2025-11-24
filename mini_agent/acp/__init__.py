@@ -36,7 +36,7 @@ from mini_agent.cli import add_workspace_tools, initialize_base_tools
 from mini_agent.config import Config
 from mini_agent.llm import LLMClient
 from mini_agent.retry import RetryConfig as RetryConfigBase
-from mini_agent.schema import Message
+from ..schema import Message
 
 logger = logging.getLogger(__name__)
 

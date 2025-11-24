@@ -1,247 +1,59 @@
-"""Configuration management module
-
-Provides unified configuration loading and management functionality
-"""
-
+"""Configuration management for Mini-Agent"""
 import os
+from dataclasses import dataclass, field
+from typing import Optional
 from pathlib import Path
 
-import yaml
-from pydantic import BaseModel, Field
 
-# Load .env file if it exists
-def load_env_file():
-    """Load environment variables from .env file if it exists."""
-    env_path = Path.cwd() / ".env"
-    if env_path.exists():
-        with open(env_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    key, value = line.split("=", 1)
-                    os.environ[key.strip()] = value.strip()
-
-# Load .env file on module import
-load_env_file()
-
-
-class RetryConfig(BaseModel):
-    """Retry configuration"""
-
-    enabled: bool = True
-    max_retries: int = 3
-    initial_delay: float = 1.0
-    max_delay: float = 60.0
-    exponential_base: float = 2.0
-
-
-class LLMConfig(BaseModel):
+@dataclass
+class LLMConfig:
     """LLM configuration"""
+    api_key: Optional[str] = None
+    api_base: str = "https://api.minimax.io/v1/chat/completions"
+    model: str = "MiniMax-M2"
+    provider: str = "anthropic"
+    max_tokens: int = 4000
+    temperature: float = 0.7
 
-    api_key: str
-    api_base: str = "https://api.minimax.io"
-    model: str = "MiniMax-M2"  # Primary: MiniMax-M2 for reasoning (300 prompts/5hrs)
-    provider: str = "openai"   # Primary: OpenAI-compatible API for MiniMax
-    retry: RetryConfig = Field(default_factory=RetryConfig)
 
-
-class AgentConfig(BaseModel):
+@dataclass 
+class AgentConfig:
     """Agent configuration"""
-
-    max_steps: int = 50
-    workspace_dir: str = "./workspace"
-    system_prompt_path: str = "system_prompt.md"
+    max_steps: int = 10
+    system_prompt: str = "You are a helpful AI assistant."
 
 
-class ToolsConfig(BaseModel):
-    """Tools configuration"""
-
-    # Basic tools (file operations, bash)
-    enable_file_tools: bool = True
-    enable_bash: bool = True
-    enable_note: bool = True
-
-    # Z.AI tools - CRITICAL: Must respect config for credit protection
-    enable_zai_search: bool = False
-    enable_zai_llm: bool = False
-    zai_settings: dict = Field(default_factory=dict)
-
-    # Skills
-    enable_skills: bool = True
-    skills_dir: str = "./skills"
-
-    # MCP tools
-    enable_mcp: bool = True
-    mcp_config_path: str = "mcp.json"
-
-
-class Config(BaseModel):
+@dataclass
+class Config:
     """Main configuration class"""
-
-    llm: LLMConfig
-    agent: AgentConfig
-    tools: ToolsConfig
+    llm: LLMConfig = field(default_factory=LLMConfig)
+    agent: AgentConfig = field(default_factory=AgentConfig)
 
     @classmethod
     def load(cls) -> "Config":
-        """Load configuration from the default search path."""
-        config_path = cls.get_default_config_path()
-        if not config_path.exists():
-            raise FileNotFoundError(
-                "Configuration file not found. Run scripts/setup-config.sh or place config.yaml in mini_agent/config/."
-            )
-        return cls.from_yaml(config_path)
-
-    @classmethod
-    def from_yaml(cls, config_path: str | Path) -> "Config":
-        """Load configuration from YAML file
-
-        Args:
-            config_path: Configuration file path
-
-        Returns:
-            Config instance
-
-        Raises:
-            FileNotFoundError: Configuration file does not exist
-            ValueError: Invalid configuration format or missing required fields
-        """
-        config_path = Path(config_path)
-
-        if not config_path.exists():
-            raise FileNotFoundError(f"Configuration file does not exist: {config_path}")
-
-        with open(config_path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-
-        if not data:
-            raise ValueError("Configuration file is empty")
-
-        # Handle environment variable substitution
-        def expand_env_vars(obj):
-            """Recursively expand environment variables in config values."""
-            if isinstance(obj, dict):
-                return {key: expand_env_vars(value) for key, value in obj.items()}
-            elif isinstance(obj, list):
-                return [expand_env_vars(item) for item in obj]
-            elif isinstance(obj, str):
-                # Handle environment variable substitution like ${VAR_NAME}
-                import re
-                def replacer(match):
-                    var_name = match.group(1)
-                    return os.getenv(var_name, match.group(0))  # Return original if env var not found
-                return re.sub(r'\$\{([^}]+)\}', replacer, obj)
-            else:
-                return obj
-
-        data = expand_env_vars(data)
-
-        # Parse LLM configuration
-        if "api_key" not in data:
-            raise ValueError("Configuration file missing required field: api_key")
-
-        if not data["api_key"] or data["api_key"] == "YOUR_API_KEY_HERE":
-            raise ValueError("Please configure a valid API Key")
-
-        # Parse retry configuration
-        retry_data = data.get("retry", {})
-        retry_config = RetryConfig(
-            enabled=retry_data.get("enabled", True),
-            max_retries=retry_data.get("max_retries", 3),
-            initial_delay=retry_data.get("initial_delay", 1.0),
-            max_delay=retry_data.get("max_delay", 60.0),
-            exponential_base=retry_data.get("exponential_base", 2.0),
-        )
-
-        llm_config = LLMConfig(
-            api_key=data["api_key"],
-            api_base=data.get("api_base", "https://api.minimax.io"),
-            model=data.get("model", "MiniMax-M2"),
-            provider=data.get("provider", "openai"),  # Using OpenAI protocol for MiniMax
-            retry=retry_config,
-        )
-
-        # Parse Agent configuration
-        agent_config = AgentConfig(
-            max_steps=data.get("max_steps", 50),
-            workspace_dir=data.get("workspace_dir", "./workspace"),
-            system_prompt_path=data.get("system_prompt_path", "system_prompt.md"),
-        )
-
-        # Parse tools configuration
-        tools_data = data.get("tools", {})
-        tools_config = ToolsConfig(
-            enable_file_tools=tools_data.get("enable_file_tools", True),
-            enable_bash=tools_data.get("enable_bash", True),
-            enable_note=tools_data.get("enable_note", True),
-            # CRITICAL: Z.AI tools must be explicitly disabled for credit protection
-            enable_zai_search=tools_data.get("enable_zai_search", False),
-            enable_zai_llm=tools_data.get("enable_zai_llm", False),
-            zai_settings=tools_data.get("zai_settings", {}),
-            enable_skills=tools_data.get("enable_skills", True),
-            skills_dir=tools_data.get("skills_dir", "./skills"),
-            enable_mcp=tools_data.get("enable_mcp", True),
-            mcp_config_path=tools_data.get("mcp_config_path", "mcp.json"),
-        )
-
-        return cls(
-            llm=llm_config,
-            agent=agent_config,
-            tools=tools_config,
-        )
-
-    @staticmethod
-    def get_package_dir() -> Path:
-        """Get the package installation directory
-
-        Returns:
-            Path to the mini_agent package directory
-        """
-        # Get the directory where this config.py file is located
-        return Path(__file__).parent
-
-    @classmethod
-    def find_config_file(cls, filename: str) -> Path | None:
-        """Find configuration file with priority order
-
-        Search for config file in the following order of priority:
-        1) mini_agent/config/{filename} in current directory (development mode)
-        2) ~/.mini-agent/config/{filename} in user home directory
-        3) {package}/mini_agent/config/{filename} in package installation directory
-
-        Args:
-            filename: Configuration file name (e.g., "config.yaml", "mcp.json", "system_prompt.md")
-
-        Returns:
-            Path to found config file, or None if not found
-        """
-        # Priority 1: Development mode - current directory's config/ subdirectory
-        dev_config = Path.cwd() / "mini_agent" / "config" / filename
-        if dev_config.exists():
-            return dev_config
-
-        # Priority 2: User config directory
-        user_config = Path.home() / ".mini-agent" / "config" / filename
-        if user_config.exists():
-            return user_config
-
-        # Priority 3: Package installation directory's config/ subdirectory
-        package_config = cls.get_package_dir() / "config" / filename
-        if package_config.exists():
-            return package_config
-
-        return None
-
-    @classmethod
-    def get_default_config_path(cls) -> Path:
-        """Get the default config file path with priority search
-
-        Returns:
-            Path to config.yaml (prioritizes: dev config/ > user config/ > package config/)
-        """
-        config_path = cls.find_config_file("config.yaml")
-        if config_path:
-            return config_path
-
-        # Fallback to package config directory for error message purposes
-        return cls.get_package_dir() / "config" / "config.yaml"
+        """Load configuration from environment and files"""
+        config = cls()
+        
+        # Load from environment variables
+        config.llm.api_key = os.getenv("MINIMAX_API_KEY") or os.getenv("ZAI_API_KEY")
+        config.llm.api_base = os.getenv("API_BASE", "https://api.minimax.io")
+        config.llm.model = os.getenv("MODEL", "MiniMax-M2")
+        config.llm.provider = os.getenv("PROVIDER", "anthropic")
+        
+        # Also load from .env file if it exists
+        env_file = Path.cwd() / ".env"
+        if env_file.exists():
+            with open(env_file) as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        key, value = line.split("=", 1)
+                        os.environ[key.strip()] = value.strip()
+        
+        # Update config from environment
+        config.llm.api_key = os.getenv("MINIMAX_API_KEY") or os.getenv("ZAI_API_KEY")
+        config.llm.api_base = os.getenv("API_BASE", "https://api.minimax.io")
+        config.llm.model = os.getenv("MODEL", "MiniMax-M2")
+        config.llm.provider = os.getenv("PROVIDER", "anthropic")
+        
+        return config

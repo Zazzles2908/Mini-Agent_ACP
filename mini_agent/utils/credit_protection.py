@@ -56,12 +56,18 @@ def get_config_zai_enabled() -> bool:
             print("⚠️  No config file found - Z.AI protection active (safe default)")
             return False
             
-        # Check Z.AI configuration
+        # Check Z.AI configuration (updated for unified approach)
         tools_data = config_data.get('tools', {})
+        
+        # Check new unified Z.AI config
+        zai_web_enabled = tools_data.get('enable_zai_web_tools', False)
+        
+        # Check legacy config keys for backward compatibility
         search_enabled = tools_data.get('enable_zai_search', False)
         llm_enabled = tools_data.get('enable_zai_llm', False)
         
-        zai_enabled = search_enabled or llm_enabled
+        # Enable if any Z.AI functionality is requested
+        zai_enabled = zai_web_enabled or search_enabled or llm_enabled
         
         if zai_enabled:
             print(f"✅ Z.AI enabled in config ({config_path_used}) - Credits will be consumed")

@@ -15,6 +15,7 @@
 
 ### 💻 **Development & Usage**
 - **[05_DEVELOPMENT/](./05_DEVELOPMENT/)** - Development guides, usage strategies, organization reference
+- **[05_DEVELOPMENT/DOCUMENT_HYGIENE_VIOLATION_RESOLVED.md](./05_DEVELOPMENT/DOCUMENT_HYGIENE_VIOLATION_RESOLVED.md)** - Document organization fixes
 
 ### 🔍 **Testing & Quality Assurance**
 - **[06_TESTING_QA/](./06_TESTING_QA/)** - Code audits, testing procedures, quality assurance
@@ -24,16 +25,32 @@
 
 ### 🛠️ **Tools & Integration**
 - **[08_TOOLS_INTEGRATION/](./08_TOOLS_INTEGRATION/)** - Visualization tools, coding plan, system architecture
+- **[08_TOOLS_INTEGRATION/MCP_SERVERS_FINAL_REPORT.md](./08_TOOLS_INTEGRATION/MCP_SERVERS_FINAL_REPORT.md)** - MCP servers implementation report
+- **[08_TOOLS_INTEGRATION/MINIMAX_CODING_PLAN_IMPLEMENTATION_GUIDE.md](./08_TOOLS_INTEGRATION/MINIMAX_CODING_PLAN_IMPLEMENTATION_GUIDE.md)** - Coding plan MCP server guide
+- **[08_TOOLS_INTEGRATION/MCP_CONNECTION_ISSUES_RESOLUTION.md](./08_TOOLS_INTEGRATION/MCP_CONNECTION_ISSUES_RESOLUTION.md)** - MCP connection fixes
+
+### 🌐 **Web Functionality**
+- **[14_WEB/](./14_WEB/)** - Complete web capabilities: MCP servers, native tools, Z.AI integration, credit protection
 
 ### 🚢 **Production & Deployment**
 - **[09_PRODUCTION/](./09_PRODUCTION/)** - Cleanup plans, optimization, deployment guides
+- **[09_PRODUCTION/PRODUCTION_TRANSFORMATION_COMPLETE.md](./09_PRODUCTION/PRODUCTION_TRANSFORMATION_COMPLETE.md)** - Complete transformation summary
+- **[09_PRODUCTION/PRODUCTION_TRANSFORMATION_PLAN.md](./09_PRODUCTION/PRODUCTION_TRANSFORMATION_PLAN.md)** - Transformation plan and strategy
+- **[09_PRODUCTION/PRODUCTION_DEPLOYMENT_GUIDE.md](./09_PRODUCTION/PRODUCTION_DEPLOYMENT_GUIDE.md)** - Complete deployment guide (Docker, K8s, Cloud)
 
 ### 📦 **Archives & Backups**
 - **[10_ARCHIVE/](./10_ARCHIVE/)** - Historical files, backups, old versions
+- **[10_ARCHIVE/PROJECT_CLEANUP_SUMMARY.md](./10_ARCHIVE/PROJECT_CLEANUP_SUMMARY.md)** - Project cleanup and organization summary
 - **[/_DEPRECATED/](../_DEPRECATED/)** - Deprecated ZAI documentation (kept for reference)
 
 ### 🎨 **Visual Resources**
 - **[VISUALS/](./VISUALS/)** - Generated diagrams, charts, visual documentation
+
+### 🚀 **Additional Upgrades**
+- **[13_ADDITIONAL_UPGRADES/](./13_ADDITIONAL_UPGRADES/)** - Strategic upgrade plans and future enhancements
+- **[13_ADDITIONAL_UPGRADES/PHASE_1_WEB_SEARCH/](./13_ADDITIONAL_UPGRADES/PHASE_1_WEB_SEARCH/)** - Web search architecture optimization
+- **[13_ADDITIONAL_UPGRADES/PHASE_2_SUPABASE/](./13_ADDITIONAL_UPGRADES/PHASE_2_SUPABASE/)** - Supabase database integration for long-term memory
+- **[13_ADDITIONAL_UPGRADES/PHASE_3_OBSERVABILITY_ACP/](./13_ADDITIONAL_UPGRADES/PHASE_3_OBSERVABILITY_ACP/)** - Langfuse observability and ACP editor integration
 
 ---
 
@@ -51,10 +68,12 @@
 | **08_TOOLS_INTEGRATION** | 3 | Tool integration & visualization |
 | **09_PRODUCTION** | 15 | Production deployment & optimization |
 | **10_ARCHIVE** | 25+ | Historical & backup files |
+| **14_WEB** | 3 | Web functionality: MCP servers, tools, Z.AI integration |
+| **13_ADDITIONAL_UPGRADES** | 4 | Strategic upgrade plans (3 phases) |
 | **_DEPRECATED** | 15 | Legacy ZAI documentation |
 | **VISUALS** | 2 | Generated visual artifacts |
 
-**Total: 100+ files organized into 11 logical categories**
+**Total: 144+ files organized into 12 logical categories (cleaned and organized)**
 
 ---
 
@@ -84,6 +103,12 @@
 1. **[07_RESEARCH_ANALYSIS/](./07_RESEARCH_ANALYSIS/)** - Research reports
 2. **[02_SYSTEM_CORE/](./02_SYSTEM_CORE/)** - System analysis
 3. **[08_TOOLS_INTEGRATION/](./08_TOOLS_INTEGRATION/)** - Integration research
+
+### **For Future Upgrades**
+1. **[13_ADDITIONAL_UPGRADES/](./13_ADDITIONAL_UPGRADES/)** - Complete upgrade roadmap
+2. **[13_ADDITIONAL_UPGRADES/PHASE_1_WEB_SEARCH/](./13_ADDITIONAL_UPGRADES/PHASE_1_WEB_SEARCH/)** - Web search optimization (Ready)
+3. **[13_ADDITIONAL_UPGRADES/PHASE_2_SUPABASE/](./13_ADDITIONAL_UPGRADES/PHASE_2_SUPABASE/)** - Database integration (Ready)
+4. **[13_ADDITIONAL_UPGRADES/PHASE_3_OBSERVABILITY_ACP/](./13_ADDITIONAL_UPGRADES/PHASE_3_OBSERVABILITY_ACP/)** - Observability & ACP (Paused)
 
 ---
 

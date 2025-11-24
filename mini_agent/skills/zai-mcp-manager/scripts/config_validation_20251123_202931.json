@@ -1,0 +1,90 @@
+{
+  "is_valid": false,
+  "overall_score": 0,
+  "total_issues": 8,
+  "issues_by_level": {
+    "pass": 0,
+    "warning": 4,
+    "fail": 4,
+    "error": 0
+  },
+  "issues": [
+    {
+      "category": "files",
+      "item": ".env",
+      "level": "fail",
+      "message": "Required file missing: .env",
+      "recommendation": "Create .env with proper configuration",
+      "fix_available": true
+    },
+    {
+      "category": "files",
+      "item": ".mcp.json",
+      "level": "fail",
+      "message": "Required file missing: .mcp.json",
+      "recommendation": "Create .mcp.json with proper configuration",
+      "fix_available": true
+    },
+    {
+      "category": "files",
+      "item": "mini_agent/config/.mcp.json",
+      "level": "warning",
+      "message": "Recommended file missing: mini_agent/config/.mcp.json",
+      "recommendation": "Consider adding mini_agent/config/.mcp.json for better organization",
+      "fix_available": true
+    },
+    {
+      "category": "files",
+      "item": "mini_agent/config/z_mcp_servers.json",
+      "level": "warning",
+      "message": "Recommended file missing: mini_agent/config/z_mcp_servers.json",
+      "recommendation": "Consider adding mini_agent/config/z_mcp_servers.json for better organization",
+      "fix_available": true
+    },
+    {
+      "category": "environment",
+      "item": "ZAI_API_KEY",
+      "level": "warning",
+      "message": "ZAI_API_KEY seems shorter than expected",
+      "recommendation": "Verify your Z.AI API key is complete",
+      "fix_available": true
+    },
+    {
+      "category": "connectivity",
+      "item": "search_endpoint",
+      "level": "fail",
+      "message": "HTTP 400: Unexpected response",
+      "recommendation": "Check Z.AI service status and documentation",
+      "fix_available": false
+    },
+    {
+      "category": "connectivity",
+      "item": "reader_endpoint",
+      "level": "fail",
+      "message": "HTTP 400: Unexpected response",
+      "recommendation": "Check Z.AI service status and documentation",
+      "fix_available": false
+    },
+    {
+      "category": "security",
+      "item": ".gitignore",
+      "level": "warning",
+      "message": ".gitignore file missing",
+      "recommendation": "Create .gitignore file and add sensitive files",
+      "fix_available": true
+    }
+  ],
+  "recommendations": [
+    "\u26a0\ufe0f **Configuration Issues:** Review failed validations",
+    "- Create .env with proper configuration",
+    "- Create .mcp.json with proper configuration",
+    "- Check Z.AI service status and documentation",
+    "- Check Z.AI service status and documentation",
+    "\ud83d\udca1 **Best Practice Recommendations:**",
+    "- Consider adding mini_agent/config/.mcp.json for better organization",
+    "- Consider adding mini_agent/config/z_mcp_servers.json for better organization",
+    "- Verify your Z.AI API key is complete",
+    "- Create .gitignore file and add sensitive files"
+  ],
+  "timestamp": "2025-11-23T20:29:31.245098"
+}
