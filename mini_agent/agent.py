@@ -531,52 +531,49 @@ Requirements:
                 # Validate task completion before declaring it done
                 validation_result = await self._validate_task_completion(response)
                 
-                # Handle both dict and string results from validation
+                # Handle validation results
                 if validation_result:
-                    # Check if validation_result is a dict (expected format)
                     if isinstance(validation_result, dict):
                         honesty_score = validation_result.get('honesty_score', 0)
                         feedback = validation_result.get('feedback', '')
+                        
+                        if honesty_score >= 80:
+                            # High honesty score - genuine completion
+                            print(f"\n{Colors.BRIGHT_GREEN}[SUCCESS] TASK VALIDATION PASSED{Colors.RESET}")
+                            if feedback:
+                                print(f"{Colors.DIM}[FEEDBACK] {feedback}{Colors.RESET}")
+                            return response.content
+                        else:
+                            # Low honesty score - needs improvement
+                            print(f"\n{Colors.BRIGHT_YELLOW}[QUALITY] QUALITY ASSESSMENT REQUIRED{Colors.RESET}")
+                            print(f"{Colors.DIM}[SCORE] Honesty Score: {honesty_score}/100{Colors.RESET}")
+                            
+                            if validation_result.get('feedback'):
+                                print(f"\n{Colors.DIM}[TOOL] Feedback:{Colors.RESET}")
+                                feedback_text = validation_result['feedback']
+                                if isinstance(feedback_text, str):
+                                    for issue in feedback_text.split('\n'):
+                                        if issue.strip():
+                                            print(f"   {Colors.DIM}{ICON_INFO} {issue}{Colors.RESET}")
+                                else:
+                                    print(f"   {Colors.DIM}{ICON_INFO} {feedback_text}{Colors.RESET}")
+                            
+                            if validation_result.get('deception_patterns'):
+                                print(f"\n{Colors.BRIGHT_RED}[ISSUE]  DETECTED ISSUES:{Colors.RESET}")
+                                deception_patterns = validation_result['deception_patterns']
+                                if isinstance(deception_patterns, list):
+                                    for pattern in deception_patterns:
+                                        if pattern:
+                                            print(f"   {Colors.BRIGHT_RED}{ICON_ERROR} {pattern}{Colors.RESET}")
+                            
+                            # Continue iteration to address issues
+                            assistant_msg.content += f"\n\n**Quality Assessment**: {validation_result.get('feedback', 'Please review your work and ensure all requirements are fully met.')}"
+                            self.messages[-1] = assistant_msg
+                            continue
                     else:
-                        # Handle case where validation_result is a string
-                        print(f"{Colors.DIM}[DEBUG] Validation returned string, treating as passed{Colors.RESET}")
-                        honesty_score = 100  # Default to high score for string results
-                        feedback = validation_result if isinstance(validation_result, str) else ''
-                    
-                    if honesty_score >= 80:
-                        # High honesty score - genuine completion
-                        print(f"\n{Colors.BRIGHT_GREEN}[SUCCESS] TASK VALIDATION PASSED{Colors.RESET}")
-                    if feedback:
-                        print(f"{Colors.DIM}[FEEDBACK] {feedback}{Colors.RESET}")
-                    return response.content
-                elif validation_result:
-                    # Validation failed or low honesty score
-                    print(f"\n{Colors.BRIGHT_YELLOW}[QUALITY] QUALITY ASSESSMENT REQUIRED{Colors.RESET}")
-                    
-                    if isinstance(validation_result, dict):
-                        honesty_score = validation_result.get('honesty_score', 0)
-                        print(f"{Colors.DIM}[SCORE] Honesty Score: {honesty_score}/100{Colors.RESET}")
-                        
-                        if validation_result.get('feedback'):
-                            print(f"\n{Colors.DIM}[TOOL] Feedback:{Colors.RESET}")
-                            for issue in validation_result['feedback'].split('\n'):
-                                if issue.strip():
-                                    print(f"   {Colors.DIM}{ICON_INFO} {issue}{Colors.RESET}")
-                        
-                        if validation_result.get('deception_patterns'):
-                            print(f"\n{Colors.BRIGHT_RED}[ISSUE]  DETECTED ISSUES:{Colors.RESET}")
-                            for pattern in validation_result['deception_patterns']:
-                                print(f"   {Colors.BRIGHT_RED}{ICON_ERROR} {pattern}{Colors.RESET}")
-                        
-                        # Continue iteration to address issues
-                        assistant_msg.content += f"\n\n**Quality Assessment**: {validation_result.get('feedback', 'Please review your work and ensure all requirements are fully met.')}"
-                    else:
-                        # Handle string result case
-                        print(f"{Colors.DIM}[SCORE] Validation score: Unable to parse{Colors.RESET}")
-                        assistant_msg.content += f"\n\n**Quality Assessment**: {validation_result}"
-                    continue
-                    self.messages[-1] = assistant_msg  # Update the message
-                    continue  # Continue to next step
+                        # Handle non-dict validation result
+                        print(f"{Colors.DIM}[DEBUG] Validation returned non-dict result, treating as passed{Colors.RESET}")
+                        return response.content
                 else:
                     # No validation system available - proceed with original behavior
                     print(f"\n{Colors.DIM}[ISSUE]  Validation system not available - proceeding{Colors.RESET}")

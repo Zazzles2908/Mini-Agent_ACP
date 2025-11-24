@@ -6,7 +6,7 @@
 ```
 C:\Users\Jazeel-Home\Mini-Agent\mini_agent\config\
 ├── config.yaml          # Main configuration (LLM, tools, agent settings)
-├── mcp.json             # MCP server configuration  
+├── .mcp.json             # MCP server configuration  
 ├── system_prompt.md     # System prompt for the agent
 └── config-example.yaml  # Example/template configuration
 ```
@@ -37,7 +37,7 @@ python launch_mini_agent.py --workspace .
 ```
 1. CLI loads config.py
 2. config.yaml → parsed for LLM/provider settings  
-3. mcp.json → parsed for MCP server configurations
+3. .mcp.json → parsed for MCP server configurations
 4. .env → provides ZAI_API_KEY and other environment variables
 5. All settings combined into unified configuration
 ```
@@ -47,7 +47,7 @@ Based on `config.yaml` settings:
 - **File Tools**: `enable_file_tools: true` → ReadTool, WriteTool, EditTool
 - **Bash Tool**: `enable_bash: true` → BashTool + Kill/Output tools
 - **Z.AI Tools**: `enable_zai_search: true` → zai_web_search, zai_web_reader
-- **MCP Tools**: `enable_mcp: true` → Load servers from mcp.json
+- **MCP Tools**: `enable_mcp: true` → Load servers from .mcp.json
 - **Skills**: `enable_skills: true` → Load all skills from mini_agent/skills/
 
 ---
@@ -73,7 +73,7 @@ tools:
   enable_zai_search: true   # Native Z.AI web search
   enable_skills: true       # Skills system
   enable_mcp: true          # MCP tools
-  mcp_config_path: "mcp.json"
+  mcp_config_path: ".mcp.json"
 ```
 
 ### **`mcp.json` (MCP Servers)**
@@ -110,14 +110,14 @@ ZAI_API_KEY=7a4720203ba745d09eba3ee511340d0c.ecls7G5Qh6cPF4oe
 1. **File Tools** (3): ReadTool, WriteTool, EditTool
 2. **Bash Tools** (3): BashTool, BashKillTool, BashOutputTool  
 3. **Z.AI Tools** (2): zai_web_search, zai_web_reader
-4. **MCP Tools** (Varies): Based on mcp.json servers
+4. **MCP Tools** (Varies): Based on .mcp.json servers
 5. **Skills** (10+): Document skills, specialized tools
 6. **Session Tools** (1): SessionNoteTool
 
 ### **Configuration Sources:**
 1. **`.env`** → ZAI_API_KEY, other environment variables
 2. **`config.yaml`** → LLM settings, tool toggles, agent behavior
-3. **`mcp.json`** → External MCP server configurations
+3. **`.mcp.json`** → External MCP server configurations
 4. **`pyproject.toml`** → Python dependencies
 5. **`mini_agent/skills/`** → Built-in skills (all enabled)
 
@@ -153,7 +153,7 @@ tools:
 ```
 
 ### **Add/Remove MCP Servers:**
-Edit `mini_agent/config/mcp.json`:
+Edit `mini_agent/config/.mcp.json`:
 ```json
 {
   "mcpServers": {

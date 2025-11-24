@@ -224,7 +224,7 @@ async def initialize_base_tools(config: Config):
         print(f"{Colors.BRIGHT_CYAN}Loading MCP tools...{Colors.RESET}")
         try:
             # Use priority search for mcp.json
-            mcp_config_path = get_config().find_config_file(config.tools.get("mcp_config_path", "mcp.json"))
+            mcp_config_path = get_config().find_config_file(config.tools.get("mcp_config_path", ".mcp.json"))
             if mcp_config_path:
                 mcp_tools = await load_mcp_tools_async(str(mcp_config_path))
                 if mcp_tools:
@@ -233,7 +233,7 @@ async def initialize_base_tools(config: Config):
                 else:
                     print(f"{Colors.YELLOW}⚠️  No available MCP tools found{Colors.RESET}")
             else:
-                print(f"{Colors.YELLOW}⚠️  MCP config file not found: {config.tools.get('mcp_config_path', 'mcp.json')}{Colors.RESET}")
+                print(f"{Colors.YELLOW}⚠️  MCP config file not found: {config.tools.get('mcp_config_path', '.mcp.json')}{Colors.RESET}")
         except Exception as e:
             print(f"{Colors.YELLOW}⚠️  Failed to load MCP tools: {e}{Colors.RESET}")
 
