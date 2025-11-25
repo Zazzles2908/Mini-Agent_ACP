@@ -6,9 +6,16 @@
 - **[QUICK_START.md](./QUICK_START.md)** - Get up and running in 5 minutes
 - **[01_OVERVIEW/README.md](./01_OVERVIEW/README.md)** - Project overview & current status
 
+### 🔥 **Z.AI MCP Integration - LATEST UPDATES**
+- **[01_OVERVIEW/Zai_MCP_Implementation_Guide.md](./01_OVERVIEW/Zai_MCP_Implementation_Guide.md)** - Complete Z.AI MCP implementation guide with Accept header fix
+- **[01_OVERVIEW/Zai_MCP_Loader_Analysis.md](./01_OVERVIEW/Zai_MCP_Loader_Analysis.md)** - MCP loader compatibility analysis and file requirements
+- **[01_OVERVIEW/Zai_MCP_Documentation_Summary.md](./01_OVERVIEW/Zai_MCP_Documentation_Summary.md)** - Comprehensive documentation update summary
+- **[01_OVERVIEW/ZAi_MCP_Status_Verification.md](./01_OVERVIEW/ZAi_MCP_Status_Verification.md)** - Complete verification report with test results
+
 ### 🏗️ **Core System Documentation**
 - **[02_SYSTEM_CORE/](./02_SYSTEM_CORE/)** - System audits, assessments, core functionality
 - **[03_ARCHITECTURE/](./03_ARCHITECTURE/)** - System architecture, ACP protocol, VS Code integration
+- **[03_ARCHITECTURE/ZAI_LEAN_IMPLEMENTATION_ENHANCED.md](./03_ARCHITECTURE/ZAI_LEAN_IMPLEMENTATION_ENHANCED.md)** - Enhanced Z.AI architecture with Accept header fix
 
 ### ⚙️ **Setup & Configuration**
 - **[04_SETUP_CONFIG/](./04_SETUP_CONFIG/)** - Installation, configuration, VS Code extension setup
@@ -22,12 +29,23 @@
 
 ### 🔬 **Research & Analysis**
 - **[07_RESEARCH_ANALYSIS/](./07_RESEARCH_ANALYSIS/)** - ZAI integration, OpenAI research, architectural analysis
+- **[07_RESEARCH_ANALYSIS/ZAI_MCP_INVESTIGATION.md](./07_RESEARCH_ANALYSIS/ZAI_MCP_INVESTIGATION.md)** - Complete Z.AI MCP investigation with Accept header fix
 
 ### 🛠️ **Tools & Integration**
 - **[08_TOOLS_INTEGRATION/](./08_TOOLS_INTEGRATION/)** - Visualization tools, coding plan, system architecture
 - **[08_TOOLS_INTEGRATION/MCP_SERVERS_FINAL_REPORT.md](./08_TOOLS_INTEGRATION/MCP_SERVERS_FINAL_REPORT.md)** - MCP servers implementation report
 - **[08_TOOLS_INTEGRATION/MINIMAX_CODING_PLAN_IMPLEMENTATION_GUIDE.md](./08_TOOLS_INTEGRATION/MINIMAX_CODING_PLAN_IMPLEMENTATION_GUIDE.md)** - Coding plan MCP server guide
 - **[08_TOOLS_INTEGRATION/MCP_CONNECTION_ISSUES_RESOLUTION.md](./08_TOOLS_INTEGRATION/MCP_CONNECTION_ISSUES_RESOLUTION.md)** - MCP connection fixes
+
+### 🚀 **New System Architecture Documentation (November 2025)**
+- **[08_TOOLS_INTEGRATION/SYSTEM_ARCHITECTURE_MASTER_SUMMARY.md](./08_TOOLS_INTEGRATION/SYSTEM_ARCHITECTURE_MASTER_SUMMARY.md)** - Complete system overview and upgrade readiness
+- **[08_TOOLS_INTEGRATION/TESTING_AND_CONFIGURATION_FRAMEWORK.md](./08_TOOLS_INTEGRATION/TESTING_AND_CONFIGURATION_FRAMEWORK.md)** - Comprehensive testing strategy and configuration management
+- **[08_TOOLS_INTEGRATION/SUPABASE_SYSTEM_DOCUMENTATION.md](./08_TOOLS_INTEGRATION/SUPABASE_SYSTEM_DOCUMENTATION.md)** - Database infrastructure and integration
+- **[08_TOOLS_INTEGRATION/MCP_SERVERS_DOCUMENTATION.md](./08_TOOLS_INTEGRATION/MCP_SERVERS_DOCUMENTATION.md)** - MCP server architecture and integration
+- **[08_TOOLS_INTEGRATION/SKILLS_SYSTEM_DOCUMENTATION.md](./08_TOOLS_INTEGRATION/SKILLS_SYSTEM_DOCUMENTATION.md)** - Progressive disclosure knowledge framework
+- **[08_TOOLS_INTEGRATION/TOOLS_SYSTEM_DOCUMENTATION.md](./08_TOOLS_INTEGRATION/TOOLS_SYSTEM_DOCUMENTATION.md)** - Core execution layer and enhanced tools
+- **[08_TOOLS_INTEGRATION/AGENT_CLIENT_PROTOCOL_DOCUMENTATION.md](./08_TOOLS_INTEGRATION/AGENT_CLIENT_PROTOCOL_DOCUMENTATION.md)** - LLM integration and agent communication
+- **[08_TOOLS_INTEGRATION/AI_SYSTEMS_DOCUMENTATION.md](./08_TOOLS_INTEGRATION/AI_SYSTEMS_DOCUMENTATION.md)** - Multi-model AI integration architecture
 
 ### 🌐 **Web Functionality**
 - **[14_WEB/](./14_WEB/)** - Complete web capabilities: MCP servers, native tools, Z.AI integration, credit protection
@@ -73,7 +91,7 @@
 | **_DEPRECATED** | 15 | Legacy ZAI documentation |
 | **VISUALS** | 2 | Generated visual artifacts |
 
-**Total: 144+ files organized into 12 logical categories (cleaned and organized)**
+**Total: 152+ files organized into 12 logical categories (including 8 new system architecture docs)**
 
 ---
 
@@ -85,14 +103,15 @@
 3. **[04_SETUP_CONFIG/](./04_SETUP_CONFIG/)** - Installation guides
 
 ### **For Understanding the System**
-1. **[03_ARCHITECTURE/SYSTEM_ARCHITECTURE.md](./03_ARCHITECTURE/SYSTEM_ARCHITECTURE.md)** - Core architecture
-2. **[VISUALS/](./VISUALS/)** - System diagrams and visual guides
-3. **[02_SYSTEM_CORE/](./02_SYSTEM_CORE/)** - System assessments
+1. **[08_TOOLS_INTEGRATION/SYSTEM_ARCHITECTURE_MASTER_SUMMARY.md](./08_TOOLS_INTEGRATION/SYSTEM_ARCHITECTURE_MASTER_SUMMARY.md)** - Complete system overview and upgrade readiness
+2. **[03_ARCHITECTURE/SYSTEM_ARCHITECTURE.md](./03_ARCHITECTURE/SYSTEM_ARCHITECTURE.md)** - Core architecture
+3. **[VISUALS/](./VISUALS/)** - System diagrams and visual guides
 
 ### **For Development**
 1. **[05_DEVELOPMENT/](./05_DEVELOPMENT/)** - Development guides
-2. **[08_TOOLS_INTEGRATION/](./08_TOOLS_INTEGRATION/)** - Tools and integration
-3. **[03_ARCHITECTURE/](./03_ARCHITECTURE/)** - Technical reference
+2. **[08_TOOLS_INTEGRATION/SYSTEM_ARCHITECTURE_MASTER_SUMMARY.md](./08_TOOLS_INTEGRATION/SYSTEM_ARCHITECTURE_MASTER_SUMMARY.md)** - System overview and enhancement readiness
+3. **[08_TOOLS_INTEGRATION/](./08_TOOLS_INTEGRATION/)** - Tools and integration (8 new comprehensive docs)
+4. **[03_ARCHITECTURE/](./03_ARCHITECTURE/)** - Technical reference
 
 ### **For Production Use**
 1. **[09_PRODUCTION/](./09_PRODUCTION/)** - Production guides

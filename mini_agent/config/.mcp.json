@@ -1,0 +1,69 @@
+{
+  "mcpServers": {
+    "memory": {
+      "description": "Memory - Knowledge graph memory system (long-term memory based on graph database)",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "disabled": false
+    },
+    "git": {
+      "description": "Git - Git repository operations and version control with status, log, branch, add, and commit tools",
+      "command": "python",
+      "args": ["mini_agent/scripts/mcp_servers/git_server.py"],
+      "env": {},
+      "disabled": false
+    },
+    "zai-web-search": {
+      "description": "Z.AI Web Search - Direct API implementation with proper MCP protocol",
+      "command": "python",
+      "args": ["mini_agent/scripts/mcp_servers/zai_web_search_server.py"],
+      "env": {
+        "ZAI_API_KEY": "${ZAI_API_KEY}"
+      },
+      "disabled": false
+    },
+    "minimax-coding-plan": {
+      "description": "MiniMax Coding Plan - AI coding assistance with web_search and understand_image tools",
+      "command": "python",
+      "args": ["mini_agent/scripts/mcp_servers/minimax_coding_plan_server.py"],
+      "env": {
+        "MINIMAX_API_KEY": "${MINIMAX_API_KEY}",
+        "MINIMAX_API_BASE": "https://api.minimax.io"
+      },
+      "disabled": false
+    },
+    "supabase-admin": {
+      "description": "Supabase Admin MCP - Full database control for Mini-Agent's long-term memory and project storage",
+      "command": "python",
+      "args": ["mini_agent/scripts/mcp_servers/supabase_admin_server.py"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_KEY": "${SUPABASE_SERVICE_KEY}"
+      },
+      "disabled": false
+    },
+    "zai-mcp-manager": {
+      "description": "ZAI MCP Manager - Comprehensive quota monitoring, health checking, and configuration management for Z.AI MCP endpoints",
+      "command": "python",
+      "args": ["mini_agent/scripts/mcp_servers/zai_manager_server.py"],
+      "env": {
+        "ZAI_API_KEY": "${ZAI_API_KEY}"
+      },
+      "disabled": false
+    }
+  },
+  "_notes": [
+    "✅ CONSOLIDATED & CLEAN CONFIGURATION - Updated 2025-11-25",
+    "FIXED: MCP server scripts consolidated from dual locations to mini_agent development stack",
+    "FIXED: Updated all relative paths to point to mini_agent/scripts/mcp_servers/",
+    "FIXED: Implemented clean, consistent naming convention for MCP servers",
+    "FIXED: Moved test files to dedicated test/mcp_servers/ directory",
+    "FIXED: Removed redundant naming (removed 'mcp_server' suffix from all scripts)",
+    "memory server - provides knowledge graph memory system",
+    "git server - provides version control operations", 
+    "zai-web-search - working Z.AI integration using Direct API with GLM models",
+    "minimax-coding-plan - AI-powered coding assistance and development planning",
+    "supabase-admin - long-term memory and database operations for Mini-Agent",
+    "zai-mcp-manager - quota monitoring, health checking, and configuration management"
+  ]
+}

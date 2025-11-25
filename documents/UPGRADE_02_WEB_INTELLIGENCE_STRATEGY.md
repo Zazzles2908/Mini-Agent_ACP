@@ -1,7 +1,7 @@
 # 🚀 Upgrade Strategy 2: Web Intelligence Integration
-## Seamless Enhancement of Existing Web Architecture
+## Using Existing MCP Infrastructure & Supabase Integration
 
-**Design Intent**: Enhance Mini-Agent's existing web capabilities by creating an intelligent web research system that integrates with the agent's decision-making process and learning capabilities.
+**Updated Design Intent**: Enhance Mini-Agent's existing web capabilities using the MCP server infrastructure and Supabase database to create intelligent web research capabilities that integrate with the agent's knowledge base.
 
 ---
 
@@ -74,30 +74,80 @@ Build intelligent web research capabilities that enhance existing tools:
 
 ## 📋 **IMPLEMENTATION PLAN**
 
-### **Phase 1: Research Orchestrator Enhancement (2-3 hours)**
-**Goal**: Enhance existing web tools with intelligent research coordination
+### **Phase 1: Research Orchestrator Enhancement Using MCP Infrastructure (2-3 hours)**
+**Goal**: Enhance existing web tools using MCP server integration for intelligent research
 
-**Current**: Individual tool calls (search, read, etc.)
-**Enhanced**: Intelligent research orchestration with synthesis
+**Current**: Individual tool calls without intelligence layer
+**Enhanced**: Intelligent research using existing MCP servers and Supabase
 
 ```python
-# Enhanced web research orchestrator
+# Enhanced web research orchestrator using MCP servers
 class WebResearchOrchestrator:
-    """Intelligent web research that enhances existing tools"""
+    """Intelligent web research using existing MCP infrastructure"""
     
     async def research_topic(self, query: str, context: str = None):
-        """Conduct comprehensive research on a topic"""
-        # 1. Use existing Z.AI tools for search and reading
-        # 2. Validate sources using existing fact-checker
-        # 3. Synthesize findings intelligently  
-        # 4. Update knowledge graph with new information
-        # 5. Provide research patterns for future use
+        """Conduct comprehensive research using MCP servers"""
+        # 1. Use existing zai-web-search and zai-web-reader MCP servers
+        # 2. Store research findings in mini_agent_knowledge via table_operation
+        # 3. Update mini_agent_sessions with research patterns
+        # 4. Cross-reference with existing knowledge graph
+        # 5. Provide intelligence feedback via tool_logs
+        
+        # Use MCP server tools:
+        # - zai-web-search: FREE web search (existing)
+        # - zai-web-reader: FREE web content extraction (existing)
+        # - table_operation: Store findings in knowledge base
+        # - session_memory: Track research patterns
+        
+        # Store in Supabase:
+        # - mini_agent_knowledge: New entities and relationships
+        # - mini_agent_sessions: Research session tracking
+        # - mini_agent_tool_logs: Research pattern analysis
+        
+        results = await self.mcp_client.call_tool("zai-web-search", {
+            "query": query,
+            "max_results": 5
+        })
+        
+        # Extract and validate content
+        validated_content = await self.validate_and_extract_content(results)
+        
+        # Store in knowledge base
+        await self.mcp_client.call_tool("table_operation", {
+            "table_name": "mini_agent_knowledge",
+            "operation": "insert", 
+            "data": {
+                "entity_type": "research_topic",
+                "entity_id": query,
+                "attributes": {"content": validated_content, "timestamp": datetime.now()},
+                "project_id": self.current_project
+            }
+        })
+        
+        return validated_content
         
     async def validate_web_findings(self, sources: List[str]):
-        """Validate web sources using integrated fact-checking"""
+        """Validate web sources using fact-checking integration"""
         # Use existing fact_checker.py integration
-        # Cross-reference with knowledge graph
-        # Provide reliability scores
+        # Cross-reference with mini_agent_knowledge
+        # Store validation results in mini_agent_tool_logs
+        
+        validation_results = []
+        for source in sources:
+            result = await self.fact_checker.validate(source)
+            await self.mcp_client.call_tool("table_operation", {
+                "table_name": "mini_agent_tool_logs",
+                "operation": "insert",
+                "data": {
+                    "session_id": self.session_id,
+                    "tool_name": "fact_checker",
+                    "parameters": {"source": source},
+                    "result": {"validation": result, "reliability_score": result.score}
+                }
+            })
+            validation_results.append(result)
+            
+        return validation_results
         # Flag potential misinformation
 ```
 

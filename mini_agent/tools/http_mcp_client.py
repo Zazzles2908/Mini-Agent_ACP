@@ -6,6 +6,7 @@ This module provides support for MCP servers that run over HTTP (remote servers)
 like Z.AI's MCP endpoints. It implements the MCP protocol over HTTP/JSON-RPC.
 """
 
+import asyncio
 import json
 import logging
 import time
@@ -196,10 +197,23 @@ class HTTPMCPClientSession:
         raise RuntimeError(f"HTTP request failed after {self.retry_config['max_retries']} retries")
     
     async def initialize(self) -> bool:
-        """Initialize the MCP session (Z.AI style - just test connectivity)."""
+        """Initialize the MCP session using proper MCP protocol."""
         try:
-            # For Z.AI, we test connectivity by calling the endpoint with an empty request
-            result = await self._make_request('POST', '', {})
+            # Proper MCP initialize request
+            init_data = {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {},
+                    "clientInfo": {
+                        "name": "Mini-Agent",
+                        "version": "1.0.0"
+                    }
+                }
+            }
+            result = await self._make_request('POST', '', init_data)
             logger.info(f"MCP session initialized: {result}")
             return True
         except Exception as e:
@@ -277,8 +291,14 @@ class HTTPMCPClientSession:
     async def call_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         """Call a tool using Z.AI's custom MCP format."""
         try:
-            # Z.AI MCP format
+            # Ensure session is initialized
+            if not await self.initialize():
+                raise Exception("Failed to initialize MCP session")
+                
+            # Z.AI MCP format with proper JSON-RPC structure
             data = {
+                "jsonrpc": "2.0",
+                "id": 1,
                 "method": "tools/call",
                 "params": {
                     "name": tool_name,
@@ -361,6 +381,3 @@ class HTTPMCPClient:
             traceback.print_exc()
             return []
 
-
-# Import asyncio for the sleep function
-import asyncio

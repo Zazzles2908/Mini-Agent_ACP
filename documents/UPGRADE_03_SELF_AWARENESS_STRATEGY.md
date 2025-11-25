@@ -1,7 +1,7 @@
 # 🚀 Upgrade Strategy 3: Self-Awareness & Continuous Improvement
-## Intelligent Integration of Existing Agent Systems
+## Using Existing Infrastructure & Supabase Analytics
 
-**Design Intent**: Transform Mini-Agent into a truly self-aware system by intelligently connecting its existing building blocks (fact-checking, context management, skills, web intelligence, memory) into a cohesive self-improvement loop.
+**Updated Design Intent**: Transform Mini-Agent into a truly self-aware system using the existing infrastructure (fact-checking, context management, skills, web intelligence, memory) connected through Supabase analytics and MCP server orchestration.
 
 ---
 
@@ -61,31 +61,80 @@ Connect existing systems into a self-improving feedback loop:
 
 ## 📋 **IMPLEMENTATION PLAN**
 
-### **Phase 1: Performance Monitoring & Analytics (2-3 hours)**
-**Goal**: Transform existing monitoring into intelligent performance analytics
+### **Phase 1: Performance Monitoring Using Supabase Analytics (2-3 hours)**
+**Goal**: Transform existing monitoring into intelligent performance analytics using Supabase
 
-**Current**: Basic logging in `logger.py`
-**Enhanced**: Intelligent performance analysis with actionable insights
+**Current**: Basic logging without analysis
+**Enhanced**: Intelligent performance analysis using mini_agent_tool_logs and Supabase
 
 ```python
-# Enhanced performance monitoring
+# Enhanced performance monitoring using Supabase
 class SelfAwarePerformanceMonitor:
-    """Analyzes agent performance patterns for self-improvement"""
+    """Analyzes agent performance patterns using Supabase analytics"""
     
     async def analyze_execution_performance(self):
-        """Analyze performance patterns from execution logs"""
-        # 1. Parse existing logger.py data
-        # 2. Identify successful execution patterns
-        # 3. Analyze tool usage effectiveness
-        # 4. Detect performance bottlenecks
-        # 5. Generate improvement recommendations
+        """Analyze performance patterns from mini_agent_tool_logs"""
+        # Use table_operation to query mini_agent_tool_logs
+        result = await self.mcp_client.call_tool("table_operation", {
+            "table_name": "mini_agent_tool_logs",
+            "operation": "select",
+            "filters": {"session_id": self.session_id},
+            "order_by": "execution_time_ms DESC",
+            "limit": 100
+        })
+        
+        # Analyze patterns using execute_sql for complex queries
+        analysis = await self.mcp_client.call_tool("execute_sql", {
+            "sql": """
+            SELECT 
+                tool_name,
+                AVG(execution_time_ms) as avg_time,
+                COUNT(*) as usage_count,
+                AVG(CASE WHEN success THEN 1.0 ELSE 0.0 END) as success_rate
+            FROM mini_agent_tool_logs 
+            WHERE session_id = ? 
+            GROUP BY tool_name 
+            ORDER BY avg_time DESC
+            """,
+            "params": [self.session_id]
+        })
+        
+        # Store performance insights in mini_agent_system_state
+        await self.mcp_client.call_tool("table_operation", {
+            "table_name": "mini_agent_system_state", 
+            "operation": "insert",
+            "data": {
+                "state_key": f"performance_analysis_{datetime.now().isoformat()}",
+                "state_value": analysis,
+                "metadata": {"analysis_type": "performance"}
+            }
+        })
         
     async def track_capability_effectiveness(self):
-        """Track which capabilities are most effective"""
-        # Analyze which tools/skills succeed most
-        # Identify context management patterns
-        # Monitor QA validation accuracy
-        # Build effectiveness metrics
+        """Track which capabilities are most effective using Supabase"""
+        # Query success rates by tool type from mini_agent_tool_logs
+        # Analyze context management patterns from mini_agent_sessions
+        # Cross-reference QA validation results
+        # Store insights in mini_agent_knowledge
+        
+        effectiveness_data = await self.mcp_client.call_tool("table_operation", {
+            "table_name": "mini_agent_tool_logs",
+            "operation": "select",
+            "filters": {"success": True},
+            "group_by": "tool_name"
+        })
+        
+        # Store effectiveness metrics
+        await self.mcp_client.call_tool("table_operation", {
+            "table_name": "mini_agent_knowledge",
+            "operation": "insert",
+            "data": {
+                "entity_type": "capability_effectiveness",
+                "entity_id": f"effectiveness_{datetime.now().date()}",
+                "attributes": {"metrics": effectiveness_data},
+                "project_id": self.current_project
+            }
+        })
 ```
 
 ### **Phase 2: Adaptive Behavior System (3-4 hours)**

@@ -110,17 +110,39 @@ class MCPServerConnection:
             # Initialize the session
             await session.initialize()
 
-            # List available tools
+            # List available tools with validation
             tools_list = await session.list_tools()
+            
+            # Validate that tools were successfully loaded
+            if not hasattr(tools_list, 'tools'):
+                raise Exception("Failed to retrieve tools list from server")
+                
+            if not tools_list.tools:
+                logger.warning(f"No tools found from MCP server '{self.name}' - server may not be functioning properly")
+                print(f"⚠️  Warning: No tools found from MCP server '{self.name}'")
+                return False
 
-            # Wrap each tool
+            # Wrap each tool with validation
             for tool in tools_list.tools:
+                # Validate tool has required properties
+                if not hasattr(tool, 'name') or not tool.name:
+                    logger.error(f"Tool missing required 'name' property from server '{self.name}'")
+                    continue
+                    
+                if not hasattr(tool, 'description'):
+                    logger.warning(f"Tool '{tool.name}' missing 'description' from server '{self.name}'")
+                    
                 # Convert MCP tool schema to our format
                 parameters = tool.inputSchema if hasattr(tool, 'inputSchema') else {}
+                
+                # Validate parameters if present
+                if not isinstance(parameters, dict):
+                    logger.warning(f"Tool '{tool.name}' has invalid parameters schema")
+                    parameters = {}
 
                 mcp_tool = MCPTool(
                     name=tool.name,
-                    description=tool.description or "",
+                    description=getattr(tool, 'description', ""),
                     parameters=parameters,
                     session=session
                 )
@@ -155,7 +177,7 @@ class MCPServerConnection:
 _mcp_connections: list[MCPServerConnection] = []
 
 
-async def load_mcp_tools_async(config_path: str = "mcp.json") -> list[Tool]:
+async def load_mcp_tools_async(config_path: str = "mini_agent/config/.mcp.json") -> list[Tool]:
     """
     Load MCP tools from config file.
 
@@ -200,13 +222,34 @@ async def load_mcp_tools_async(config_path: str = "mcp.json") -> list[Tool]:
 
             try:
                 # Determine if this is a remote server
-                if server_config.get("command") == "remote" and server_config.get("url"):
+                if (server_config.get("command") == "remote" and server_config.get("url")) or \
+                   (server_config.get("type") == "http" and server_config.get("url")) or \
+                   (server_config.get("type") == "sse" and server_config.get("url")) or \
+                   (server_config.get("type") == "streamable-http" and server_config.get("url")):
                     # Remote server configuration
                     print(f"Connecting to remote MCP server: {server_name}")
+                    import os
+                    
+                    # Handle environment variable substitution in headers and URL
+                    config_headers = server_config.get("headers", {})
+                    processed_headers = {}
+                    for key, value in config_headers.items():
+                        if isinstance(value, str) and value.startswith("${") and value.endswith("}"):
+                            env_var = value[2:-1]  # Remove ${ and }
+                            processed_headers[key] = os.environ.get(env_var, value)
+                        else:
+                            processed_headers[key] = value
+                    
+                    # Handle environment variable substitution in URL
+                    url = server_config.get("url", "")
+                    if url.startswith("${") and url.endswith("}"):
+                        env_var = url[2:-1]
+                        url = os.environ.get(env_var, url)
+                    
                     http_client = HTTPMCPClient({
                         "name": server_name,
-                        "url": server_config.get("url"),
-                        "headers": server_config.get("headers", {}),
+                        "url": url,
+                        "headers": processed_headers,
                         "timeout": server_config.get("timeout", 30),
                         "retry": server_config.get("retry", {"max_retries": 3, "initial_delay": 1.0})
                     })
@@ -224,13 +267,38 @@ async def load_mcp_tools_async(config_path: str = "mcp.json") -> list[Tool]:
                         print(f"No command specified for server: {server_name}")
                         continue
 
+                    # Validate that the command exists
+                    import shutil
+                    if not shutil.which(command):
+                        print(f"✗ Command '{command}' not found in PATH for server: {server_name}")
+                        logger.error(f"Command '{command}' not found for MCP server '{server_name}'")
+                        continue
+
+                    # Validate that the script file exists if it's a Python script
+                    if command == "python" and args:
+                        script_path = Path(args[0])
+                        if not script_path.exists():
+                            print(f"✗ Script file not found: {script_path} for server: {server_name}")
+                            logger.error(f"Script file not found: {script_path} for MCP server '{server_name}'")
+                            continue
+
                     print(f"Starting local MCP server: {server_name}")
                     connection = MCPServerConnection(server_name, command, args, env)
                     success = await connection.connect()
 
                     if success:
+                        # Validate that tools were actually loaded
+                        if not connection.tools:
+                            print(f"✗ No tools loaded from server: {server_name}")
+                            logger.warning(f"No tools loaded from MCP server '{server_name}'")
+                            await connection.disconnect()
+                            continue
+                            
                         _mcp_connections.append(connection)
                         all_tools.extend(connection.tools)
+                        print(f"✓ Successfully loaded {len(connection.tools)} tools from '{server_name}'")
+                    else:
+                        print(f"✗ Failed to establish connection to server: {server_name}")
 
             except Exception as e:
                 logger.error(f"Failed to connect to MCP server '{server_name}': {e}")
@@ -238,6 +306,36 @@ async def load_mcp_tools_async(config_path: str = "mcp.json") -> list[Tool]:
                 continue
 
         print(f"\nTotal MCP tools loaded: {len(all_tools)}")
+        
+        # Provide summary of loading results
+        if all_tools:
+            print("\n=== MCP Server Loading Summary ===")
+            successful_servers = []
+            failed_servers = []
+            
+            for server_name, server_config in mcp_servers.items():
+                if server_config.get("disabled", False):
+                    continue
+                    
+                # Check if this server contributed tools
+                server_tools = [tool for tool in all_tools if hasattr(tool, '_session') and 
+                               any(conn.name == server_name for conn in _mcp_connections)]
+                
+                if server_tools:
+                    successful_servers.append((server_name, len(server_tools)))
+                else:
+                    failed_servers.append(server_name)
+            
+            if successful_servers:
+                print("✅ Successfully loaded tools from:")
+                for server_name, tool_count in successful_servers:
+                    print(f"   - {server_name}: {tool_count} tools")
+            
+            if failed_servers:
+                print("❌ Failed to load tools from:")
+                for server_name in failed_servers:
+                    print(f"   - {server_name}")
+                print(f"\nTotal failed servers: {len(failed_servers)}")
 
         return all_tools
 

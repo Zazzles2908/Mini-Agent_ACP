@@ -1,0 +1,39 @@
+{
+  "session_id": "8dcd04fc-720f-4ff4-9d7c-3ff45c69225c",
+  "user_id": "default",
+  "created_at": 1764078628.459748,
+  "last_activity": 1764079333.026546,
+  "metadata": {
+    "errors": [
+      {
+        "timestamp": 1764078738.6473083,
+        "error": "BashTool.execute() missing 1 required positional argument: 'command'",
+        "component": "tool_execution",
+        "operation": "bash"
+      },
+      {
+        "timestamp": 1764078759.080112,
+        "error": "ReadTool.execute() missing 1 required positional argument: 'path'",
+        "component": "tool_execution",
+        "operation": "read_file"
+      },
+      {
+        "timestamp": 1764079311.7794828,
+        "error": "ReadTool.execute() missing 1 required positional argument: 'path'",
+        "component": "tool_execution",
+        "operation": "read_file"
+      },
+      {
+        "timestamp": 1764079333.009541,
+        "error": "BashTool.execute() missing 1 required positional argument: 'command'",
+        "component": "tool_execution",
+        "operation": "bash"
+      }
+    ]
+  },
+  "context_size": 29671,
+  "activity_count": 14,
+  "total_operations": 14,
+  "archived_at": 1764080420.477165,
+  "session_summary": "Session lasted 0.5 hours; Context size: 29,671 tokens; Total operations: 14; Activity count: 14; Errors encountered: 4"
+}

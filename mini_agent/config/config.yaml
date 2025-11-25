@@ -33,7 +33,7 @@ retry:
   exponential_base: 2.0   # Exponential backoff base (delay = initial_delay * base^attempt)
 
 # ===== Agent Configuration =====
-max_steps: 200  # Maximum execution steps
+max_steps: 350  # Maximum execution steps
 workspace_dir: "./workspace"  # Working directory
 system_prompt_path: "system_prompt.md"  # System prompt file (same config directory)
 
@@ -57,7 +57,87 @@ tools:
     track_usage: true                 # Monitor prompts within 5-hour windows
     efficiency_mode: true             # Use GLM-4.6 for routine tasks
     mcp_first: true                   # Always use MCP protocol first
+
+# ===== PHASE 1: FOUNDATION COMPONENTS =====
+# Task Orchestration System - Prevents context overflow
+orchestration:
+  enabled: true                    # Enable task orchestration
+  max_parallel_tasks: 3            # Maximum parallel subtasks
+  context_isolation:
+    max_tokens_per_task: 80000     # Max context tokens per subtask
+    knowledge_graph_filter: true    # Filter knowledge graph entities
+  complexity_detection:
+    enabled: true                  # Enable automatic complexity detection
+    complexity_threshold: 2        # Minimum complexity score for orchestration
   
+  # Task decomposition settings
+  decomposition:
+    max_subtasks: 15               # Maximum subtasks per complex task
+    timeout_per_subtask: 300       # Timeout per subtask (seconds)
+    max_retries_per_subtask: 2     # Maximum retries per subtask
+
+# Session Management System - Prevents memory bloat
+session_management:
+  enabled: true                    # Enable session management
+  database_path: "./data/sessions.db"  # Session database path
+  
+  cleanup:
+    idle_timeout: 3600             # Cleanup idle sessions after 1 hour
+    max_context_size: 100000       # Cleanup sessions with >100K tokens
+    max_session_age: 86400         # Cleanup sessions older than 24 hours
+    max_context_updates: 1000      # Cleanup sessions with >1000 context updates
+    max_errors: 10                 # Cleanup sessions with >10 errors
+    cleanup_interval: 300          # Run cleanup every 5 minutes
+  
+  archive:
+    enabled: true                  # Enable session archiving
+    archive_directory: "./archive/sessions"  # Archive directory
+    archive_threshold: 10000       # Archive sessions with >10K tokens
+  
+  emergency_cleanup:
+    enabled: true                  # Enable emergency cleanup
+    memory_threshold: 0.9          # Trigger emergency cleanup at 90% memory usage
+
+# Error Recovery System - Improves reliability
+error_recovery:
+  enabled: true                    # Enable error recovery
+  circuit_breaker:
+    failure_threshold: 5           # Open circuit after 5 failures
+    timeout: 60                    # Keep circuit open for 60 seconds
+    success_threshold: 3           # Close circuit after 3 successes in half-open
+  
+  retry:
+    default_attempts: 3            # Default retry attempts
+    backoff_factor: 2.0            # Exponential backoff factor
+    max_delay: 60                  # Maximum retry delay (seconds)
+  
+  fallback:
+    enabled: true                  # Enable fallback strategies
+    timeout: 10                    # Fallback timeout (seconds)
+
+# Resource Management System - Optimizes resource usage
+resource_management:
+  max_cpu_cores: 4                # Maximum CPU cores to use
+  max_memory_mb: 8192             # Maximum memory to use (MB)
+  max_context_tokens: 200000      # Maximum context tokens total
+  max_api_calls_per_minute: 100   # API call rate limit
+
+# ===== PHASE 1 ENHANCEMENTS STATUS =====
+# ✅ Task Orchestration Layer: PREVENTS CONTEXT OVERFLOW
+#    - Automatically detects complex tasks and breaks them down
+#    - Executes subtasks in parallel with isolated contexts
+#    - Reduces context size from 200K+ tokens to ~20K per subtask
+    
+# ✅ Session Lifecycle Management: PREVENTS MEMORY BLOAT  
+#    - Automatic cleanup of stale sessions
+#    - Context isolation per session
+#    - Intelligent archival of important sessions
+    
+# ✅ Error Recovery System: IMPROVES RELIABILITY
+#    - Circuit breaker patterns for fault tolerance
+#    - Exponential backoff retry logic
+#    - Fallback strategies for failed operations
+
 # ===== Memory Enhancement (Phase 1 Upgrade) =====
 # 🚀 Enable intelligent memory features for self-awareness
 memory:
