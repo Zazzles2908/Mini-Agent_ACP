@@ -23,15 +23,16 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
 
 from mini_agent import LLMClient
-from mini_agent.agent import Agent
+from mini_agent.core.acp_agent import ACPAgent as Agent
 from mini_agent.config import get_config
 from mini_agent.config.__init__ import Config
 from mini_agent.schema import LLMProvider
 from mini_agent.tools.base import Tool
 from mini_agent.tools.bash_tool import BashKillTool, BashOutputTool, BashTool
 from mini_agent.tools.file_tools import EditTool, ReadTool, WriteTool
-from mini_agent.tools.mcp_loader import cleanup_mcp_connections, load_mcp_tools_async
-from mini_agent.tools.note_tool import SessionNoteTool
+# MCP tools now loaded via lazy loading system - old imports removed
+# REMOVED: SessionNoteTool import to prevent memory system conflict
+# Memory functionality now provided via MCP tools (session_memory, project_memory)
 from mini_agent.tools.skill_tool import create_skill_tools
 from mini_agent.utils import calculate_display_width
 
@@ -115,11 +116,11 @@ def print_session_info(agent: Agent, workspace_dir: Path, model: str):
     print()
     
     print(f"{Colors.BRIGHT_YELLOW}Available Tools:{Colors.RESET}")
-    # Group tools by category
-    file_tools = [t for t in agent.tools.values() if "read" in t.name.lower() or "write" in t.name.lower() or "edit" in t.name.lower()]
-    bash_tools = [t for t in agent.tools.values() if "bash" in t.name.lower()]
-    skill_tools = [t for t in agent.tools.values() if "skill" in t.name.lower()]
-    other_tools = [t for t in agent.tools.values() if t not in file_tools + bash_tools + skill_tools]
+    # Group tools by category (now agent.tools is a list)
+    file_tools = [t for t in agent.tools if hasattr(t, 'name') and ("read" in t.name.lower() or "write" in t.name.lower() or "edit" in t.name.lower())]
+    bash_tools = [t for t in agent.tools if hasattr(t, 'name') and "bash" in t.name.lower()]
+    skill_tools = [t for t in agent.tools if hasattr(t, 'name') and "skill" in t.name.lower()]
+    other_tools = [t for t in agent.tools if t not in file_tools + bash_tools + skill_tools]
 
     if file_tools:
         print(f"  {Colors.GREEN}📁 File Operations:{Colors.RESET}")
@@ -219,40 +220,24 @@ async def initialize_base_tools(config: Config):
         except Exception as e:
             print(f"{Colors.YELLOW}⚠️  Failed to load Skills: {e}{Colors.RESET}")
 
-    # 4. MCP Tools
+    # 4. MCP Tools - LAZY LOADING (No longer loaded during startup)
     if config.tools.get("enable_mcp", True):
-        print(f"{Colors.BRIGHT_CYAN}Loading MCP tools...{Colors.RESET}")
-        try:
-            # Use priority search for mcp.json
-            mcp_config_path = get_config().find_config_file(config.tools.get("mcp_config_path", ".mcp.json"))
-            if mcp_config_path:
-                mcp_tools = await load_mcp_tools_async(str(mcp_config_path))
-                if mcp_tools:
-                    tools.extend(mcp_tools)
-                    print(f"{Colors.GREEN}✅ Loaded {len(mcp_tools)} MCP tools (from: {mcp_config_path}){Colors.RESET}")
-                else:
-                    print(f"{Colors.YELLOW}⚠️  No available MCP tools found{Colors.RESET}")
-            else:
-                print(f"{Colors.YELLOW}⚠️  MCP config file not found: {config.tools.get('mcp_config_path', '.mcp.json')}{Colors.RESET}")
-        except Exception as e:
-            print(f"{Colors.YELLOW}⚠️  Failed to load MCP tools: {e}{Colors.RESET}")
+        print(f"{Colors.BRIGHT_CYAN}MCP Tools: Available via lazy loading{Colors.RESET}")
+        print(f"{Colors.GREEN}✅ MCP tools will load on-demand (prevents startup failures){Colors.RESET}")
+        # MCP tools are now loaded via lazy loading system
+        # This prevents startup failures while maintaining full MCP functionality
 
-    # 5. Z.AI Web Tools (MCP-First Hybrid)
+    # 5. Z.AI Web Tools - REMOVED DUPLICATE LOADING
+    # Z.AI tools are already loaded via module import in tools/__init__.py
+    # This prevents duplicate initialization and conflicting configurations
     zai_enabled = config.tools.get("enable_zai_search", False) or config.tools.get("enable_zai_web_tools", False)
     if zai_enabled:
-        print(f"{Colors.BRIGHT_CYAN}Loading Z.AI Web Tools...{Colors.RESET}")
-        try:
-            # Use HTTP-based Z.AI tools (replacing the old unified client)
-            from mini_agent.tools.zai_web_tool import ZAIWebTool
-            zai_tool = ZAIWebTool()
-            tools.append(zai_tool)
-            print(f"{Colors.GREEN}✅ Loaded Z.AI Web Tools (HTTP-based){Colors.RESET}")
-        except Exception as e:
-            print(f"{Colors.YELLOW}⚠️  Failed to load Z.AI Web Tools: {e}{Colors.RESET}")
+        print(f"{Colors.GREEN}✅ Z.AI Web Tools available (loaded via module import){Colors.RESET}")
 
-    # 6. Session Note Tool (always load for memory)
-    tools.append(SessionNoteTool())
-    print(f"{Colors.GREEN}✅ Loaded Session Note tool{Colors.RESET}")
+    # 6. Session Note Tool - DISABLED to avoid duplication with MCP-based memory tools
+    # Memory tools are now loaded via MCP system (session_memory, project_memory)
+    # Direct SessionNoteTool loading disabled to prevent memory system conflicts
+    # print(f"{Colors.GREEN}✅ Loaded Session Note tool{Colors.RESET}")
 
     return tools, skill_loader
 
@@ -281,21 +266,24 @@ def add_workspace_tools(tools: List[Tool], config: Config, workspace_dir: Path):
         )
         print(f"{Colors.GREEN}✅ Loaded file operation tools (workspace: {workspace_dir}){Colors.RESET}")
 
-    # Session note tool - enhanced with memory intelligence
-    if config.tools.get("enable_note", True):
-        memory_config = config.get_memory_config()
-        
-        if memory_config["enable_enhanced"]:
-            # Use enhanced session note tool
-            from mini_agent.tools.note_tool import EnhancedSessionNoteTool, EnhancedRecallNoteTool
-            enhanced_note_tool = EnhancedSessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json"))
-            enhanced_recall_tool = EnhancedRecallNoteTool(memory_file=str(workspace_dir / ".agent_memory.json"))
-            tools.extend([enhanced_note_tool, enhanced_recall_tool])
-            print(f"{Colors.GREEN}✅ Loaded enhanced session note tools (memory intelligence enabled){Colors.RESET}")
-        else:
-            # Use original session note tool for backward compatibility
-            tools.append(SessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json")))
-            print(f"{Colors.GREEN}✅ Loaded session note tool{Colors.RESET}")
+    # Session note tool - DISABLED to avoid duplication with MCP-based memory tools
+    # Memory tools are now loaded via MCP system (session_memory, project_memory)
+    # Enhanced session note tool loading disabled to prevent memory system conflicts
+    # All memory functionality is available through MCP tools instead
+    # if config.tools.get("enable_note", True):
+    #     memory_config = config.get_memory_config()
+    #     
+    #     if memory_config["enable_enhanced"]:
+    #         # Use enhanced session note tool
+    #         from mini_agent.tools.note_tool import EnhancedSessionNoteTool, EnhancedRecallNoteTool
+    #         enhanced_note_tool = EnhancedSessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json"))
+    #         enhanced_recall_tool = EnhancedRecallNoteTool(memory_file=str(workspace_dir / ".agent_memory.json"))
+    #         tools.extend([enhanced_note_tool, enhanced_recall_tool])
+    #         print(f"{Colors.GREEN}✅ Loaded enhanced session note tools (memory intelligence enabled){Colors.RESET}")
+    #     else:
+    #         # Use original session note tool for backward compatibility
+    #         tools.append(SessionNoteTool(memory_file=str(workspace_dir / ".agent_memory.json")))
+    #         print(f"{Colors.GREEN}✅ Loaded session note tool{Colors.RESET}")
 
 
 async def run_agent(workspace_dir: Path):
@@ -525,9 +513,10 @@ async def run_agent(workspace_dir: Path):
                 response = await agent.run()
                 
                 # Display response
-                if response.content:
+                response_content = response.content if hasattr(response, 'content') else str(response)
+                if response_content:
                     print(f"\n{Colors.GREEN}🤖 Mini-Agent:{Colors.RESET}")
-                    print(f"{Colors.RESET}{response.content}{Colors.RESET}")
+                    print(f"{Colors.RESET}{response_content}{Colors.RESET}")
                 else:
                     print(f"\n{Colors.YELLOW}⚠️  No response generated{Colors.RESET}")
 
@@ -544,10 +533,12 @@ async def run_agent(workspace_dir: Path):
             print(f"\n{Colors.RED}❌ Error: {e}{Colors.RESET}")
             print(f"{Colors.DIM}{'─' * 60}{Colors.RESET}\n")
 
-    # 10. Cleanup MCP connections
+    # 10. Cleanup MCP connections (lazy loading system)
     try:
         print(f"{Colors.BRIGHT_CYAN}Cleaning up MCP connections...{Colors.RESET}")
-        await cleanup_mcp_connections()
+        # Use lazy MCP cleanup instead of synchronous cleanup
+        from mini_agent.tools.lazy_mcp_loader import cleanup_lazy_mcp
+        await cleanup_lazy_mcp()
         print(f"{Colors.GREEN}✅ Cleanup complete{Colors.RESET}\n")
     except Exception as e:
         print(f"{Colors.YELLOW}Error during cleanup (can be ignored): {e}{Colors.RESET}\n")

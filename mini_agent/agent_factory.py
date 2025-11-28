@@ -6,11 +6,14 @@ Auto-configures agent with tools and settings from configuration system
 import asyncio
 import logging
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, TYPE_CHECKING
 
-from .agent import Agent
+if TYPE_CHECKING:
+    from .core.agent import ModularAgent as ModularAgentType
+    from .core.acp_agent import ACPAgent as ACPAgentType
+
 from .config import get_config
-from .llm.llm_wrapper import LLMClient, create_llm_client
+from .llm.llm_wrapper import LLMClient
 from .tools.mcp_loader import load_mcp_tools_async
 from .tools.file_tools import ReadTool, WriteTool, EditTool
 from .tools.bash_tool import BashTool
@@ -38,7 +41,7 @@ class AgentFactory:
         max_steps: Optional[int] = None,
         auto_load_tools: bool = True,
         **kwargs
-    ) -> Agent:
+    ) -> Any:
         """
         Create a fully configured production agent.
         
@@ -50,7 +53,12 @@ class AgentFactory:
             auto_load_tools: Whether to automatically load configured tools
             
         Returns:
-            Fully configured Agent instance
+            ACPAgent or ModularAgent instance based on configuration
+            
+        Note:
+            This factory supports both ACPAgent (advanced ACP-enabled) and ModularAgent (basic)
+            based on the agent.type configuration setting. For new installations, ACPAgent
+            is recommended as it provides enhanced features and protocol compliance.
         """
         try:
             # 1. Load configuration
@@ -58,9 +66,20 @@ class AgentFactory:
             
             # 2. Create LLM client with auto-configuration
             try:
-                llm_client = create_llm_client(**kwargs)
+                # Get LLM configuration from config or kwargs
+                api_key = kwargs.get('api_key') or self.config.api_key
+                provider = kwargs.get('provider') or self.config.provider
+                api_base = kwargs.get('api_base') or self.config.api_base
+                model = kwargs.get('model') or self.config.model
+                
+                llm_client = LLMClient(
+                    api_key=api_key,
+                    provider=provider,
+                    api_base=api_base,
+                    model=model
+                )
                 logger.info(f"✅ LLM Client: {llm_client.provider} ({llm_client.model})")
-                if not llm_client.api_key:
+                if not api_key:
                     logger.warning("⚠️  API key not provided. Agent will work with limited LLM functionality.")
             except Exception as e:
                 logger.warning(f"⚠️  Failed to create LLM client: {e}")
@@ -90,17 +109,56 @@ class AgentFactory:
             steps = max_steps or self.config.get("app.max_steps", default=50)
             token_limit = self.config.get("llm.context.token_limit", default=200000)
             
-            # 7. Create the agent
-            agent = Agent(
-                llm_client=llm_client,
-                system_prompt=system_prompt,
-                tools=tools,
-                max_steps=steps,
-                workspace_dir=workspace,
-                token_limit=token_limit,
-            )
+            # 7. Create the appropriate agent based on configuration
+            agent_config = self.config.get("agent", {})
+            agent_type = agent_config.get("type", "acp")  # Default to ACP for new installations
             
-            logger.info(f"✅ Agent created successfully - Max steps: {steps}, Workspace: {workspace}")
+            if agent_type == "acp":
+                logger.info("🔧 Creating ACPAgent instance (ACP-enabled)")
+                from .core.acp_agent import ACPAgent
+                
+                # Extract ACP-specific configuration
+                acp_config = agent_config.get("acp_config", {})
+                
+                # Get system prompt - either from parameter, config, or default
+                agent_system_prompt = system_prompt or self._load_system_prompt()
+                
+                # Create ACPAgent with ACP configuration
+                agent = ACPAgent(
+                    llm_client=llm_client,
+                    system_prompt=agent_system_prompt,
+                    tools=tools if tools else [],
+                    max_steps=steps,
+                    workspace_dir=workspace,
+                    config=self.config if self.config else {},
+                    acp_config=acp_config
+                )
+                
+                logger.info("✅ ACPAgent created successfully - Advanced features enabled")
+                
+            elif agent_type == "basic":
+                logger.info("🔧 Creating ModularAgent instance (basic mode)")
+                from .core.agent import ModularAgent
+                
+                # Get system prompt - either from parameter, config, or default
+                agent_system_prompt = system_prompt or self._load_system_prompt()
+                
+                # Create basic ModularAgent
+                agent = ModularAgent(
+                    llm_client=llm_client,
+                    system_prompt=agent_system_prompt,
+                    tools=tools if tools else [],
+                    max_steps=steps,
+                    workspace_dir=workspace,
+                    config=self.config if self.config else {}
+                )
+                
+                logger.info("✅ ModularAgent created successfully - Basic functionality")
+                
+            else:
+                raise ValueError(f"Unknown agent type: {agent_type}. Must be 'acp' or 'basic'")
+            
+            logger.info(f"✅ Agent created successfully - Max steps: {steps}, Workspace: {workspace}, Type: {agent_type.upper()}")
             return agent
             
         except Exception as e:
@@ -125,6 +183,8 @@ class AgentFactory:
             tools.append(BashTool())
             logger.debug("💻 Loaded bash tools")
         
+        # Memory tools now loaded via MCP protocol - removed direct import
+        
         # MCP tools
         if config.get("tools.enable_mcp_tools", default=True):
             try:
@@ -134,15 +194,18 @@ class AgentFactory:
             except Exception as e:
                 logger.warning(f"⚠️  Failed to load MCP tools: {e}")
         
-        # Z.AI web tools
-        if config.get("tools.enable_zai_web_search", default=True):
-            try:
-                from .tools.zai_web_tool import ZAIWebTool
-                zai_tool = ZAIWebTool()
-                tools.append(zai_tool)
-                logger.debug("🌐 Loaded Z.AI web tools")
-            except Exception as e:
-                logger.warning(f"⚠️  Failed to load Z.AI tools: {e}")
+        # Z.AI web tools - DISABLED to avoid duplication with MCP-based Z.AI tools
+        # Z.AI tools are now loaded via MCP system (http_mcp_client.py) with fallback
+        # Direct ZAIWebTool loading disabled to prevent tool duplication
+        if config.get("tools.enable_zai_web_search", default=False):
+            logger.warning("⚠️  Direct Z.AI tool loading disabled - using MCP-based Z.AI tools instead")
+            # try:
+            #     from .tools.zai_web_tool import ZAIWebTool
+            #     zai_tool = ZAIWebTool()
+            #     tools.append(zai_tool)
+            #     logger.debug("🌐 Loaded Z.AI web tools")
+            # except Exception as e:
+            #     logger.warning(f"⚠️  Failed to load Z.AI tools: {e}")
         
         return tools
     
@@ -151,14 +214,26 @@ class AgentFactory:
         # Try to get from config
         prompt = self.config.get("app.system_prompt")
         
-        if prompt:
+        if prompt and isinstance(prompt, str):
             return prompt
         
-        # Try to load from file
+        # Try to load compressed system prompt first (50 lines vs 440+ lines)
+        compressed_prompt_file = Path("mini_agent/config/system_prompt_compressed.md")
+        if compressed_prompt_file.exists():
+            try:
+                with open(compressed_prompt_file, 'r', encoding='utf-8') as f:
+                    compressed_content = f.read()
+                    logger.info("✅ Loaded compressed system prompt (50 lines - 88% reduction)")
+                    return compressed_content
+            except Exception as e:
+                logger.warning(f"⚠️  Failed to load compressed system prompt: {e}")
+        
+        # Fallback to original system prompt
         prompt_file = Path("mini_agent/config/system_prompt.md")
         if prompt_file.exists():
             try:
                 with open(prompt_file, 'r', encoding='utf-8') as f:
+                    logger.warning("⚠️  Using original system prompt (440+ lines) - consider compressing")
                     return f.read()
             except Exception as e:
                 logger.warning(f"⚠️  Failed to load system prompt from file: {e}")
@@ -212,7 +287,7 @@ You have access to a comprehensive toolkit of tools and capabilities that you ca
 
 Remember: You are a production-grade assistant designed to help users accomplish their goals effectively and efficiently."""
     
-    def get_agent_info(self, agent: Agent) -> Dict[str, Any]:
+    def get_agent_info(self, agent: "Agent") -> Dict[str, Any]:
         """Get comprehensive information about a created agent"""
         return {
             "agent_type": "production-grade",
@@ -254,12 +329,19 @@ Remember: You are a production-grade assistant designed to help users accomplish
             
             # Test LLM client creation
             try:
-                llm_client = create_llm_client()
-                llm_health = llm_client.health_check()
-                health["tests"]["llm_client"] = llm_health
-                if llm_health["status"] != "healthy":
-                    health["warnings"].extend(llm_health.get("warnings", []))
-                    health["errors"].extend(llm_health.get("errors", []))
+                # Create LLM client with default config values
+                llm_client = LLMClient(
+                    api_key=self.config.api_key,
+                    provider=self.config.provider,
+                    api_base=self.config.api_base,
+                    model=self.config.model
+                )
+                health["tests"]["llm_client"] = {
+                    "status": "healthy",
+                    "provider": llm_client.provider,
+                    "model": llm_client.model,
+                    "message": "LLM client created successfully"
+                }
             except Exception as e:
                 health["tests"]["llm_client"] = {"status": "unhealthy", "error": str(e)}
                 health["errors"].append(f"LLM client test failed: {e}")
@@ -294,7 +376,7 @@ async def create_production_agent(
     system_prompt: Optional[str] = None,
     custom_tools: Optional[List] = None,
     **kwargs
-) -> Agent:
+) -> "Agent":
     """Create a production-grade agent with auto-configuration"""
     factory = AgentFactory()
     return await factory.create_agent(
@@ -304,7 +386,7 @@ async def create_production_agent(
     )
 
 
-def create_simple_agent() -> Agent:
+def create_simple_agent() -> "Agent":
     """Create a simple agent for testing (synchronous)"""
     factory = AgentFactory()
     # This would need to be async in a real implementation

@@ -16,7 +16,7 @@
 # - Global: https://platform.minimax.io -> api_base: https://api.minimax.io
 # - China: https://platform.minimaxi.com -> api_base: https://api.minimaxi.com
 # Please choose based on your network environment and get API key from corresponding platform
-api_key: "${MINIMAX_API_KEY}"  # Set this in your .env file or environment
+api_key: ""  # Set via MINIMAX_API_KEY environment variable or .env file
 api_base: "https://api.minimax.io"   # Global users (default)
 # api_base: "https://api.minimaxi.com"  # China users
 model: "MiniMax-M2"
@@ -37,12 +37,23 @@ max_steps: 350  # Maximum execution steps
 workspace_dir: "./workspace"  # Working directory
 system_prompt_path: "system_prompt.md"  # System prompt file (same config directory)
 
+# Agent Type Selection
+# Choose between advanced ACP-enabled agent or basic modular agent
+agent:
+  type: "acp"  # Options: "acp" (advanced), "basic" (legacy for compatibility)
+  acp_config:
+    enabled: true          # Enable ACP protocol support
+    strict_mode: false     # Enable strict protocol validation
+    timeout: 300          # ACP message timeout (seconds)
+    max_retries: 3        # Maximum ACP retry attempts
+
 # ===== Tools Configuration =====
 tools:
   # Basic tool switches
   enable_file_tools: true  # File read/write/edit tools (ReadTool, WriteTool, EditTool)
   enable_bash: true        # Bash command execution tool
-  enable_note: true        # Session note tool (SessionNoteTool)
+  # Memory Management - NEW: LLM-friendly simple memory tools
+  enable_simple_memory_tools: true  # Simple session & project memory tools (simple_session_memory, simple_project_memory)
   # Z.AI Tools - MCP Protocol Integration (FREE quotas)
   # ✅ Using MCP servers for FREE Lite plan quotas
   # 📊 Quotas: 100 web searches + 100 web readers (FREE with Lite plan)
