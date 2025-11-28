@@ -11,6 +11,11 @@ from typing import List, Optional, Dict, Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from .core.agent import ModularAgent as ModularAgentType
     from .core.acp_agent import ACPAgent as ACPAgentType
+    from typing import Union
+    Agent = Union[ModularAgentType, ACPAgentType]
+else:
+    # For runtime, use Any as a fallback
+    Agent = Any
 
 from .config import get_config
 from .llm.llm_wrapper import LLMClient
@@ -287,7 +292,7 @@ You have access to a comprehensive toolkit of tools and capabilities that you ca
 
 Remember: You are a production-grade assistant designed to help users accomplish their goals effectively and efficiently."""
     
-    def get_agent_info(self, agent: "Agent") -> Dict[str, Any]:
+    def get_agent_info(self, agent: Agent) -> Dict[str, Any]:
         """Get comprehensive information about a created agent"""
         return {
             "agent_type": "production-grade",
@@ -376,7 +381,7 @@ async def create_production_agent(
     system_prompt: Optional[str] = None,
     custom_tools: Optional[List] = None,
     **kwargs
-) -> "Agent":
+) -> Agent:
     """Create a production-grade agent with auto-configuration"""
     factory = AgentFactory()
     return await factory.create_agent(
@@ -386,7 +391,7 @@ async def create_production_agent(
     )
 
 
-def create_simple_agent() -> "Agent":
+def create_simple_agent() -> Agent:
     """Create a simple agent for testing (synchronous)"""
     factory = AgentFactory()
     # This would need to be async in a real implementation
