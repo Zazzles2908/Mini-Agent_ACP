@@ -262,6 +262,7 @@ def add_workspace_tools(tools: List[Tool], config: Config, workspace_dir: Path):
                 ReadTool(workspace_dir=str(workspace_dir)),
                 WriteTool(workspace_dir=str(workspace_dir)),
                 EditTool(workspace_dir=str(workspace_dir)),
+                ListDirectoryTool(workspace_dir=str(workspace_dir)),
             ]
         )
         print(f"{Colors.GREEN}✅ Loaded file operation tools (workspace: {workspace_dir}){Colors.RESET}")

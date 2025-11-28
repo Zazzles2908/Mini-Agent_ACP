@@ -212,6 +212,152 @@ class WriteTool(Tool):
 # Add alias for compatibility with validation system
 ReadFileTool = ReadTool
 
+
+class ListDirectoryTool(Tool):
+    """List files and directories in a directory."""
+
+    def __init__(self, workspace_dir: str = "."):
+        """Initialize ListDirectoryTool with workspace directory.
+
+        Args:
+            workspace_dir: Base directory for resolving relative paths
+        """
+        self.workspace_dir = Path(workspace_dir).absolute()
+
+    @property
+    def name(self) -> str:
+        return "list_directory"
+
+    @property
+    def description(self) -> str:
+        return (
+            "List files and directories in the specified directory. "
+            "Shows file sizes, types, and creation dates. "
+            "Supports recursive listing of subdirectories."
+        )
+
+    @property
+    def parameters(self) -> dict[str, Any]:
+        return {
+            "type": "object",
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "description": "Absolute or relative path to the directory",
+                },
+                "recursive": {
+                    "type": "boolean",
+                    "description": "Whether to list subdirectories recursively",
+                    "default": False,
+                },
+                "include_hidden": {
+                    "type": "boolean",
+                    "description": "Whether to include hidden files (starting with .)",
+                    "default": False,
+                },
+            },
+            "required": ["path"],
+        }
+
+    async def execute(self, path: str, recursive: bool = False, include_hidden: bool = False) -> ToolResult:
+        """Execute list directory."""
+        try:
+            dir_path = Path(path)
+            # Resolve relative paths relative to workspace_dir
+            if not dir_path.is_absolute():
+                dir_path = self.workspace_dir / dir_path
+
+            if not dir_path.exists():
+                return ToolResult(
+                    success=False,
+                    content="",
+                    error=f"Directory not found: {path}",
+                )
+
+            if not dir_path.is_dir():
+                return ToolResult(
+                    success=False,
+                    content="",
+                    error=f"Path is not a directory: {path}",
+                )
+
+            # Collect directory listing
+            entries = []
+            
+            def scan_directory(directory: Path, depth: int = 0):
+                try:
+                    items = list(directory.iterdir())
+                    
+                    for item in sorted(items):
+                        # Skip hidden files unless requested
+                        if not include_hidden and item.name.startswith('.'):
+                            continue
+                        
+                        # Format entry information
+                        stat = item.stat()
+                        size = stat.st_size if item.is_file() else 0
+                        
+                        entry = {
+                            "name": item.name,
+                            "type": "directory" if item.is_dir() else "file",
+                            "size": size,
+                            "modified": stat.st_mtime,
+                            "path": str(item.relative_to(self.workspace_dir) if item.is_relative_to(self.workspace_dir) else item),
+                            "absolute_path": str(item.absolute()),
+                        }
+                        
+                        entries.append(entry)
+                        
+                        # Recursive scan if requested and not too deep
+                        if recursive and item.is_dir() and depth < 3:  # Limit recursion depth
+                            scan_directory(item, depth + 1)
+                            
+                except PermissionError:
+                    entries.append({
+                        "name": "(Permission Denied)",
+                        "type": "error",
+                        "size": 0,
+                        "modified": 0,
+                        "path": str(directory),
+                        "absolute_path": str(directory.absolute()),
+                    })
+                except Exception as e:
+                    entries.append({
+                        "name": f"(Error: {e})",
+                        "type": "error",
+                        "size": 0,
+                        "modified": 0,
+                        "path": str(directory),
+                        "absolute_path": str(directory.absolute()),
+                    })
+
+            scan_directory(dir_path)
+
+            # Format the output
+            lines = []
+            lines.append(f"Directory listing for: {dir_path}")
+            lines.append(f"Total items: {len(entries)}")
+            lines.append("")
+            
+            for entry in entries:
+                if entry["type"] == "directory":
+                    lines.append(f"📁 {entry['name']}/")
+                elif entry["type"] == "file":
+                    size_str = f"{entry['size']:,} bytes" if entry["size"] < 1024 else f"{entry['size']/1024:.1f} KB"
+                    lines.append(f"📄 {entry['name']} ({size_str})")
+                else:
+                    lines.append(f"❌ {entry['name']}")
+
+            content = "\n".join(lines)
+            
+            # Apply token truncation if needed
+            max_tokens = 32000
+            content = truncate_text_by_tokens(content, max_tokens)
+
+            return ToolResult(success=True, content=content)
+        except Exception as e:
+            return ToolResult(success=False, content="", error=str(e))
+
 class EditTool(Tool):
     """Edit file by replacing text."""
 
